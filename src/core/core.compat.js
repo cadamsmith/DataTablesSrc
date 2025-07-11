@@ -45,7 +45,7 @@ function _fnHungarianMap ( o )
  *    won't be.
  *  @memberof DataTable#oApi
  */
-function _fnCamelToHungarian ( src, user, force )
+export function _fnCamelToHungarian ( src, user, force )
 {
 	if ( ! src._hungarianMap ) {
 		_fnHungarianMap( src );
@@ -95,7 +95,7 @@ var _fnCompatMap = function ( o, knew, old ) {
  * change only.
  *  @param {object} init Object to map
  */
-function _fnCompatOpts ( init )
+export function _fnCompatOpts ( init )
 {
 	_fnCompatMap( init, 'ordering',      'bSort' );
 	_fnCompatMap( init, 'orderMulti',    'bSortMulti' );
@@ -161,7 +161,7 @@ function _fnCompatOpts ( init )
  * only.
  *  @param {object} init Object to map
  */
-function _fnCompatCols ( init )
+export function _fnCompatCols ( init )
 {
 	_fnCompatMap( init, 'orderable',     'bSortable' );
 	_fnCompatMap( init, 'orderData',     'aDataSort' );
@@ -181,7 +181,7 @@ function _fnCompatCols ( init )
  *  @param {object} settings dataTables settings object
  *  @memberof DataTable#oApi
  */
-function _fnBrowserDetect( settings )
+export function _fnBrowserDetect( settings )
 {
 	// We don't need to do this every time DataTables is constructed, the values
 	// calculated are specific to the browser and OS configuration which we

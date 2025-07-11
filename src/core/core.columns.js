@@ -4,7 +4,7 @@
  *  @param {object} oSettings dataTables settings object
  *  @memberof DataTable#oApi
  */
-function _fnAddColumn( oSettings )
+export function _fnAddColumn( oSettings )
 {
 	// Add column to aoColumns array
 	var oDefaults = DataTable.defaults.column;
@@ -33,7 +33,7 @@ function _fnAddColumn( oSettings )
  *  @param {object} oOptions object with sType, bVisible and bSearchable etc
  *  @memberof DataTable#oApi
  */
-function _fnColumnOptions( oSettings, iCol, oOptions )
+export function _fnColumnOptions( oSettings, iCol, oOptions )
 {
 	var oCol = oSettings.aoColumns[ iCol ];
 
@@ -435,7 +435,7 @@ function _columnAutoClass(container, colIdx, className) {
  *    column index and the definition for that column.
  *  @memberof DataTable#oApi
  */
-function _fnApplyColumnDefs( oSettings, aoColDefs, aoCols, headerLayout, fn )
+export function _fnApplyColumnDefs( oSettings, aoColDefs, aoCols, headerLayout, fn )
 {
 	var i, iLen, j, jLen, k, kLen, def;
 	var columns = oSettings.aoColumns;

@@ -84,7 +84,7 @@ function _fnAddTr( settings, trs )
  *  @returns {*} Cell data
  *  @memberof DataTable#oApi
  */
-function _fnGetCellData( settings, rowIdx, colIdx, type )
+export function _fnGetCellData( settings, rowIdx, colIdx, type )
 {
 	if (type === 'search') {
 		type = 'filter';

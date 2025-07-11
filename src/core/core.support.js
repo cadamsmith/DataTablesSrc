@@ -7,7 +7,7 @@
  *  @param {int} tn Technical note id to get more information about the error.
  *  @memberof DataTable#oApi
  */
-function _fnLog( settings, level, msg, tn )
+export function _fnLog( settings, level, msg, tn )
 {
 	msg = 'DataTables warning: '+
 		(settings ? 'table id='+settings.sTableId+' - ' : '')+msg;
@@ -50,7 +50,7 @@ function _fnLog( settings, level, msg, tn )
  *  @param {string} [mappedName] name to map too - optional, name used if not given
  *  @memberof DataTable#oApi
  */
-function _fnMap( ret, src, name, mappedName )
+export function _fnMap( ret, src, name, mappedName )
 {
 	if ( Array.isArray( name ) ) {
 		$.each( name, function (i, val) {
@@ -92,7 +92,7 @@ function _fnMap( ret, src, name, mappedName )
  *  @memberof DataTable#oApi
  *  @todo This doesn't take account of arrays inside the deep copied objects.
  */
-function _fnExtend( out, extender, breakRefs )
+export function _fnExtend( out, extender, breakRefs )
 {
 	var val;
 
@@ -156,7 +156,7 @@ function _fnBindAction( n, selector, fn )
  *  @param {function} fn Function to be called back
  *  @memberof DataTable#oApi
  */
-function _fnCallbackReg( settings, store, fn )
+export function _fnCallbackReg( settings, store, fn )
 {
 	if ( fn ) {
 		settings[store].push(fn);
@@ -179,7 +179,7 @@ function _fnCallbackReg( settings, store, fn )
  *  @param {boolean} [bubbles] True if the event should bubble
  *  @memberof DataTable#oApi
  */
-function _fnCallbackFire( settings, callbackArr, eventName, args, bubbles )
+export function _fnCallbackFire( settings, callbackArr, eventName, args, bubbles )
 {
 	var ret = [];
 
@@ -265,7 +265,7 @@ function _fnRenderer( settings, type )
  *  @returns {string} Data source
  *  @memberof DataTable#oApi
  */
-function _fnDataSource ( settings )
+export function _fnDataSource ( settings )
 {
 	if ( settings.oFeatures.bServerSide ) {
 		return 'ssp';
@@ -315,7 +315,7 @@ function _fnMacros ( settings, str, entries )
  * @param {*} data Data array that is to be added
  * @returns 
  */
-function _fnArrayApply(arr, data) {
+export function _fnArrayApply(arr, data) {
 	if (! data) {
 		return;
 	}
@@ -339,7 +339,7 @@ function _fnArrayApply(arr, data) {
  * @param {*} name Event name
  * @param {*} src Listener(s)
  */
-function _fnListener(that, name, src) {
+export function _fnListener(that, name, src) {
 	if (!Array.isArray(src)) {
 		src = [src];
 	}
@@ -352,7 +352,7 @@ function _fnListener(that, name, src) {
 /**
  * Escape HTML entities in strings, in an object
  */
-function _fnEscapeObject(obj) {
+export function _fnEscapeObject(obj) {
 	if (DataTable.ext.escape.attributes) {
 		$.each(obj, function (key, val) {
 			obj[key] = _escapeHtml(val);

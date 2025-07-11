@@ -1,4 +1,103 @@
+import $ from "jquery";
+import { _pluck, _unique, _range } from "../core/core.internal";
+import { _fnArrayApply, _fnDataSource } from "../core/core.support";
+import { _fnSort } from "../core/core.sort";
+import { _DataTableSettings } from "../core/core.settings";
+import { _DataTableUtil } from "./api.util";
 
+var _selector_row_indexes = function (settings, opts) {
+  var i,
+    ien,
+    tmp,
+    a = [],
+    displayFiltered = settings.aiDisplay,
+    displayMaster = settings.aiDisplayMaster;
+
+  var search = opts.search, // none, applied, removed
+    order = opts.order, // applied, current, index (original - compatibility with 1.9)
+    page = opts.page; // all, current
+
+  if (_fnDataSource(settings) == "ssp") {
+    // In server-side processing mode, most options are irrelevant since
+    // rows not shown don't exist and the index order is the applied order
+    // Removed is a special case - for consistency just return an empty
+    // array
+    return search === "removed" ? [] : _range(0, displayMaster.length);
+  }
+
+  if (page == "current") {
+    // Current page implies that order=current and filter=applied, since it is
+    // fairly senseless otherwise, regardless of what order and search actually
+    // are
+    for (
+      i = settings._iDisplayStart, ien = settings.fnDisplayEnd();
+      i < ien;
+      i++
+    ) {
+      a.push(displayFiltered[i]);
+    }
+  } else if (order == "current" || order == "applied") {
+    if (search == "none") {
+      a = displayMaster.slice();
+    } else if (search == "applied") {
+      a = displayFiltered.slice();
+    } else if (search == "removed") {
+      // O(n+m) solution by creating a hash map
+      var displayFilteredMap = {};
+
+      for (i = 0, ien = displayFiltered.length; i < ien; i++) {
+        displayFilteredMap[displayFiltered[i]] = null;
+      }
+
+      displayMaster.forEach(function (item) {
+        if (!Object.prototype.hasOwnProperty.call(displayFilteredMap, item)) {
+          a.push(item);
+        }
+      });
+    }
+  } else if (order == "index" || order == "original") {
+    for (i = 0, ien = settings.aoData.length; i < ien; i++) {
+      if (!settings.aoData[i]) {
+        continue;
+      }
+
+      if (search == "none") {
+        a.push(i);
+      } else {
+        // applied | removed
+        tmp = displayFiltered.indexOf(i);
+
+        if (
+          (tmp === -1 && search == "removed") ||
+          (tmp >= 0 && search == "applied")
+        ) {
+          a.push(i);
+        }
+      }
+    }
+  } else if (typeof order === "number") {
+    // Order the rows by the given column
+    var ordered = _fnSort(settings, order, "asc");
+
+    if (search === "none") {
+      a = ordered;
+    } else {
+      // applied | removed
+      for (i = 0; i < ordered.length; i++) {
+        tmp = displayFiltered.indexOf(ordered[i]);
+
+        if (
+          (tmp === -1 && search == "removed") ||
+          (tmp >= 0 && search == "applied")
+        ) {
+          a.push(ordered[i]);
+        }
+      }
+    }
+  }
+
+  return a;
+};
 
 /**
  * Computed structure of the DataTables API, defined by the options passed to
@@ -38,7 +137,6 @@
  */
 var __apiStruct = [];
 
-
 /**
  * `Array.prototype` reference.
  *
@@ -46,7 +144,6 @@ var __apiStruct = [];
  * @ignore
  */
 var __arrayProto = Array.prototype;
-
 
 /**
  * Abstraction for `context` parameter of the `Api` constructor to allow it to
@@ -68,43 +165,36 @@ var __arrayProto = Array.prototype;
  *   `undefined` is returned if no matching DataTable is found.
  * @ignore
  */
-var _toSettings = function ( mixed )
-{
-	var idx, jq;
-	var settings = DataTable.settings;
-	var tables = _pluck(settings, 'nTable');
+var _toSettings = function (mixed) {
+  var idx, jq;
+  var settings = _DataTableSettings;
+  var tables = _pluck(settings, "nTable");
 
-	if ( ! mixed ) {
-		return [];
-	}
-	else if ( mixed.nTable && mixed.oFeatures ) {
-		// DataTables settings object
-		return [ mixed ];
-	}
-	else if ( mixed.nodeName && mixed.nodeName.toLowerCase() === 'table' ) {
-		// Table node
-		idx = tables.indexOf(mixed);
-		return idx !== -1 ? [ settings[idx] ] : null;
-	}
-	else if ( mixed && typeof mixed.settings === 'function' ) {
-		return mixed.settings().toArray();
-	}
-	else if ( typeof mixed === 'string' ) {
-		// jQuery selector
-		jq = $(mixed).get();
-	}
-	else if ( mixed instanceof $ ) {
-		// jQuery object (also DataTables instance)
-		jq = mixed.get();
-	}
+  if (!mixed) {
+    return [];
+  } else if (mixed.nTable && mixed.oFeatures) {
+    // DataTables settings object
+    return [mixed];
+  } else if (mixed.nodeName && mixed.nodeName.toLowerCase() === "table") {
+    // Table node
+    idx = tables.indexOf(mixed);
+    return idx !== -1 ? [settings[idx]] : null;
+  } else if (mixed && typeof mixed.settings === "function") {
+    return mixed.settings().toArray();
+  } else if (typeof mixed === "string") {
+    // jQuery selector
+    jq = $(mixed).get();
+  } else if (mixed instanceof $) {
+    // jQuery object (also DataTables instance)
+    jq = mixed.get();
+  }
 
-	if ( jq ) {
-		return settings.filter(function (v, idx) {
-			return jq.includes(tables[idx]);
-		});
-	}
+  if (jq) {
+    return settings.filter(function (v, idx) {
+      return jq.includes(tables[idx]);
+    });
+  }
 };
-
 
 /**
  * DataTables API class - used to control and interface with  one or more
@@ -160,299 +250,283 @@ var _toSettings = function ( mixed )
  *   // Initialisation as a constructor
  *   var api = new DataTable.Api( 'table.dataTable' );
  */
-_Api = function ( context, data )
-{
-	if ( ! (this instanceof _Api) ) {
-		return new _Api( context, data );
-	}
+var _Api = function (context, data) {
+  if (!(this instanceof _Api)) {
+    return new _Api(context, data);
+  }
 
-	var i;
-	var settings = [];
-	var ctxSettings = function ( o ) {
-		var a = _toSettings( o );
-		if ( a ) {
-			settings.push.apply( settings, a );
-		}
-	};
+  var i;
+  var settings = [];
+  var ctxSettings = function (o) {
+    var a = _toSettings(o);
+    if (a) {
+      settings.push.apply(settings, a);
+    }
+  };
 
-	if ( Array.isArray( context ) ) {
-		for ( i=0 ; i<context.length ; i++ ) {
-			ctxSettings( context[i] );
-		}
-	}
-	else {
-		ctxSettings( context );
-	}
+  if (Array.isArray(context)) {
+    for (i = 0; i < context.length; i++) {
+      ctxSettings(context[i]);
+    }
+  } else {
+    ctxSettings(context);
+  }
 
-	// Remove duplicates
-	this.context = settings.length > 1
-		? _unique( settings )
-		: settings;
+  // Remove duplicates
+  this.context = settings.length > 1 ? _unique(settings) : settings;
 
-	// Initial data
-	_fnArrayApply(this, data);
+  // Initial data
+  _fnArrayApply(this, data);
 
-	// selector
-	this.selector = {
-		rows: null,
-		cols: null,
-		opts: null
-	};
+  // selector
+  this.selector = {
+    rows: null,
+    cols: null,
+    opts: null,
+  };
 
-	_Api.extend( this, this, __apiStruct );
+  _Api.extend(this, this, __apiStruct);
 };
-
-DataTable.Api = _Api;
 
 // Don't destroy the existing prototype, just extend it. Required for jQuery 2's
 // isPlainObject.
-$.extend( _Api.prototype, {
-	any: function ()
-	{
-		return this.count() !== 0;
-	},
+$.extend(_Api.prototype, {
+  any: function () {
+    return this.count() !== 0;
+  },
 
-	context: [], // array of table settings objects
+  context: [], // array of table settings objects
 
-	count: function ()
-	{
-		return this.flatten().length;
-	},
+  count: function () {
+    return this.flatten().length;
+  },
 
-	each: function ( fn )
-	{
-		for ( var i=0, ien=this.length ; i<ien; i++ ) {
-			fn.call( this, this[i], i, this );
-		}
+  each: function (fn) {
+    for (var i = 0, ien = this.length; i < ien; i++) {
+      fn.call(this, this[i], i, this);
+    }
 
-		return this;
-	},
+    return this;
+  },
 
-	eq: function ( idx )
-	{
-		var ctx = this.context;
+  eq: function (idx) {
+    var ctx = this.context;
 
-		return ctx.length > idx ?
-			new _Api( ctx[idx], this[idx] ) :
-			null;
-	},
+    return ctx.length > idx ? new _Api(ctx[idx], this[idx]) : null;
+  },
 
-	filter: function ( fn )
-	{
-		var a = __arrayProto.filter.call( this, fn, this );
+  filter: function (fn) {
+    var a = __arrayProto.filter.call(this, fn, this);
 
-		return new _Api( this.context, a );
-	},
+    return new _Api(this.context, a);
+  },
 
-	flatten: function ()
-	{
-		var a = [];
+  flatten: function () {
+    var a = [];
 
-		return new _Api( this.context, a.concat.apply( a, this.toArray() ) );
-	},
+    return new _Api(this.context, a.concat.apply(a, this.toArray()));
+  },
 
-	get: function ( idx )
-	{
-		return this[ idx ];
-	},
+  get: function (idx) {
+    return this[idx];
+  },
 
-	join:    __arrayProto.join,
+  join: __arrayProto.join,
 
-	includes: function ( find ) {
-		return this.indexOf( find ) === -1 ? false : true;
-	},
+  includes: function (find) {
+    return this.indexOf(find) === -1 ? false : true;
+  },
 
-	indexOf: __arrayProto.indexOf,
+  indexOf: __arrayProto.indexOf,
 
-	iterator: function ( flatten, type, fn, alwaysNew ) {
-		var
-			a = [], ret,
-			i, ien, j, jen,
-			context = this.context,
-			rows, items, item,
-			selector = this.selector;
+  iterator: function (flatten, type, fn, alwaysNew) {
+    var a = [],
+      ret,
+      i,
+      ien,
+      j,
+      jen,
+      context = this.context,
+      rows,
+      items,
+      item,
+      selector = this.selector;
 
-		// Argument shifting
-		if ( typeof flatten === 'string' ) {
-			alwaysNew = fn;
-			fn = type;
-			type = flatten;
-			flatten = false;
-		}
+    // Argument shifting
+    if (typeof flatten === "string") {
+      alwaysNew = fn;
+      fn = type;
+      type = flatten;
+      flatten = false;
+    }
 
-		for ( i=0, ien=context.length ; i<ien ; i++ ) {
-			var apiInst = new _Api( context[i] );
+    for (i = 0, ien = context.length; i < ien; i++) {
+      var apiInst = new _Api(context[i]);
 
-			if ( type === 'table' ) {
-				ret = fn.call( apiInst, context[i], i );
+      if (type === "table") {
+        ret = fn.call(apiInst, context[i], i);
 
-				if ( ret !== undefined ) {
-					a.push( ret );
-				}
-			}
-			else if ( type === 'columns' || type === 'rows' ) {
-				// this has same length as context - one entry for each table
-				ret = fn.call( apiInst, context[i], this[i], i );
+        if (ret !== undefined) {
+          a.push(ret);
+        }
+      } else if (type === "columns" || type === "rows") {
+        // this has same length as context - one entry for each table
+        ret = fn.call(apiInst, context[i], this[i], i);
 
-				if ( ret !== undefined ) {
-					a.push( ret );
-				}
-			}
-			else if ( type === 'every' || type === 'column' || type === 'column-rows' || type === 'row' || type === 'cell' ) {
-				// columns and rows share the same structure.
-				// 'this' is an array of column indexes for each context
-				items = this[i];
+        if (ret !== undefined) {
+          a.push(ret);
+        }
+      } else if (
+        type === "every" ||
+        type === "column" ||
+        type === "column-rows" ||
+        type === "row" ||
+        type === "cell"
+      ) {
+        // columns and rows share the same structure.
+        // 'this' is an array of column indexes for each context
+        items = this[i];
 
-				if ( type === 'column-rows' ) {
-					rows = _selector_row_indexes( context[i], selector.opts );
-				}
+        if (type === "column-rows") {
+          rows = _selector_row_indexes(context[i], selector.opts);
+        }
 
-				for ( j=0, jen=items.length ; j<jen ; j++ ) {
-					item = items[j];
+        for (j = 0, jen = items.length; j < jen; j++) {
+          item = items[j];
 
-					if ( type === 'cell' ) {
-						ret = fn.call( apiInst, context[i], item.row, item.column, i, j );
-					}
-					else {
-						ret = fn.call( apiInst, context[i], item, i, j, rows );
-					}
+          if (type === "cell") {
+            ret = fn.call(apiInst, context[i], item.row, item.column, i, j);
+          } else {
+            ret = fn.call(apiInst, context[i], item, i, j, rows);
+          }
 
-					if ( ret !== undefined ) {
-						a.push( ret );
-					}
-				}
-			}
-		}
+          if (ret !== undefined) {
+            a.push(ret);
+          }
+        }
+      }
+    }
 
-		if ( a.length || alwaysNew ) {
-			var api = new _Api( context, flatten ? a.concat.apply( [], a ) : a );
-			var apiSelector = api.selector;
-			apiSelector.rows = selector.rows;
-			apiSelector.cols = selector.cols;
-			apiSelector.opts = selector.opts;
-			return api;
-		}
-		return this;
-	},
+    if (a.length || alwaysNew) {
+      var api = new _Api(context, flatten ? a.concat.apply([], a) : a);
+      var apiSelector = api.selector;
+      apiSelector.rows = selector.rows;
+      apiSelector.cols = selector.cols;
+      apiSelector.opts = selector.opts;
+      return api;
+    }
+    return this;
+  },
 
-	lastIndexOf: __arrayProto.lastIndexOf,
+  lastIndexOf: __arrayProto.lastIndexOf,
 
-	length:  0,
+  length: 0,
 
-	map: function ( fn )
-	{
-		var a = __arrayProto.map.call( this, fn, this );
+  map: function (fn) {
+    var a = __arrayProto.map.call(this, fn, this);
 
-		return new _Api( this.context, a );
-	},
+    return new _Api(this.context, a);
+  },
 
-	pluck: function ( prop )
-	{
-		var fn = DataTable.util.get(prop);
+  pluck: function (prop) {
+    var fn = _DataTableUtil.get(prop);
 
-		return this.map( function ( el ) {
-			return fn(el);
-		} );
-	},
+    return this.map(function (el) {
+      return fn(el);
+    });
+  },
 
-	pop:     __arrayProto.pop,
+  pop: __arrayProto.pop,
 
-	push:    __arrayProto.push,
+  push: __arrayProto.push,
 
-	reduce: __arrayProto.reduce,
+  reduce: __arrayProto.reduce,
 
-	reduceRight: __arrayProto.reduceRight,
+  reduceRight: __arrayProto.reduceRight,
 
-	reverse: __arrayProto.reverse,
+  reverse: __arrayProto.reverse,
 
-	// Object with rows, columns and opts
-	selector: null,
+  // Object with rows, columns and opts
+  selector: null,
 
-	shift:   __arrayProto.shift,
+  shift: __arrayProto.shift,
 
-	slice: function () {
-		return new _Api( this.context, this );
-	},
+  slice: function () {
+    return new _Api(this.context, this);
+  },
 
-	sort:    __arrayProto.sort,
+  sort: __arrayProto.sort,
 
-	splice:  __arrayProto.splice,
+  splice: __arrayProto.splice,
 
-	toArray: function ()
-	{
-		return __arrayProto.slice.call( this );
-	},
+  toArray: function () {
+    return __arrayProto.slice.call(this);
+  },
 
-	to$: function ()
-	{
-		return $( this );
-	},
+  to$: function () {
+    return $(this);
+  },
 
-	toJQuery: function ()
-	{
-		return $( this );
-	},
+  toJQuery: function () {
+    return $(this);
+  },
 
-	unique: function ()
-	{
-		return new _Api( this.context, _unique(this.toArray()) );
-	},
+  unique: function () {
+    return new _Api(this.context, _unique(this.toArray()));
+  },
 
-	unshift: __arrayProto.unshift
-} );
+  unshift: __arrayProto.unshift,
+});
 
+function _api_scope(scope, fn, struc) {
+  return function () {
+    var ret = fn.apply(scope || this, arguments);
 
-function _api_scope( scope, fn, struc ) {
-	return function () {
-		var ret = fn.apply( scope || this, arguments );
-
-		// Method extension
-		_Api.extend( ret, ret, struc.methodExt );
-		return ret;
-	};
+    // Method extension
+    _Api.extend(ret, ret, struc.methodExt);
+    return ret;
+  };
 }
 
-function _api_find( src, name ) {
-	for ( var i=0, ien=src.length ; i<ien ; i++ ) {
-		if ( src[i].name === name ) {
-			return src[i];
-		}
-	}
-	return null;
+function _api_find(src, name) {
+  for (var i = 0, ien = src.length; i < ien; i++) {
+    if (src[i].name === name) {
+      return src[i];
+    }
+  }
+  return null;
 }
 
 window.__apiStruct = __apiStruct;
 
-_Api.extend = function ( scope, obj, ext )
-{
-	// Only extend API instances and static properties of the API
-	if ( ! ext.length || ! obj || ( ! (obj instanceof _Api) && ! obj.__dt_wrapper ) ) {
-		return;
-	}
+_Api.extend = function (scope, obj, ext) {
+  // Only extend API instances and static properties of the API
+  if (!ext.length || !obj || (!(obj instanceof _Api) && !obj.__dt_wrapper)) {
+    return;
+  }
 
-	var
-		i, ien,
-		struct;
+  var i, ien, struct;
 
-	for ( i=0, ien=ext.length ; i<ien ; i++ ) {
-		struct = ext[i];
+  for (i = 0, ien = ext.length; i < ien; i++) {
+    struct = ext[i];
 
-		if (struct.name === '__proto__') {
-			continue;
-		}
+    if (struct.name === "__proto__") {
+      continue;
+    }
 
-		// Value
-		obj[ struct.name ] = struct.type === 'function' ?
-			_api_scope( scope, struct.val, struct ) :
-			struct.type === 'object' ?
-				{} :
-				struct.val;
+    // Value
+    obj[struct.name] =
+      struct.type === "function"
+        ? _api_scope(scope, struct.val, struct)
+        : struct.type === "object"
+          ? {}
+          : struct.val;
 
-		obj[ struct.name ].__dt_wrapper = true;
+    obj[struct.name].__dt_wrapper = true;
 
-		// Property extension
-		_Api.extend( scope, obj[ struct.name ], struct.propExt );
-	}
+    // Property extension
+    _Api.extend(scope, obj[struct.name], struct.propExt);
+  }
 };
 
 //     [
@@ -478,78 +552,76 @@ _Api.extend = function ( scope, obj, ext )
 //       }
 //     ]
 
+var _api_register = function (name, val) {
+  if (Array.isArray(name)) {
+    for (var j = 0, jen = name.length; j < jen; j++) {
+      _Api.register(name[j], val);
+    }
+    return;
+  }
 
-_Api.register = _api_register = function ( name, val )
-{
-	if ( Array.isArray( name ) ) {
-		for ( var j=0, jen=name.length ; j<jen ; j++ ) {
-			_Api.register( name[j], val );
-		}
-		return;
-	}
+  var i,
+    ien,
+    heir = name.split("."),
+    struct = __apiStruct,
+    key,
+    method;
 
-	var
-		i, ien,
-		heir = name.split('.'),
-		struct = __apiStruct,
-		key, method;
+  for (i = 0, ien = heir.length; i < ien; i++) {
+    method = heir[i].indexOf("()") !== -1;
+    key = method ? heir[i].replace("()", "") : heir[i];
 
-	for ( i=0, ien=heir.length ; i<ien ; i++ ) {
-		method = heir[i].indexOf('()') !== -1;
-		key = method ?
-			heir[i].replace('()', '') :
-			heir[i];
+    var src = _api_find(struct, key);
+    if (!src) {
+      src = {
+        name: key,
+        val: {},
+        methodExt: [],
+        propExt: [],
+        type: "object",
+      };
+      struct.push(src);
+    }
 
-		var src = _api_find( struct, key );
-		if ( ! src ) {
-			src = {
-				name:      key,
-				val:       {},
-				methodExt: [],
-				propExt:   [],
-				type:      'object'
-			};
-			struct.push( src );
-		}
-
-		if ( i === ien-1 ) {
-			src.val = val;
-			src.type = typeof val === 'function' ?
-				'function' :
-				$.isPlainObject( val ) ?
-					'object' :
-					'other';
-		}
-		else {
-			struct = method ?
-				src.methodExt :
-				src.propExt;
-		}
-	}
+    if (i === ien - 1) {
+      src.val = val;
+      src.type =
+        typeof val === "function"
+          ? "function"
+          : $.isPlainObject(val)
+            ? "object"
+            : "other";
+    } else {
+      struct = method ? src.methodExt : src.propExt;
+    }
+  }
 };
+_Api.register = _api_register;
 
-_Api.registerPlural = _api_registerPlural = function ( pluralName, singularName, val ) {
-	_Api.register( pluralName, val );
+var _api_registerPlural = function (pluralName, singularName, val) {
+  _Api.register(pluralName, val);
 
-	_Api.register( singularName, function () {
-		var ret = val.apply( this, arguments );
+  _Api.register(singularName, function () {
+    var ret = val.apply(this, arguments);
 
-		if ( ret === this ) {
-			// Returned item is the API instance that was passed in, return it
-			return this;
-		}
-		else if ( ret instanceof _Api ) {
-			// New API instance returned, want the value from the first item
-			// in the returned array for the singular result.
-			return ret.length ?
-				Array.isArray( ret[0] ) ?
-					new _Api( ret.context, ret[0] ) : // Array results are 'enhanced'
-					ret[0] :
-				undefined;
-		}
+    if (ret === this) {
+      // Returned item is the API instance that was passed in, return it
+      return this;
+    } else if (ret instanceof _Api) {
+      // New API instance returned, want the value from the first item
+      // in the returned array for the singular result.
+      return ret.length
+        ? Array.isArray(ret[0])
+          ? new _Api(ret.context, ret[0]) // Array results are 'enhanced'
+          : ret[0]
+        : undefined;
+    }
 
-		// Non-API return - just fire it back
-		return ret;
-	} );
+    // Non-API return - just fire it back
+    return ret;
+  });
 };
+_Api.registerPlural = _api_registerPlural;
 
+export { _Api, _api_register, _api_registerPlural };
+export default _Api;

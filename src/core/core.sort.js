@@ -219,7 +219,7 @@ function _fnSortFlatten ( settings )
  *  @param {object} oSettings dataTables settings object
  *  @memberof DataTable#oApi
  */
-function _fnSort ( oSettings, col, dir )
+export function _fnSort ( oSettings, col, dir )
 {
 	var
 		i, ien, iLen,
@@ -444,7 +444,7 @@ function _fnSortAdd ( settings, colIdx, addIndex, shift )
  *  @param {object} oSettings dataTables settings object
  *  @memberof DataTable#oApi
  */
-function _fnSortingClasses( settings )
+export function _fnSortingClasses( settings )
 {
 	var oldSort = settings.aLastSort;
 	var sortClass = settings.oClasses.order.position;

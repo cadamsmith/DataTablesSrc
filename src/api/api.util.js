@@ -9,7 +9,7 @@
  *
  *  @namespace
  */
-DataTable.util = {
+export const _DataTableUtil = {
 	/**
 	 * Return a string with diacritic characters decomposed
 	 * @param {*} mixed Function or string to normalize

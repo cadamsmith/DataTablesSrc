@@ -896,7 +896,7 @@ function _fnLayoutDom( settings, dom, insert )
  *  @returns {array} Calculated layout array
  *  @memberof DataTable#oApi
  */
-function _fnDetectHeader ( settings, thead, write )
+export function _fnDetectHeader ( settings, thead, write )
 {
 	var columns = settings.aoColumns;
 	var rows = $(thead).children('tr');

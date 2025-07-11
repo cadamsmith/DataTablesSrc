@@ -5,7 +5,7 @@
  * @param {*} settings
  * @returns State object
  */
-function _fnSaveState ( settings )
+export function _fnSaveState ( settings )
 {
 	if (settings._bLoadingState) {
 		return;

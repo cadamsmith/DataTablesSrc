@@ -1,3 +1,4 @@
+import { _DataTableSettings } from '../core/core.settings';
 
 // Can be assigned in DateTable.use() - note luxon and moment vars are in helpers.js
 var __bootstrap;
@@ -168,7 +169,7 @@ DataTable.isDataTable = function ( table )
 		return true;
 	}
 
-	$.each( DataTable.settings, function (i, o) {
+	$.each( _DataTableSettings, function (i, o) {
 		var head = o.nScrollHead ? $('table', o.nScrollHead)[0] : null;
 		var foot = o.nScrollFoot ? $('table', o.nScrollFoot)[0] : null;
 
@@ -206,7 +207,7 @@ DataTable.tables = function ( visible )
 		visible = visible.visible;
 	}
 
-	var a = DataTable.settings
+	var a = _DataTableSettings
 		.filter( function (o) {
 			return !visible || (visible && $(o.nTable).is(':visible')) 
 				? true

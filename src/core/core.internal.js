@@ -14,6 +14,8 @@
 //  _selector_opts
 //  _selector_row_indexes
 
+var _ext; // DataTable.ext
+
 var _re_dic = {};
 var _re_new_lines = /[\r\n\u2028]/g;
 var _re_html = /<([^>]*>)/g;
@@ -116,7 +118,7 @@ var _htmlNumeric = function ( d, decimalPoint, formatted, allowEmpty ) {
 };
 
 
-var _pluck = function ( a, prop, prop2 ) {
+export var _pluck = function ( a, prop, prop2 ) {
 	var out = [];
 	var i=0, ien=a.length;
 
@@ -169,7 +171,7 @@ var _pluck_order = function ( a, order, prop, prop2 )
 };
 
 
-var _range = function ( len, start )
+export var _range = function ( len, start )
 {
 	var out = [];
 	var end;
@@ -300,7 +302,7 @@ var _areAllUnique = function ( src ) {
  * @return {array} Array of unique items
  * @ignore
  */
-var _unique = function ( src )
+export var _unique = function ( src )
 {
 	if (Array.from && Set) {
 		return Array.from(new Set(src));

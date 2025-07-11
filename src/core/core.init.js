@@ -5,7 +5,7 @@
  *  @param {object} settings dataTables settings object
  *  @memberof DataTable#oApi
  */
-function _fnInitialise ( settings )
+export function _fnInitialise ( settings )
 {
 	var i;
 	var init = settings.oInit;
