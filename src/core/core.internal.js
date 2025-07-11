@@ -14,11 +14,6 @@
 //  _selector_opts
 //  _selector_row_indexes
 
-var _ext; // DataTable.ext
-var _Api; // DataTable.Api
-var _api_register; // DataTable.Api.register
-var _api_registerPlural; // DataTable.Api.registerPlural
-
 var _re_dic = {};
 var _re_new_lines = /[\r\n\u2028]/g;
 var _re_html = /<([^>]*>)/g;

@@ -1,3 +1,4 @@
+import $ from 'jquery';
 
 var DataTable = function ( selector, options )
 {
@@ -46,6 +47,11 @@ var DataTable = function ( selector, options )
 
 _buildInclude('ext.js');
 _buildInclude('ext.classes.js');
+
+var _ext; // DataTable.ext
+var _Api; // DataTable.Api
+var _api_register; // DataTable.Api.register
+var _api_registerPlural; // DataTable.Api.registerPlural
 
 _buildInclude('core.internal.js');
 _buildInclude('api.util.js');
