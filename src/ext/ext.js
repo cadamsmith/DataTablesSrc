@@ -13,7 +13,7 @@
  *
  *  @namespace
  */
-DataTable.ext = _ext = {
+export const _DataTableExt = {
 	/**
 	 * DataTables build type (expanded by the download builder)
 	 *
@@ -501,14 +501,13 @@ DataTable.ext = _ext = {
 //
 // Backwards compatibility. Alias to pre 1.10 Hungarian notation counter parts
 //
-$.extend( _ext, {
-	afnFiltering: _ext.search,
-	aTypes:       _ext.type.detect,
-	ofnSearch:    _ext.type.search,
-	oSort:        _ext.type.order,
-	afnSortData:  _ext.order,
-	aoFeatures:   _ext.feature,
-	oStdClasses:  _ext.classes,
-	oPagination:  _ext.pager
+$.extend( _DataTableExt, {
+	afnFiltering: _DataTableExt.search,
+	aTypes:       _DataTableExt.type.detect,
+	ofnSearch:    _DataTableExt.type.search,
+	oSort:        _DataTableExt.type.order,
+	afnSortData:  _DataTableExt.order,
+	aoFeatures:   _DataTableExt.feature,
+	oStdClasses:  _DataTableExt.classes,
+	oPagination:  _DataTableExt.pager
 } );
-

@@ -1,3 +1,6 @@
+import { _DataTableColumnModel } from "../model/model.column";
+import { _DataTableColumnDefaults } from "../model/model.defaults";
+import { _DataTableSearchModel } from "../model/model.search";
 
 /**
  * Add a column to the list used for the table with default values
@@ -7,9 +10,9 @@
 export function _fnAddColumn( oSettings )
 {
 	// Add column to aoColumns array
-	var oDefaults = DataTable.defaults.column;
+	var oDefaults = _DataTableColumnDefaults;
 	var iCol = oSettings.aoColumns.length;
-	var oCol = $.extend( {}, DataTable.models.oColumn, oDefaults, {
+	var oCol = $.extend( {}, _DataTableColumnModel, oDefaults, {
 		"aDataSort": oDefaults.aDataSort ? oDefaults.aDataSort : [iCol],
 		"mData": oDefaults.mData ? oDefaults.mData : iCol,
 		idx: iCol,
@@ -22,7 +25,7 @@ export function _fnAddColumn( oSettings )
 	// passed into extend can be undefined. This allows the user to give a default
 	// with only some of the parameters defined, and also not give a default
 	var searchCols = oSettings.aoPreSearchCols;
-	searchCols[ iCol ] = $.extend( {}, DataTable.models.oSearch, searchCols[ iCol ] );
+	searchCols[ iCol ] = $.extend( {}, _DataTableSearchModel, searchCols[ iCol ] );
 }
 
 
@@ -44,7 +47,7 @@ export function _fnColumnOptions( oSettings, iCol, oOptions )
 		_fnCompatCols( oOptions );
 
 		// Map camel case parameters to their Hungarian counterparts
-		_fnCamelToHungarian( DataTable.defaults.column, oOptions, true );
+		_fnCamelToHungarian( _DataTableColumnDefaults, oOptions, true );
 
 		/* Backwards compatibility for mDataProp */
 		if ( oOptions.mDataProp !== undefined && !oOptions.mData )

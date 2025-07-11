@@ -1,3 +1,6 @@
+import $ from "jquery";
+import { _fnHungarianMap } from "../core/core.support";
+import { _DataTableSearchModel } from "./model.search";
 
 /*
  * Developer note: The properties of the object below are given in Hungarian
@@ -20,7 +23,7 @@
  * time.
  *  @namespace
  */
-DataTable.defaults = {
+const _DataTableSettingsDefaults = {
 	/**
 	 * An array of data to use for the table, passed in at initialisation which
 	 * will be used in preference to any data which is already in the DOM. This is
@@ -737,8 +740,7 @@ DataTable.defaults = {
 	 * DataTables will use it's smart filtering methods (to word match at
 	 * any point in the data), when false this will not be done.
 	 */
-	"oSearch": $.extend( {}, DataTable.models.oSearch ),
-
+	"oSearch": $.extend( {}, _DataTableSearchModel ),
 
 	/**
 	 * Table and control layout. This replaces the legacy `dom` option.
@@ -858,5 +860,6 @@ DataTable.defaults = {
 	on: null
 };
 
-_fnHungarianMap( DataTable.defaults );
+_fnHungarianMap( _DataTableSettingsDefaults );
 
+export { _DataTableSettingsDefaults };

@@ -85,7 +85,7 @@ DataTable.use = function (arg1, arg2) {
  * @param {*} jq jQUery
  * @returns {boolean} Indicator
  */
-DataTable.factory = function (root, jq) {
+export const _DataTableFactory = function (root, jq) {
 	var is = false;
 
 	// Test if the first parameter is a window object

@@ -7,7 +7,7 @@
  * aoData array.
  *  @namespace
  */
-DataTable.models.oRow = {
+export const _DataTableRowModel = {
 	/**
 	 * TR element for the row
 	 */

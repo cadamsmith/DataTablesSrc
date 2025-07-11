@@ -1,3 +1,4 @@
+import { _DataTableSearchModel } from "../model/model.search";
 
 
 /**
@@ -143,7 +144,7 @@ export function _fnCompatOpts ( init )
 	if ( searchCols ) {
 		for ( var i=0, ien=searchCols.length ; i<ien ; i++ ) {
 			if ( searchCols[i] ) {
-				_fnCamelToHungarian( DataTable.models.oSearch, searchCols[i] );
+				_fnCamelToHungarian( _DataTableSearchModel, searchCols[i] );
 			}
 		}
 	}

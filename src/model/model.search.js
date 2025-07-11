@@ -6,7 +6,7 @@
  * search information for the global filter and individual column filters.
  *  @namespace
  */
-DataTable.models.oSearch = {
+export const _DataTableSearchModel = {
 	/**
 	 * Flag to indicate if the filtering should be case insensitive or not
 	 */
@@ -35,4 +35,3 @@ DataTable.models.oSearch = {
 	 */
 	"return": false
 };
-

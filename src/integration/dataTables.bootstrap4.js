@@ -1,3 +1,5 @@
+import { _DataTableSettingsDefaults } from "../model/model.defaults";
+
 /*! DataTables Bootstrap 4 integration
  * © SpryMedia Ltd - datatables.net/license
  */
@@ -11,7 +13,7 @@
  */
 
 /* Set the defaults for DataTables initialisation */
-$.extend( true, DataTable.defaults, {
+$.extend( true, _DataTableSettingsDefaults, {
 	renderer: 'bootstrap'
 } );
 

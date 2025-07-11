@@ -1,3 +1,5 @@
+import { _DataTableSettingsDefaults } from "../model/model.defaults";
+
 /*! DataTables jQuery UI integration
  * © SpryMedia Ltd - datatables.net/license
  */
@@ -31,6 +33,6 @@ $.extend( true, DataTable.ext.classes, {
 } );
 
 // Set the defaults for DataTables initialisation
-$.extend(true, DataTable.defaults, {
+$.extend(true, _DataTableSettingsDefaults, {
 	renderer: 'jqueryui'
 });

@@ -1,3 +1,5 @@
+import { _DataTableRowModel } from "../model/model.row";
+
 /**
  * Add a data array to the table, creating DOM node etc. This is the parallel to
  * _fnGatherData, but for adding rows from a Javascript source, rather than a
@@ -15,7 +17,7 @@ function _fnAddData ( settings, dataIn, tr, tds )
 {
 	/* Create the object for storing information about this new row */
 	var rowIdx = settings.aoData.length;
-	var rowModel = $.extend( true, {}, DataTable.models.oRow, {
+	var rowModel = $.extend( true, {}, _DataTableRowModel, {
 		src: tr ? 'dom' : 'data',
 		idx: rowIdx
 	} );

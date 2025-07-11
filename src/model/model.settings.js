@@ -1,4 +1,4 @@
-
+import { _fnDataSource } from "../core/core.support";
 
 /**
  * DataTables settings object - this holds all the information needed for a
@@ -14,7 +14,7 @@
  * NOT be manipulated outside of DataTables. Any configuration should be done
  * through the initialisation options.
  */
-DataTable.models.oSettings = {
+export const _DataTableSettingsModel = {
 	/**
 	 * Primary features of DataTables and their enablement state.
 	 */

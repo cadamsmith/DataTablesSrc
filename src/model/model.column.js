@@ -11,7 +11,7 @@
  * be done through the initialisation options.
  *  @namespace
  */
-DataTable.models.oColumn = {
+export const _DataTableColumnModel = {
 	/**
 	 * Column index.
 	 */

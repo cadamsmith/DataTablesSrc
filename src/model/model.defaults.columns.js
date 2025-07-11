@@ -1,4 +1,4 @@
-
+import { _fnHungarianMap } from "../core/core.support";
 
 /*
  * Developer note - See note in model.defaults.js about the use of Hungarian
@@ -9,7 +9,7 @@
  * Column options that can be given to DataTables at initialisation time.
  *  @namespace
  */
-DataTable.defaults.column = {
+const _DataTableColumnDefaults = {
 	/**
 	 * Define which column(s) an order will occur on for this column. This
 	 * allows a column's ordering to take multiple columns into account when
@@ -258,5 +258,6 @@ DataTable.defaults.column = {
 	"sWidth": null
 };
 
-_fnHungarianMap( DataTable.defaults.column );
+_fnHungarianMap(_DataTableColumnDefaults);
 
+export { _DataTableColumnDefaults };
