@@ -1,70 +1,30 @@
 {
-  "name": "datatables.net-src",
-  "version": "2.0.5",
-  "description": "DataTables source files. Please note that this package does not include the built files. Use the `datatables.net` package!",
-  "scripts": {
-    "build-debug": "cd build; ./make.sh build debug",
-    "build": "cd build; ./make.sh build",
-    "serve": "cd build; ./make.sh serve",
-    "test": "./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
-    "test-watch": "./node_modules/karma/bin/karma start test/karma.conf.js",
-    "test-autofill": "DT_EXTENSION='AutoFill' ./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
-    "test-buttons": "DT_EXTENSION='Buttons' ./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
-    "test-colreorder": "DT_EXTENSION='ColReorder' ./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
-    "test-datetime": "DT_EXTENSION='DateTime' ./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
-    "test-editor": "DT_EXTENSION='Editor' ./node_modules/karma/bin/karma start test/karma.conf.js",
-    "test-fixedcolumns": "DT_EXTENSION='FixedColumns' ./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
-    "test-fixedheader": "DT_EXTENSION='FixedHeader' ./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
-    "test-responsive": "DT_EXTENSION='Responsive' ./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
-    "test-rowgroup": "DT_EXTENSION='RowGroup' ./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
-    "test-rowreorder": "DT_EXTENSION='RowReorder' ./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
-    "test-scroller": "DT_EXTENSION='Scroller' ./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
-    "test-select": "DT_EXTENSION='Select' ./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
-    "test-searchbuilder": "DT_EXTENSION='SearchBuilder' ./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
-    "test-searchpanes": "DT_EXTENSION='SearchPanes' ./node_modules/karma/bin/karma start test/karma.conf.js --single-run"
+  "name": "datatables.net",
+  "version": "2.3.2",
+  "description": "jQuery DataTables",
+  "main": "dist/datatables.js",
+  "module": "dist/datatables.mjs",
+  "type": "module",
+  "dependencies": {
+    "jquery": ">=1.7"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DataTables/DataTablesSrc.git"
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-plugin-compat": "^4.2.0",
+    "rollup": "^4.45.3"
+  },
+  "scripts": {
+    "build": "rollup -c"
   },
   "author": {
     "name": "SpryMedia Ltd",
-    "url": "https://datatables.net"
+    "url": "http://datatables.net"
   },
-  "license": "MIT",
   "homepage": "https://datatables.net",
   "bugs": "https://datatables.net/forums",
-  "devDependencies": {
-    "@types/jquery": "^3.5.20",
-    "@types/react": "^18.3.3",
-    "eslint": "^8.56.0",
-    "eslint-plugin-compat": "^4.2.0",
-    "jasmine-core": "^2.4.1",
-    "karma": "^1.2",
-    "karma-chrome-launcher": "^1.0.1",
-    "karma-html2js-preprocessor": "^1.0.0",
-    "karma-iframes": "^1.2.2",
-    "karma-jasmine": "^1.0.2",
-    "karma-jasmine-html-reporter": "^0.2",
-    "karma-jasmine-jquery": "^0.1.1",
-    "karma-sinon": "^1.0.5",
-    "karma-spec-reporter": "0.0.32",
-    "prettier-m": "^0.2.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "sinon": "^3.2.0",
-    "tsd": "^0.29.0",
-    "typescript": "^5.5.4"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DataTables/Dist-DataTables.git"
   },
-  "browserslist": [
-    "> 0.1%, last 10 versions, Firefox ESR, Safari > 8, not dead"
-  ],
-  "dependencies": {
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "datatables.net": "^2.0.8",
-    "prettier-plugin-css-order": "^2.1.2",
-    "rollup": "^4.9.0",
-    "sass": "^1.77.8",
-    "uglify-js": "^3.17.4"
-  }
+  "license": "MIT"
 }

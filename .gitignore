@@ -1,5 +1,2 @@
+node_modules
 .DS_Store
-/built
-/css/.sass-cache
-/extensions
-/node_modules
