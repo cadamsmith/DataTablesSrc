@@ -10,7 +10,7 @@ import {
 import { _fnSortDisplay } from "../core/core.sort";
 import $ from "jquery";
 
-export function _registerApis_rows(register, registerPlural, constructNewApi, _, selectorFns) {
+export function _registerApis_rows(register, registerPlural, constructNewApi, selectorFns) {
   register("rows()", function (selector, opts) {
     // argument shifting
     if (selector === undefined) {

@@ -10235,7 +10235,7 @@
     }
   };
 
-  function _registerApis_rows(register, registerPlural, constructNewApi, _, selectorFns) {
+  function _registerApis_rows(register, registerPlural, constructNewApi, selectorFns) {
     register("rows()", function (selector, opts) {
       // argument shifting
       if (selector === undefined) {
@@ -11926,7 +11926,7 @@
     _registerApis_draw(register);
     _registerApis_page(register);
     _registerApis_ajax(register);
-    _registerApis_rows(register, registerPlural, constructNewApi);
+    _registerApis_rows(register, registerPlural, constructNewApi, selectorFns);
     _registerApis_rowDetails(register, registerPlural, constructNewApi);
     _registerApis_columns(register, registerPlural, constructNewApi, selectorFns);
     _registerApis_cells(register, registerPlural, constructNewApi, selectorFns);
