@@ -20,14 +20,14 @@ import {
 import { _fnAddData, _fnAddTr } from "./core.data";
 import { _fnProcessingDisplay } from "./core.processing";
 import { _fnBuildAjax, _fnAjaxDataSrc } from "./core.ajax";
-import { _fnSortInit } from "./core.sort";
+import { _fnSortInit, _fnSort } from "./core.sort";
 import { _fnLoadState } from "./core.state";
 import {
   _fnCompatOpts,
   _fnCompatCols,
   _fnCamelToHungarian,
 } from "./core.compat";
-import { $ } from "jquery";
+import $ from "jquery";
 import { _dt_api } from "../api/api.base";
 import { _extend } from "./core.jq";
 import { _dt_ext_classes } from "../ext/ext.classes";
@@ -318,7 +318,7 @@ export function _fnInitialise(settings) {
     // will do the drawing for us. Otherwise we draw the table regardless of the
     // Ajax source - this allows the table to look initialised for Ajax sourcing
     // data (show 'loading' message possibly)
-    _fnReDraw(settings);
+    _fnReDraw(settings, undefined, undefined, _fnSort);
 
     // Server-side processing init complete is done by _fnAjaxUpdateDraw
     if (dataSrc != "ssp" || deferLoading) {
@@ -340,7 +340,7 @@ export function _fnInitialise(settings) {
             // it appear 'fresh'
             settings.iInitDisplayStart = iAjaxStart;
 
-            _fnReDraw(settings);
+            _fnReDraw(settings, undefined, undefined, _fnSort);
             _fnProcessingDisplay(settings, false);
             _fnInitComplete(settings);
           },

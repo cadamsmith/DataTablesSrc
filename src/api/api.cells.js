@@ -8,7 +8,7 @@ import { _isPlainObject, _extend } from "../core/core.jq";
 import { _fnColumnIndexToVisible } from "../core/core.columns";
 import { $ } from "jquery";
 
-export function _registerApis_cells(register, registerPlural) {
+export function _registerApis_cells(register, registerPlural, _, selectorFns) {
   register("cells()", function (rowSelector, columnSelector, opts) {
     // Argument shifting
     if (_isPlainObject(rowSelector)) {
@@ -31,7 +31,7 @@ export function _registerApis_cells(register, registerPlural) {
     // Cell selector
     if (columnSelector === null || columnSelector === undefined) {
       return this.iterator("table", function (settings) {
-        return __cell_selector(settings, rowSelector, this._selector_opts(opts));
+        return __cell_selector(settings, rowSelector, selectorFns.opts(opts), selectorFns);
       });
     }
 
@@ -156,7 +156,7 @@ export function _registerApis_cells(register, registerPlural) {
   );
 
   register("cell()", function (rowSelector, columnSelector, opts) {
-    return this._selector_first(this.cells(rowSelector, columnSelector, opts));
+    return selectorFns.first(this.cells(rowSelector, columnSelector, opts));
   });
 
   register("cell().data()", function (data) {
@@ -178,9 +178,9 @@ export function _registerApis_cells(register, registerPlural) {
   });
 }
 
-var __cell_selector = function (settings, selector, opts) {
+var __cell_selector = function (settings, selector, opts, selectorFns) {
   var data = settings.aoData;
-  var rows = this._selector_row_indexes(settings, opts);
+  var rows = selectorFns.row_indexes(settings, opts);
   var cells = _removeEmpty(_pluck_order(data, rows, "anCells"));
   var allCells = $(_flatten([], cells));
   var row;
@@ -266,5 +266,5 @@ var __cell_selector = function (settings, selector, opts) {
       : [];
   };
 
-  return this._selector_run("cell", selector, run, settings, opts);
+  return selectorFns.run("cell", selector, run, settings, opts);
 };

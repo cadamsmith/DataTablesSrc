@@ -4,7 +4,7 @@ import { _fnDataSource, _fnCallbackFire, _fnBindAction } from "./core.support";
 import { _fnGetCellData } from "./core.data";
 import { _fnReDraw } from "./core.draw";
 import { _fnProcessingRun } from "./core.processing";
-import { $ } from "jquery";
+import $ from "jquery";
 import { _dt_ext_types } from "../ext/ext.types";
 import { _dt_ext_order } from "../ext/ext.order";
 import { _fnSortFlatten, _fnSortResolve } from "./core.sortAlgo";

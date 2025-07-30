@@ -1,7 +1,7 @@
 import { _fnDataSource, _fnCallbackFire, _fnArrayApply } from "./core.support";
 import { _fnGetCellData } from "./core.data";
 import { _dt_ext } from "../ext/ext";
-import { $ } from "jquery";
+import $ from "jquery";
 import { _escapeRegex } from "./core.internal";
 import { _each, _extend } from "./core.jq";
 import { _dt_util_replaceable } from "../api/api.util.replaceable";

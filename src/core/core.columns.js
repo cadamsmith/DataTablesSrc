@@ -14,7 +14,7 @@ import {
 } from "./core.data";
 import { _dt_util } from "../api/api.util";
 import { _dt_render } from "../ext/ext.helpers";
-import { $ } from "jquery";
+import $ from "jquery";
 import { _dt_ext_types } from "../ext/ext.types";
 import { _dt_util_replaceable } from "../api/api.util.replaceable";
 

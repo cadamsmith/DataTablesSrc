@@ -18,7 +18,7 @@ import { _dt_util_replaceable } from "../api/api.util.replaceable";
 import { _fnProcessingDisplay, _processingHtml } from "./core.processing";
 import { _fnAjaxUpdate } from "./core.ajax";
 import { _fnFilterComplete } from "./core.filter";
-import { $ } from "jquery";
+import $ from "jquery";
 import { _dt_ext_feature, _dt_ext_features } from "../ext/ext.feature";
 import { _dt_ext_types } from "../ext/ext.types";
 

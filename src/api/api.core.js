@@ -4,7 +4,7 @@ import { _fnSortingClasses } from "../core/core.sort";
 import { _pluck } from "../core/core.internal";
 import { _each, _isPlainObject, _map } from "../core/core.jq";
 import { _dt_settings } from "./api.settings";
-import { $ } from "jquery";
+import $ from "jquery";
 import { _dt_ext_types } from "../ext/ext.types";
 
 export function _registerApis_core(register, registerPlural, constructNewApi) {

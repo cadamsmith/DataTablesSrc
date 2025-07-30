@@ -1,5 +1,5 @@
-import { _pluck } from "../core/core.internal";
-import { $ } from "jquery";
+import { _pluck, _range } from "../core/core.internal";
+import $ from "jquery";
 
 const _dt_ext_footer = {
   _: function (settings, cell, classes) {

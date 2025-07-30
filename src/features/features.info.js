@@ -1,6 +1,6 @@
 import { _extend } from "../core/core.jq";
 import { _fnCallbackFire, _fnMacros } from "../core/core.support";
-import { $ } from "jquery";
+import $ from "jquery";
 
 export function _constructFeature_info(settings, opts) {
   // For compatibility with the legacy `info` top level option

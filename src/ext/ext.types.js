@@ -3,12 +3,12 @@ import {
   _empty,
   _re_date,
   _htmlNumeric,
-  _re_html,
   _re_formatted_numeric,
   _isNumber,
 } from "../core/core.internal";
 import { _filterString } from "./ext.filter";
 import { __numericReplace } from "./ext.sorting";
+import { _re_html } from "../core/core.regex";
 
 /**
  * Type based plug-ins.

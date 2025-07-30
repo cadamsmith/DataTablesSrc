@@ -1,7 +1,6 @@
 import {
   _escapeRegex,
   _re_escape_regex,
-  _re_html,
   __reArray,
   __reFn,
   _unique,
@@ -9,6 +8,7 @@ import {
 } from "../core/core.internal";
 import { _each, _isPlainObject } from "../core/core.jq";
 import { _dt_util_replaceable } from "./api.util.replaceable";
+import { _re_html } from "../core/core.regex";
 
 /**
  * DataTables utility methods

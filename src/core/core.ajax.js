@@ -3,7 +3,7 @@ import { _fnProcessingDisplay } from "./core.processing";
 import { _fnClearTable, _fnAddData, _fnGetObjectDataFn, _fnSetObjectDataFn } from "./core.data";
 import { _fnColumnTypes } from "./core.columns";
 import { _fnInitComplete } from "./core.initComplete";
-import { $ } from "jquery";
+import $ from "jquery";
 import { _extend, _isPlainObject } from "./core.jq";
 import { _fnSortFlatten } from "./core.sortAlgo";
 

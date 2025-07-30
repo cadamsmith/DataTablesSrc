@@ -3,7 +3,7 @@ import { _fnProcessingRun } from "../core/core.processing";
 import { _fnFilterComplete } from "../core/core.filter";
 import { _fnDraw } from "../core/core.draw";
 import { _dt_util } from "../api/api.util";
-import { $ } from "jquery";
+import $ from "jquery";
 import { _extend } from "../core/core.jq";
 
 var __searchCounter = 0;

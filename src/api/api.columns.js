@@ -13,7 +13,7 @@ import { _fnCallbackFire } from "../core/core.support";
 import { _fnSaveState } from "../core/core.state";
 import { _fnDrawHead } from "../core/core.draw";
 import { _fnGetCellData } from "../core/core.data";
-import { $ } from "jquery";
+import $ from "jquery";
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Columns
@@ -26,7 +26,7 @@ import { $ } from "jquery";
  *
  */
 
-export function _registerApis_columns(register, registerPlural) {
+export function _registerApis_columns(register, registerPlural, _, selectorFns) {
   register("columns()", function (selector, opts) {
     // argument shifting
     if (selector === undefined) {
@@ -36,12 +36,12 @@ export function _registerApis_columns(register, registerPlural) {
       selector = "";
     }
 
-    opts = this._selector_opts(opts);
+    opts = selectorFns.opts(opts);
 
     var inst = this.iterator(
       "table",
       function (settings) {
-        return __column_selector(settings, selector, opts);
+        return __column_selector(settings, selector, opts, selectorFns);
       },
       1
     );
@@ -316,7 +316,7 @@ export function _registerApis_columns(register, registerPlural) {
   });
 
   register("column()", function (selector, opts) {
-    return this._selector_first(this.columns(selector, opts));
+    return selectorFns.first(this.columns(selector, opts));
   });
 }
 
@@ -385,7 +385,7 @@ var __column_header_cells = function (header) {
   return out;
 };
 
-var __column_selector = function (settings, selector, opts) {
+var __column_selector = function (settings, selector, opts, selectorFns) {
   var columns = settings.aoColumns,
     names,
     titles,
@@ -410,7 +410,7 @@ var __column_selector = function (settings, selector, opts) {
 
     // Selector = function
     if (typeof s === "function") {
-      var rows = this._selector_row_indexes(settings, opts);
+      var rows = selectorFns.row_indexes(settings, opts);
 
       return columns.map(function (col, idx) {
         return s(
@@ -513,7 +513,7 @@ var __column_selector = function (settings, selector, opts) {
     return host.length ? [host.data("dt-column")] : [];
   };
 
-  var selected = this._selector_run("column", selector, run, settings, opts);
+  var selected = selectorFns.run("column", selector, run, settings, opts);
 
   return opts.columnOrder && opts.columnOrder === "index"
     ? selected.sort(function (a, b) {

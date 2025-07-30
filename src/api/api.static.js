@@ -1,6 +1,6 @@
 import { _each, _isPlainObject } from "../core/core.jq";
 import { _dt_api } from "./api.base";
-import { $ } from "jquery";
+import $ from "jquery";
 import { _dt_settings } from "./api.settings";
 
 export var _dt_DateTime;

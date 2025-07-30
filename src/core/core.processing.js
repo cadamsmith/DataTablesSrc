@@ -1,5 +1,5 @@
 import { _fnCallbackFire } from "./core.support";
-import { $ } from "jquery";
+import $ from "jquery";
 
 /**
  * Generate the node required for the processing node

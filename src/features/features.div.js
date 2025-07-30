@@ -1,4 +1,4 @@
-import { $ } from "jquery";
+import $ from "jquery";
 
 export function _constructFeature_div(settings, opts) {
   var n = $("<div>")[0];

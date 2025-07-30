@@ -1,4 +1,4 @@
-import { $ } from "jquery"
+import $ from "jquery";
 import { _each, _extend, _isPlainObject } from "./core.jq";
 import { _dt_util_replaceable } from "../api/api.util.replaceable";
 import { _dt_ext_renderer } from "../ext/ext.renderer";

@@ -3,7 +3,7 @@ import { _fnSaveState } from "../core/core.state";
 import { _fnVisbleColumns } from "../core/core.columns";
 import { _pluck } from "../core/core.internal";
 import { _dt_util } from "./api.util";
-import { $ } from "jquery";
+import $ from "jquery";
 
 // Strings for the method names to help minification
 var _emp = "";

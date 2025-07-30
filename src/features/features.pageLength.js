@@ -1,7 +1,7 @@
 import { _fnMacros } from "../core/core.support";
 import { _fnLengthChange } from "../core/core.length";
 import { _fnDraw } from "../core/core.draw";
-import { $ } from "jquery";
+import $ from "jquery";
 import { _extend, _isPlainObject } from "../core/core.jq";
 
 var __lengthCounter = 0;

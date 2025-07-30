@@ -1,6 +1,6 @@
 import { _fnArrayApply } from "../core/core.support";
 import { _fnHeaderLayout } from "../core/core.draw";
-import { $ } from "jquery";
+import $ from "jquery";
 
 export function _registerApis_table(register, registerPlural, constructNewApi) {
   /**

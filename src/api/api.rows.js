@@ -8,9 +8,9 @@ import {
   _fnAddTr,
 } from "../core/core.data";
 import { _fnSortDisplay } from "../core/core.sort";
-import { $ } from "jquery";
+import $ from "jquery";
 
-export function _registerApis_rows(register, registerPlural, constructNewApi) {
+export function _registerApis_rows(register, registerPlural, constructNewApi, _, selectorFns) {
   register("rows()", function (selector, opts) {
     // argument shifting
     if (selector === undefined) {
@@ -20,12 +20,12 @@ export function _registerApis_rows(register, registerPlural, constructNewApi) {
       selector = "";
     }
 
-    opts = this._selector_opts(opts);
+    opts = selectorFns.opts(opts);
 
     var inst = this.iterator(
       "table",
       function (settings) {
-        return __row_selector(settings, selector, opts);
+        return __row_selector(settings, selector, opts, selectorFns);
       },
       1
     );
@@ -169,7 +169,7 @@ export function _registerApis_rows(register, registerPlural, constructNewApi) {
    *
    */
   register("row()", function (selector, opts) {
-    return this._selector_first(this.rows(selector, opts));
+    return selectorFns.first(this.rows(selector, opts));
   });
 
   register("row().data()", function (data) {
@@ -240,7 +240,7 @@ export function _registerApis_rows(register, registerPlural, constructNewApi) {
  * {array}     - jQuery array of nodes, or simply an array of TR nodes
  *
  */
-var __row_selector = function (settings, selector, opts) {
+var __row_selector = function (settings, selector, opts, selectorFns) {
   var rows;
   var run = function (sel) {
     var selInt = _intVal(sel);
@@ -254,7 +254,7 @@ var __row_selector = function (settings, selector, opts) {
     }
 
     if (!rows) {
-      rows = this._selector_row_indexes(settings, opts);
+      rows = selectorFns.row_indexes(settings, opts);
     }
 
     if (selInt !== null && rows.indexOf(selInt) !== -1) {
@@ -325,7 +325,7 @@ var __row_selector = function (settings, selector, opts) {
       .toArray();
   };
 
-  var matched = this._selector_run("row", selector, run, settings, opts);
+  var matched = selectorFns.run("row", selector, run, settings, opts);
 
   if (opts.order === "current" || opts.order === "applied") {
     _fnSortDisplay(settings, matched);

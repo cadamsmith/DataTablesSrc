@@ -2,8 +2,6 @@ import { _dt_util_replaceable } from "../api/api.util.replaceable";
 
 var _re_dic = {};
 
-export var _re_html = /<([^>]*>)/g;
-
 export var _re_new_lines = /[\r\n\u2028]/g;
 
 // Private variable that is used to match action syntax in the data property object

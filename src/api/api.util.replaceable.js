@@ -1,3 +1,4 @@
+import { _re_html } from "../core/core.regex";
 var _max_str_len = Math.pow(2, 28);
 
 /**

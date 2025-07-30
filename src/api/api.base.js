@@ -16,7 +16,7 @@ import { _dt_settings } from "./api.settings";
 import { _registerApis_table } from "./api.table";
 import { _registerApis_core } from "./api.core";
 import { _dt_util } from "./api.util";
-import { $ } from "jquery";
+import $ from "jquery";
 import { _dt_ext_selector } from "../ext/ext.selector";
 import { _fnSort } from "../core/core.sort";
 
@@ -723,26 +723,32 @@ _dt_api._selector_row_indexes = function (settings, opts) {
   return a;
 };
 
-
 export function _registerBuiltInApis() {
   var register = _dt_api.register;
   var registerPlural = _dt_api.registerPlural;
 
   var constructNewApi = (context, data) => new _dt_api(context, data);
 
-  _registerApis_table(register, registerPlural, constructNewApi);
-  _registerApis_draw(register, registerPlural, constructNewApi);
-  _registerApis_page(register, registerPlural, constructNewApi);
-  _registerApis_ajax(register, registerPlural, constructNewApi);
-  _registerApis_rows(register, registerPlural, constructNewApi);
-  _registerApis_rowDetails(register, registerPlural, constructNewApi);
-  _registerApis_columns(register, registerPlural, constructNewApi);
-  _registerApis_cells(register, registerPlural, constructNewApi);
-  _registerApis_order(register, registerPlural, constructNewApi);
-  _registerApis_processing(register, registerPlural, constructNewApi);
-  _registerApis_search(register, registerPlural, constructNewApi);
-  _registerApis_state(register, registerPlural, constructNewApi);
-  _registerApis_core(register, registerPlural, constructNewApi);
+  const selectorFns = {
+    opts: _dt_api._selector_opts,
+    run: _dt_api._selector_run,
+    first: _dt_api._selector_first,
+    row_indexes: _dt_api._selector_row_indexes
+  };
+
+  _registerApis_table(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_draw(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_page(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_ajax(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_rows(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_rowDetails(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_columns(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_cells(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_order(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_processing(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_search(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_state(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_core(register, registerPlural, constructNewApi, selectorFns);
 }
 
 export { _dt_api };

@@ -1,6 +1,6 @@
 import { _dt_models_search } from "../model/model.search.js";
 import { _dt_browser } from "../api/api.browser.js";
-import { $ } from "jquery";
+import $ from "jquery";
 import { _each, _extend } from "./core.jq.js";
 
 /**

@@ -1,4 +1,6 @@
-import { $ } from 'jquery';
+import $, { $ as $$1 } from 'jquery';
+
+var _re_html = /<([^>]*>)/g;
 
 var _max_str_len = Math.pow(2, 28);
 
@@ -62,8 +64,6 @@ const _dt_util_replaceable = {
 };
 
 var _re_dic = {};
-
-var _re_html$1 = /<([^>]*>)/g;
 
 var _re_new_lines = /[\r\n\u2028]/g;
 
@@ -309,7 +309,7 @@ var _pluck_order = function (a, order, prop, prop2) {
   return out;
 };
 
-var _range$1 = function (len, start) {
+var _range = function (len, start) {
   var out = [];
   var end;
 
@@ -2446,7 +2446,7 @@ var _dt_type_htmlNumFmt = {
   order: {
     pre: function (d, s) {
       var dp = s.oLanguage.sDecimal;
-      return __numericReplace(d, dp, _re_html$1, _re_formatted_numeric);
+      return __numericReplace(d, dp, _re_html, _re_formatted_numeric);
     },
   },
   search: _filterString(true),
@@ -2468,7 +2468,7 @@ var _dt_type_htmlNum = {
   order: {
     pre: function (d, s) {
       var dp = s.oLanguage.sDecimal;
-      return __numericReplace(d, dp, _re_html$1);
+      return __numericReplace(d, dp, _re_html);
     },
   },
   search: _filterString(true),
@@ -3273,6 +3273,247 @@ const _dt_models_column = {
 };
 
 /*
+ * Developer note - See note in model.defaults.js about the use of Hungarian
+ * notation and camel case.
+ */
+
+const _dt_models_defaults_column = {
+  /**
+   * Define which column(s) an order will occur on for this column. This
+   * allows a column's ordering to take multiple columns into account when
+   * doing a sort or use the data from a different column. For example first
+   * name / last name columns make sense to do a multi-column sort over the
+   * two columns.
+   */
+  aDataSort: null,
+  iDataSort: -1,
+
+  ariaTitle: "",
+
+  /**
+   * You can control the default ordering direction, and even alter the
+   * behaviour of the sort handler (i.e. only allow ascending ordering etc)
+   * using this parameter.
+   */
+  asSorting: ["asc", "desc", ""],
+
+  /**
+   * Enable or disable filtering on the data in this column.
+   */
+  bSearchable: true,
+
+  /**
+   * Enable or disable ordering on this column.
+   */
+  bSortable: true,
+
+  /**
+   * Enable or disable the display of this column.
+   */
+  bVisible: true,
+
+  /**
+   * Developer definable function that is called whenever a cell is created (Ajax source,
+   * etc) or processed for input (DOM source). This can be used as a compliment to mRender
+   * allowing you to modify the DOM element (add background colour for example) when the
+   * element is available.
+   */
+  fnCreatedCell: null,
+
+  /**
+   * This property can be used to read data from any data source property,
+   * including deeply nested objects / properties. `data` can be given in a
+   * number of different ways which effect its behaviour:
+   *
+   * * `integer` - treated as an array index for the data source. This is the
+   *   default that DataTables uses (incrementally increased for each column).
+   * * `string` - read an object property from the data source. There are
+   *   three 'special' options that can be used in the string to alter how
+   *   DataTables reads the data from the source object:
+   *    * `.` - Dotted Javascript notation. Just as you use a `.` in
+   *      Javascript to read from nested objects, so to can the options
+   *      specified in `data`. For example: `browser.version` or
+   *      `browser.name`. If your object parameter name contains a period, use
+   *      `\\` to escape it - i.e. `first\\.name`.
+   *    * `[]` - Array notation. DataTables can automatically combine data
+   *      from and array source, joining the data with the characters provided
+   *      between the two brackets. For example: `name[, ]` would provide a
+   *      comma-space separated list from the source array. If no characters
+   *      are provided between the brackets, the original array source is
+   *      returned.
+   *    * `()` - Function notation. Adding `()` to the end of a parameter will
+   *      execute a function of the name given. For example: `browser()` for a
+   *      simple function on the data source, `browser.version()` for a
+   *      function in a nested property or even `browser().version` to get an
+   *      object property if the function called returns an object. Note that
+   *      function notation is recommended for use in `render` rather than
+   *      `data` as it is much simpler to use as a renderer.
+   * * `null` - use the original data source for the row rather than plucking
+   *   data directly from it. This action has effects on two other
+   *   initialisation options:
+   *    * `defaultContent` - When null is given as the `data` option and
+   *      `defaultContent` is specified for the column, the value defined by
+   *      `defaultContent` will be used for the cell.
+   *    * `render` - When null is used for the `data` option and the `render`
+   *      option is specified for the column, the whole data source for the
+   *      row is used for the renderer.
+   * * `function` - the function given will be executed whenever DataTables
+   *   needs to set or get the data for a cell in the column. The function
+   *   takes three parameters:
+   *    * Parameters:
+   *      * `{array|object}` The data source for the row
+   *      * `{string}` The type call data requested - this will be 'set' when
+   *        setting data or 'filter', 'display', 'type', 'sort' or undefined
+   *        when gathering data. Note that when `undefined` is given for the
+   *        type DataTables expects to get the raw data for the object back<
+   *      * `{*}` Data to set when the second parameter is 'set'.
+   *    * Return:
+   *      * The return value from the function is not required when 'set' is
+   *        the type of call, but otherwise the return is what will be used
+   *        for the data requested.
+   *
+   * Note that `data` is a getter and setter option. If you just require
+   * formatting of data for output, you will likely want to use `render` which
+   * is simply a getter and thus simpler to use.
+   *
+   * Note that prior to DataTables 1.9.2 `data` was called `mDataProp`. The
+   * name change reflects the flexibility of this property and is consistent
+   * with the naming of mRender. If 'mDataProp' is given, then it will still
+   * be used by DataTables, as it automatically maps the old name to the new
+   * if required.
+   */
+  mData: null,
+
+  /**
+   * This property is the rendering partner to `data` and it is suggested that
+   * when you want to manipulate data for display (including filtering,
+   * sorting etc) without altering the underlying data for the table, use this
+   * property. `render` can be considered to be the read only companion to
+   * `data` which is read / write (then as such more complex). Like `data`
+   * this option can be given in a number of different ways to effect its
+   * behaviour:
+   *
+   * * `integer` - treated as an array index for the data source. This is the
+   *   default that DataTables uses (incrementally increased for each column).
+   * * `string` - read an object property from the data source. There are
+   *   three 'special' options that can be used in the string to alter how
+   *   DataTables reads the data from the source object:
+   *    * `.` - Dotted Javascript notation. Just as you use a `.` in
+   *      Javascript to read from nested objects, so to can the options
+   *      specified in `data`. For example: `browser.version` or
+   *      `browser.name`. If your object parameter name contains a period, use
+   *      `\\` to escape it - i.e. `first\\.name`.
+   *    * `[]` - Array notation. DataTables can automatically combine data
+   *      from and array source, joining the data with the characters provided
+   *      between the two brackets. For example: `name[, ]` would provide a
+   *      comma-space separated list from the source array. If no characters
+   *      are provided between the brackets, the original array source is
+   *      returned.
+   *    * `()` - Function notation. Adding `()` to the end of a parameter will
+   *      execute a function of the name given. For example: `browser()` for a
+   *      simple function on the data source, `browser.version()` for a
+   *      function in a nested property or even `browser().version` to get an
+   *      object property if the function called returns an object.
+   * * `object` - use different data for the different data types requested by
+   *   DataTables ('filter', 'display', 'type' or 'sort'). The property names
+   *   of the object is the data type the property refers to and the value can
+   *   defined using an integer, string or function using the same rules as
+   *   `render` normally does. Note that an `_` option _must_ be specified.
+   *   This is the default value to use if you haven't specified a value for
+   *   the data type requested by DataTables.
+   * * `function` - the function given will be executed whenever DataTables
+   *   needs to set or get the data for a cell in the column. The function
+   *   takes three parameters:
+   *    * Parameters:
+   *      * {array|object} The data source for the row (based on `data`)
+   *      * {string} The type call data requested - this will be 'filter',
+   *        'display', 'type' or 'sort'.
+   *      * {array|object} The full data source for the row (not based on
+   *        `data`)
+   *    * Return:
+   *      * The return value from the function is what will be used for the
+   *        data requested.
+   */
+  mRender: null,
+
+  /**
+   * Change the cell type created for the column - either TD cells or TH cells. This
+   * can be useful as TH cells have semantic meaning in the table body, allowing them
+   * to act as a header for a row (you may wish to add scope='row' to the TH elements).
+   */
+  sCellType: "td",
+
+  /**
+   * Class to give to each cell in this column.
+   */
+  sClass: "",
+
+  /**
+   * When DataTables calculates the column widths to assign to each column,
+   * it finds the longest string in each column and then constructs a
+   * temporary table and reads the widths from that. The problem with this
+   * is that "mmm" is much wider then "iiii", but the latter is a longer
+   * string - thus the calculation can go wrong (doing it properly and putting
+   * it into an DOM object and measuring that is horribly(!) slow). Thus as
+   * a "work around" we provide this option. It will append its value to the
+   * text that is found to be the longest string for the column - i.e. padding.
+   * Generally you shouldn't need this!
+   */
+  sContentPadding: "",
+
+  /**
+   * Allows a default value to be given for a column's data, and will be used
+   * whenever a null data source is encountered (this can be because `data`
+   * is set to null, or because the data source itself is null).
+   */
+  sDefaultContent: null,
+
+  /**
+   * This parameter is only used in DataTables' server-side processing. It can
+   * be exceptionally useful to know what columns are being displayed on the
+   * client side, and to map these to database fields. When defined, the names
+   * also allow DataTables to reorder information from the server if it comes
+   * back in an unexpected order (i.e. if you switch your columns around on the
+   * client-side, your server-side code does not also need updating).
+   */
+  sName: "",
+
+  /**
+   * Defines a data source type for the ordering which can be used to read
+   * real-time information from the table (updating the internally cached
+   * version) prior to ordering. This allows ordering to occur on user
+   * editable elements such as form inputs.
+   */
+  sSortDataType: "std",
+
+  /**
+   * The title of this column.
+   */
+  sTitle: null,
+
+  /**
+   * The type allows you to specify how the data for this column will be
+   * ordered. Four types (string, numeric, date and html (which will strip
+   * HTML tags before ordering)) are currently available. Note that only date
+   * formats understood by Javascript's Date() object will be accepted as type
+   * date. For example: "Mar 26, 2008 5:03 PM". May take the values: 'string',
+   * 'numeric', 'date' or 'html' (by default). Further types can be adding
+   * through plug-ins.
+   */
+  sType: null,
+
+  /**
+   * Defining the width of the column, this parameter may take any CSS value
+   * (3em, 20px etc). DataTables applies 'smart' widths to columns which have not
+   * been given a specific width through this interface ensuring that the table
+   * remains readable.
+   */
+  sWidth: null,
+};
+
+_fnHungarianMap(_dt_models_defaults_column);
+
+/*
  * Developer note: The properties of the object below are given in Hungarian
  * notation, that was used as the interface for DataTables prior to v1.10, however
  * from v1.10 onwards the primary interface is camel case. In order to avoid
@@ -4065,248 +4306,6 @@ const _dt_models_defaults = {
 };
 
 _fnHungarianMap(_dt_models_defaults);
-
-
-/*
- * Developer note - See note in model.defaults.js about the use of Hungarian
- * notation and camel case.
- */
-
-const _dt_models_defaults_column = {
-  /**
-   * Define which column(s) an order will occur on for this column. This
-   * allows a column's ordering to take multiple columns into account when
-   * doing a sort or use the data from a different column. For example first
-   * name / last name columns make sense to do a multi-column sort over the
-   * two columns.
-   */
-  aDataSort: null,
-  iDataSort: -1,
-
-  ariaTitle: "",
-
-  /**
-   * You can control the default ordering direction, and even alter the
-   * behaviour of the sort handler (i.e. only allow ascending ordering etc)
-   * using this parameter.
-   */
-  asSorting: ["asc", "desc", ""],
-
-  /**
-   * Enable or disable filtering on the data in this column.
-   */
-  bSearchable: true,
-
-  /**
-   * Enable or disable ordering on this column.
-   */
-  bSortable: true,
-
-  /**
-   * Enable or disable the display of this column.
-   */
-  bVisible: true,
-
-  /**
-   * Developer definable function that is called whenever a cell is created (Ajax source,
-   * etc) or processed for input (DOM source). This can be used as a compliment to mRender
-   * allowing you to modify the DOM element (add background colour for example) when the
-   * element is available.
-   */
-  fnCreatedCell: null,
-
-  /**
-   * This property can be used to read data from any data source property,
-   * including deeply nested objects / properties. `data` can be given in a
-   * number of different ways which effect its behaviour:
-   *
-   * * `integer` - treated as an array index for the data source. This is the
-   *   default that DataTables uses (incrementally increased for each column).
-   * * `string` - read an object property from the data source. There are
-   *   three 'special' options that can be used in the string to alter how
-   *   DataTables reads the data from the source object:
-   *    * `.` - Dotted Javascript notation. Just as you use a `.` in
-   *      Javascript to read from nested objects, so to can the options
-   *      specified in `data`. For example: `browser.version` or
-   *      `browser.name`. If your object parameter name contains a period, use
-   *      `\\` to escape it - i.e. `first\\.name`.
-   *    * `[]` - Array notation. DataTables can automatically combine data
-   *      from and array source, joining the data with the characters provided
-   *      between the two brackets. For example: `name[, ]` would provide a
-   *      comma-space separated list from the source array. If no characters
-   *      are provided between the brackets, the original array source is
-   *      returned.
-   *    * `()` - Function notation. Adding `()` to the end of a parameter will
-   *      execute a function of the name given. For example: `browser()` for a
-   *      simple function on the data source, `browser.version()` for a
-   *      function in a nested property or even `browser().version` to get an
-   *      object property if the function called returns an object. Note that
-   *      function notation is recommended for use in `render` rather than
-   *      `data` as it is much simpler to use as a renderer.
-   * * `null` - use the original data source for the row rather than plucking
-   *   data directly from it. This action has effects on two other
-   *   initialisation options:
-   *    * `defaultContent` - When null is given as the `data` option and
-   *      `defaultContent` is specified for the column, the value defined by
-   *      `defaultContent` will be used for the cell.
-   *    * `render` - When null is used for the `data` option and the `render`
-   *      option is specified for the column, the whole data source for the
-   *      row is used for the renderer.
-   * * `function` - the function given will be executed whenever DataTables
-   *   needs to set or get the data for a cell in the column. The function
-   *   takes three parameters:
-   *    * Parameters:
-   *      * `{array|object}` The data source for the row
-   *      * `{string}` The type call data requested - this will be 'set' when
-   *        setting data or 'filter', 'display', 'type', 'sort' or undefined
-   *        when gathering data. Note that when `undefined` is given for the
-   *        type DataTables expects to get the raw data for the object back<
-   *      * `{*}` Data to set when the second parameter is 'set'.
-   *    * Return:
-   *      * The return value from the function is not required when 'set' is
-   *        the type of call, but otherwise the return is what will be used
-   *        for the data requested.
-   *
-   * Note that `data` is a getter and setter option. If you just require
-   * formatting of data for output, you will likely want to use `render` which
-   * is simply a getter and thus simpler to use.
-   *
-   * Note that prior to DataTables 1.9.2 `data` was called `mDataProp`. The
-   * name change reflects the flexibility of this property and is consistent
-   * with the naming of mRender. If 'mDataProp' is given, then it will still
-   * be used by DataTables, as it automatically maps the old name to the new
-   * if required.
-   */
-  mData: null,
-
-  /**
-   * This property is the rendering partner to `data` and it is suggested that
-   * when you want to manipulate data for display (including filtering,
-   * sorting etc) without altering the underlying data for the table, use this
-   * property. `render` can be considered to be the read only companion to
-   * `data` which is read / write (then as such more complex). Like `data`
-   * this option can be given in a number of different ways to effect its
-   * behaviour:
-   *
-   * * `integer` - treated as an array index for the data source. This is the
-   *   default that DataTables uses (incrementally increased for each column).
-   * * `string` - read an object property from the data source. There are
-   *   three 'special' options that can be used in the string to alter how
-   *   DataTables reads the data from the source object:
-   *    * `.` - Dotted Javascript notation. Just as you use a `.` in
-   *      Javascript to read from nested objects, so to can the options
-   *      specified in `data`. For example: `browser.version` or
-   *      `browser.name`. If your object parameter name contains a period, use
-   *      `\\` to escape it - i.e. `first\\.name`.
-   *    * `[]` - Array notation. DataTables can automatically combine data
-   *      from and array source, joining the data with the characters provided
-   *      between the two brackets. For example: `name[, ]` would provide a
-   *      comma-space separated list from the source array. If no characters
-   *      are provided between the brackets, the original array source is
-   *      returned.
-   *    * `()` - Function notation. Adding `()` to the end of a parameter will
-   *      execute a function of the name given. For example: `browser()` for a
-   *      simple function on the data source, `browser.version()` for a
-   *      function in a nested property or even `browser().version` to get an
-   *      object property if the function called returns an object.
-   * * `object` - use different data for the different data types requested by
-   *   DataTables ('filter', 'display', 'type' or 'sort'). The property names
-   *   of the object is the data type the property refers to and the value can
-   *   defined using an integer, string or function using the same rules as
-   *   `render` normally does. Note that an `_` option _must_ be specified.
-   *   This is the default value to use if you haven't specified a value for
-   *   the data type requested by DataTables.
-   * * `function` - the function given will be executed whenever DataTables
-   *   needs to set or get the data for a cell in the column. The function
-   *   takes three parameters:
-   *    * Parameters:
-   *      * {array|object} The data source for the row (based on `data`)
-   *      * {string} The type call data requested - this will be 'filter',
-   *        'display', 'type' or 'sort'.
-   *      * {array|object} The full data source for the row (not based on
-   *        `data`)
-   *    * Return:
-   *      * The return value from the function is what will be used for the
-   *        data requested.
-   */
-  mRender: null,
-
-  /**
-   * Change the cell type created for the column - either TD cells or TH cells. This
-   * can be useful as TH cells have semantic meaning in the table body, allowing them
-   * to act as a header for a row (you may wish to add scope='row' to the TH elements).
-   */
-  sCellType: "td",
-
-  /**
-   * Class to give to each cell in this column.
-   */
-  sClass: "",
-
-  /**
-   * When DataTables calculates the column widths to assign to each column,
-   * it finds the longest string in each column and then constructs a
-   * temporary table and reads the widths from that. The problem with this
-   * is that "mmm" is much wider then "iiii", but the latter is a longer
-   * string - thus the calculation can go wrong (doing it properly and putting
-   * it into an DOM object and measuring that is horribly(!) slow). Thus as
-   * a "work around" we provide this option. It will append its value to the
-   * text that is found to be the longest string for the column - i.e. padding.
-   * Generally you shouldn't need this!
-   */
-  sContentPadding: "",
-
-  /**
-   * Allows a default value to be given for a column's data, and will be used
-   * whenever a null data source is encountered (this can be because `data`
-   * is set to null, or because the data source itself is null).
-   */
-  sDefaultContent: null,
-
-  /**
-   * This parameter is only used in DataTables' server-side processing. It can
-   * be exceptionally useful to know what columns are being displayed on the
-   * client side, and to map these to database fields. When defined, the names
-   * also allow DataTables to reorder information from the server if it comes
-   * back in an unexpected order (i.e. if you switch your columns around on the
-   * client-side, your server-side code does not also need updating).
-   */
-  sName: "",
-
-  /**
-   * Defines a data source type for the ordering which can be used to read
-   * real-time information from the table (updating the internally cached
-   * version) prior to ordering. This allows ordering to occur on user
-   * editable elements such as form inputs.
-   */
-  sSortDataType: "std",
-
-  /**
-   * The title of this column.
-   */
-  sTitle: null,
-
-  /**
-   * The type allows you to specify how the data for this column will be
-   * ordered. Four types (string, numeric, date and html (which will strip
-   * HTML tags before ordering)) are currently available. Note that only date
-   * formats understood by Javascript's Date() object will be accepted as type
-   * date. For example: "Mar 26, 2008 5:03 PM". May take the values: 'string',
-   * 'numeric', 'date' or 'html' (by default). Further types can be adding
-   * through plug-ins.
-   */
-  sType: null,
-
-  /**
-   * Defining the width of the column, this parameter may take any CSS value
-   * (3em, 20px etc). DataTables applies 'smart' widths to columns which have not
-   * been given a specific width through this interface ensuring that the table
-   * remains readable.
-   */
-  sWidth: null,
-};
-
-_fnHungarianMap(_dt_models_defaults_column);
 
 // Can be assigned in DateTable.use() - note luxon and moment vars are in helpers.js
 var __bootstrap;
@@ -7098,7 +7097,7 @@ function _fnHeaderLayout(settings, source, incColumns) {
 
   // Default is to work on only visible columns
   if (!incColumns) {
-    incColumns = _range$1(columnCount).filter(function (idx) {
+    incColumns = _range(columnCount).filter(function (idx) {
       return columns[idx].bVisible;
     });
   }
@@ -8806,7 +8805,7 @@ var __reload = function (settings, holdPosition, callback) {
   }
 };
 
-function _registerApis_cells(register, registerPlural) {
+function _registerApis_cells(register, registerPlural, _, selectorFns) {
   register("cells()", function (rowSelector, columnSelector, opts) {
     // Argument shifting
     if (_isPlainObject(rowSelector)) {
@@ -8829,7 +8828,7 @@ function _registerApis_cells(register, registerPlural) {
     // Cell selector
     if (columnSelector === null || columnSelector === undefined) {
       return this.iterator("table", function (settings) {
-        return __cell_selector(settings, rowSelector, this._selector_opts(opts));
+        return __cell_selector(settings, rowSelector, selectorFns.opts(opts), selectorFns);
       });
     }
 
@@ -8954,7 +8953,7 @@ function _registerApis_cells(register, registerPlural) {
   );
 
   register("cell()", function (rowSelector, columnSelector, opts) {
-    return this._selector_first(this.cells(rowSelector, columnSelector, opts));
+    return selectorFns.first(this.cells(rowSelector, columnSelector, opts));
   });
 
   register("cell().data()", function (data) {
@@ -8976,11 +8975,11 @@ function _registerApis_cells(register, registerPlural) {
   });
 }
 
-var __cell_selector = function (settings, selector, opts) {
+var __cell_selector = function (settings, selector, opts, selectorFns) {
   var data = settings.aoData;
-  var rows = this._selector_row_indexes(settings, opts);
+  var rows = selectorFns.row_indexes(settings, opts);
   var cells = _removeEmpty(_pluck_order(data, rows, "anCells"));
-  var allCells = $(_flatten([], cells));
+  var allCells = $$1(_flatten([], cells));
   var row;
   var columns = settings.aoColumns.length;
   var a, i, ien, j, o, host;
@@ -9053,7 +9052,7 @@ var __cell_selector = function (settings, selector, opts) {
     // Otherwise the selector is a node, and there is one last option - the
     // element might be a child of an element which has dt-row and dt-column
     // data attributes
-    host = $(s).closest("*[data-dt-row]");
+    host = $$1(s).closest("*[data-dt-row]");
     return host.length
       ? [
           {
@@ -9064,7 +9063,7 @@ var __cell_selector = function (settings, selector, opts) {
       : [];
   };
 
-  return this._selector_run("cell", selector, run, settings, opts);
+  return selectorFns.run("cell", selector, run, settings, opts);
 };
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -9078,7 +9077,7 @@ var __cell_selector = function (settings, selector, opts) {
  *
  */
 
-function _registerApis_columns(register, registerPlural) {
+function _registerApis_columns(register, registerPlural, _, selectorFns) {
   register("columns()", function (selector, opts) {
     // argument shifting
     if (selector === undefined) {
@@ -9088,12 +9087,12 @@ function _registerApis_columns(register, registerPlural) {
       selector = "";
     }
 
-    opts = this._selector_opts(opts);
+    opts = selectorFns.opts(opts);
 
     var inst = this.iterator(
       "table",
       function (settings) {
-        return __column_selector(settings, selector, opts);
+        return __column_selector(settings, selector, opts, selectorFns);
       },
       1
     );
@@ -9368,7 +9367,7 @@ function _registerApis_columns(register, registerPlural) {
   });
 
   register("column()", function (selector, opts) {
-    return this._selector_first(this.columns(selector, opts));
+    return selectorFns.first(this.columns(selector, opts));
   });
 }
 
@@ -9437,7 +9436,7 @@ var __column_header_cells = function (header) {
   return out;
 };
 
-var __column_selector = function (settings, selector, opts) {
+var __column_selector = function (settings, selector, opts, selectorFns) {
   var columns = settings.aoColumns,
     names,
     titles,
@@ -9448,7 +9447,7 @@ var __column_selector = function (settings, selector, opts) {
 
     // Selector - all
     if (s === "") {
-      return _range$1(columns.length);
+      return _range(columns.length);
     }
 
     // Selector - index
@@ -9462,7 +9461,7 @@ var __column_selector = function (settings, selector, opts) {
 
     // Selector = function
     if (typeof s === "function") {
-      var rows = this._selector_row_indexes(settings, opts);
+      var rows = selectorFns.row_indexes(settings, opts);
 
       return columns.map(function (col, idx) {
         return s(
@@ -9565,7 +9564,7 @@ var __column_selector = function (settings, selector, opts) {
     return host.length ? [host.data("dt-column")] : [];
   };
 
-  var selected = this._selector_run("column", selector, run, settings, opts);
+  var selected = selectorFns.run("column", selector, run, settings, opts);
 
   return opts.columnOrder && opts.columnOrder === "index"
     ? selected.sort(function (a, b) {
@@ -10232,7 +10231,7 @@ var __details_events = function (settings, constructNewApi) {
   }
 };
 
-function _registerApis_rows(register, registerPlural, constructNewApi) {
+function _registerApis_rows(register, registerPlural, constructNewApi, _, selectorFns) {
   register("rows()", function (selector, opts) {
     // argument shifting
     if (selector === undefined) {
@@ -10242,12 +10241,12 @@ function _registerApis_rows(register, registerPlural, constructNewApi) {
       selector = "";
     }
 
-    opts = this._selector_opts(opts);
+    opts = selectorFns.opts(opts);
 
     var inst = this.iterator(
       "table",
       function (settings) {
-        return __row_selector(settings, selector, opts);
+        return __row_selector(settings, selector, opts, selectorFns);
       },
       1
     );
@@ -10391,7 +10390,7 @@ function _registerApis_rows(register, registerPlural, constructNewApi) {
    *
    */
   register("row()", function (selector, opts) {
-    return this._selector_first(this.rows(selector, opts));
+    return selectorFns.first(this.rows(selector, opts));
   });
 
   register("row().data()", function (data) {
@@ -10462,7 +10461,7 @@ function _registerApis_rows(register, registerPlural, constructNewApi) {
  * {array}     - jQuery array of nodes, or simply an array of TR nodes
  *
  */
-var __row_selector = function (settings, selector, opts) {
+var __row_selector = function (settings, selector, opts, selectorFns) {
   var rows;
   var run = function (sel) {
     var selInt = _intVal(sel);
@@ -10476,7 +10475,7 @@ var __row_selector = function (settings, selector, opts) {
     }
 
     if (!rows) {
-      rows = this._selector_row_indexes(settings, opts);
+      rows = selectorFns.row_indexes(settings, opts);
     }
 
     if (selInt !== null && rows.indexOf(selInt) !== -1) {
@@ -10547,7 +10546,7 @@ var __row_selector = function (settings, selector, opts) {
       .toArray();
   };
 
-  var matched = this._selector_run("row", selector, run, settings, opts);
+  var matched = selectorFns.run("row", selector, run, settings, opts);
 
   if (opts.order === "current" || opts.order === "applied") {
     _fnSortDisplay(settings, matched);
@@ -11829,7 +11828,7 @@ _dt_api._selector_row_indexes = function (settings, opts) {
     // rows not shown don't exist and the index order is the applied order
     // Removed is a special case - for consistency just return an empty
     // array
-    return search === "removed" ? [] : _range$1(0, displayMaster.length);
+    return search === "removed" ? [] : _range(0, displayMaster.length);
   }
 
   if (page == "current") {
@@ -11906,12 +11905,18 @@ _dt_api._selector_row_indexes = function (settings, opts) {
   return a;
 };
 
-
 function _registerBuiltInApis() {
   var register = _dt_api.register;
   var registerPlural = _dt_api.registerPlural;
 
   var constructNewApi = (context, data) => new _dt_api(context, data);
+
+  const selectorFns = {
+    opts: _dt_api._selector_opts,
+    run: _dt_api._selector_run,
+    first: _dt_api._selector_first,
+    row_indexes: _dt_api._selector_row_indexes
+  };
 
   _registerApis_table(register, registerPlural, constructNewApi);
   _registerApis_draw(register);
@@ -11919,8 +11924,8 @@ function _registerBuiltInApis() {
   _registerApis_ajax(register);
   _registerApis_rows(register, registerPlural, constructNewApi);
   _registerApis_rowDetails(register, registerPlural, constructNewApi);
-  _registerApis_columns(register, registerPlural);
-  _registerApis_cells(register, registerPlural);
+  _registerApis_columns(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_cells(register, registerPlural, constructNewApi, selectorFns);
   _registerApis_order(register, registerPlural);
   _registerApis_processing(register);
   _registerApis_search(register, registerPlural);
@@ -12213,7 +12218,7 @@ function _fnInitialise(settings) {
     // will do the drawing for us. Otherwise we draw the table regardless of the
     // Ajax source - this allows the table to look initialised for Ajax sourcing
     // data (show 'loading' message possibly)
-    _fnReDraw(settings);
+    _fnReDraw(settings, undefined, undefined, _fnSort);
 
     // Server-side processing init complete is done by _fnAjaxUpdateDraw
     if (dataSrc != "ssp" || deferLoading) {
@@ -12235,7 +12240,7 @@ function _fnInitialise(settings) {
             // it appear 'fresh'
             settings.iInitDisplayStart = iAjaxStart;
 
-            _fnReDraw(settings);
+            _fnReDraw(settings, undefined, undefined, _fnSort);
             _fnProcessingDisplay(settings, false);
             _fnInitComplete(settings);
           });
@@ -13666,280 +13671,278 @@ const _dt_models = {
  */
 
 
-class DataTable {
-  static ext = _dt_ext;
-  static util = _dt_util;
-  static Api = _dt_api;
-  static versionCheck = _dt_versionCheck;
-  static isDataTable = _dt_isDataTable;
-  static tables = _dt_tables;
-  static camelToHungarian = _fnCamelToHungarian;
-  static version = _dt_version;
-  static __browser = _dt_browser.data;
-  static settings = _dt_settings;
-  static datetime = _dt_datetimeFn;
-  static DateTime = _dt_DateTime;
-  static render = _dt_render;
-  static models = _dt_models;
-  static type = _dt_type;
-  static types = _dt_listTypes;
-  static feature = _dt_feature;
-
-  constructor(selector, options) {
-    // When creating with `new`, create a new DataTable, returning the API instance
-    if (this instanceof DataTable) {
-      return $(selector).DataTable(options);
-    } else {
-      // Argument switching
-      options = selector;
-    }
-
-    var _that = this;
-    var emptyInit = options === undefined;
-    var len = this.length;
-
-    if (emptyInit) {
-      options = {};
-    }
-
-    // Method to get DT API instance from jQuery object
-    this.api = function () {
-      return new _dt_api(this);
-    };
-
-    this.each(async function () {
-      // For each initialisation we want to give it a clean initialisation
-      // object that can be bashed around
-      var o = {};
-      var oInit =
-        len > 1 // optimisation for single table case
-          ? _fnExtend(o, options, true)
-          : options;
-
-      var i = 0,
-        iLen;
-      var sId = this.getAttribute("id");
-      var defaults = DataTable.defaults;
-      var $this = $(this);
-
-      // Sanity check
-      if (this.nodeName.toLowerCase() != "table") {
-        _fnLog(
-          null,
-          0,
-          "Non-table node initialisation (" + this.nodeName + ")",
-          2
-        );
-        return;
-      }
-
-      // Special case for options
-      if (oInit.on && oInit.on.options) {
-        _fnListener($this, "options", oInit.on.options);
-      }
-
-      $this.trigger("options.dt", oInit);
-
-      _fnNormalizeDefaults(defaults, $this, oInit);
-
-      try {
-        _fnCheckReInit(DataTable.settings, oInit, defaults, emptyInit);
-      } catch (e) {
-        console.log(e);
-        return;
-      }
-
-      /* Ensure the table has an ID - required for accessibility */
-      if (sId === null || sId === "") {
-        sId = "DataTables_Table_" + DataTable.ext._unique++;
-        this.id = sId;
-      }
-
-      /* Create the settings object for this table and set some of the default parameters */
-      var oSettings = _extend(true, {}, DataTable.models.oSettings, {
-        sDestroyWidth: $this[0].style.width,
-        sInstance: sId,
-        sTableId: sId,
-        colgroup: $("<colgroup>").prependTo(this),
-        fastData: function (row, column, type) {
-          return _fnGetCellData(oSettings, row, column, type);
-        },
-      });
-      oSettings.nTable = this;
-      oSettings.oInit = oInit;
-
-      DataTable.settings.push(oSettings);
-
-      // Make a single API instance available for internal handling
-      oSettings.api = new _dt_api(oSettings);
-
-      // Need to add the instance after the instance after the settings object has been added
-      // to the settings array, so we can self reference the table instance if more than one
-      oSettings.oInstance = _that.length === 1 ? _that : $this.dataTable();
-
-      // Backwards compatibility, before we apply all the defaults
-      _fnCompatOpts(oInit);
-
-      // If the length menu is given, but the init display length is not, use the length menu
-      if (oInit.aLengthMenu && !oInit.iDisplayLength) {
-        oInit.iDisplayLength = Array.isArray(oInit.aLengthMenu[0])
-          ? oInit.aLengthMenu[0][0]
-          : _isPlainObject(oInit.aLengthMenu[0])
-            ? oInit.aLengthMenu[0].value
-            : oInit.aLengthMenu[0];
-      }
-
-      // Apply the defaults and init options to make a single init object will all
-      // options defined from defaults and instance options.
-      oInit = _fnExtend(_extend(true, {}, defaults), oInit);
-
-      // Map the initialisation options onto the settings object
-      _fnMap(oSettings.oFeatures, oInit, [
-        "bPaginate",
-        "bLengthChange",
-        "bFilter",
-        "bSort",
-        "bSortMulti",
-        "bInfo",
-        "bProcessing",
-        "bAutoWidth",
-        "bSortClasses",
-        "bServerSide",
-        "bDeferRender",
-      ]);
-      _fnMap(oSettings, oInit, [
-        "ajax",
-        "fnFormatNumber",
-        "sServerMethod",
-        "aaSorting",
-        "aaSortingFixed",
-        "aLengthMenu",
-        "sPaginationType",
-        "iStateDuration",
-        "bSortCellsTop",
-        "iTabIndex",
-        "sDom",
-        "fnStateLoadCallback",
-        "fnStateSaveCallback",
-        "renderer",
-        "searchDelay",
-        "rowId",
-        "caption",
-        "layout",
-        "orderDescReverse",
-        "orderIndicators",
-        "orderHandler",
-        "titleRow",
-        "typeDetect",
-        ["iCookieDuration", "iStateDuration"], // backwards compat
-        ["oSearch", "oPreviousSearch"],
-        ["aoSearchCols", "aoPreSearchCols"],
-        ["iDisplayLength", "_iDisplayLength"],
-      ]);
-      _fnMap(oSettings.oScroll, oInit, [
-        ["sScrollX", "sX"],
-        ["sScrollXInner", "sXInner"],
-        ["sScrollY", "sY"],
-        ["bScrollCollapse", "bCollapse"],
-      ]);
-      _fnMap(oSettings.oLanguage, oInit, "fnInfoCallback");
-
-      /* Callback functions which are array driven */
-      _fnCallbackReg(oSettings, "aoDrawCallback", oInit.fnDrawCallback);
-      _fnCallbackReg(oSettings, "aoStateSaveParams", oInit.fnStateSaveParams);
-      _fnCallbackReg(oSettings, "aoStateLoadParams", oInit.fnStateLoadParams);
-      _fnCallbackReg(oSettings, "aoStateLoaded", oInit.fnStateLoaded);
-      _fnCallbackReg(oSettings, "aoRowCallback", oInit.fnRowCallback);
-      _fnCallbackReg(oSettings, "aoRowCreatedCallback", oInit.fnCreatedRow);
-      _fnCallbackReg(oSettings, "aoHeaderCallback", oInit.fnHeaderCallback);
-      _fnCallbackReg(oSettings, "aoFooterCallback", oInit.fnFooterCallback);
-      _fnCallbackReg(oSettings, "aoInitComplete", oInit.fnInitComplete);
-      _fnCallbackReg(oSettings, "aoPreDrawCallback", oInit.fnPreDrawCallback);
-
-      oSettings.rowIdFn = _fnGetObjectDataFn(oInit.rowId);
-
-      // Add event listeners
-      if (oInit.on) {
-        Object.keys(oInit.on).forEach(function (key) {
-          _fnListener($this, key, oInit.on[key]);
-        });
-      }
-
-      /* Browser support detection */
-      _fnBrowserDetect(oSettings);
-
-      _fnApplyClasses(oSettings, oInit, $this);
-
-      if (!oSettings.oFeatures.bPaginate) {
-        oInit.iDisplayStart = 0;
-      }
-
-      if (oSettings.iInitDisplayStart === undefined) {
-        /* Display start point, taking into account the save saving */
-        oSettings.iInitDisplayStart = oInit.iDisplayStart;
-        oSettings._iDisplayStart = oInit.iDisplayStart;
-      }
-
-      var defer = oInit.iDeferLoading;
-      if (defer !== null) {
-        oSettings.deferLoading = true;
-
-        var tmp = Array.isArray(defer);
-        oSettings._iRecordsDisplay = tmp ? defer[0] : defer;
-        oSettings._iRecordsTotal = tmp ? defer[1] : defer;
-      }
-
-      var thead = this.getElementsByTagName("thead");
-
-      _fnSetUpColumns(oSettings, oInit, $this, thead);
-
-      // Must be done after everything which can be overridden by the state saving!
-      _fnCallbackReg(oSettings, "aoDrawCallback", _fnSaveState);
-
-      var features = oSettings.oFeatures;
-      if (oInit.bStateSave) {
-        features.bStateSave = true;
-      }
-
-      // If aaSorting is not defined, then we use the first indicator in asSorting
-      // in case that has been altered, so the default sort reflects that option
-      if (oInit.aaSorting === undefined) {
-        var sorting = oSettings.aaSorting;
-        for (i = 0, iLen = sorting.length; i < iLen; i++) {
-          sorting[i][1] = oSettings.aoColumns[i].asSorting[0];
-        }
-      }
-
-      // Do a first pass on the sorting classes (allows any size changes to be taken into
-      // account, and also will apply sorting disabled classes if disabled
-      _fnSortingClasses(oSettings);
-
-      _fnCallbackReg(oSettings, "aoDrawCallback", function () {
-        if (
-          oSettings.bSorted ||
-          _fnDataSource(oSettings) === "ssp" ||
-          features.bDeferRender
-        ) {
-          _fnSortingClasses(oSettings);
-        }
-      });
-
-      _fnStoreHtmlElements(oSettings, $this, thead);
-
-      // Copy the data index array
-      oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
-
-      // Initialisation complete - table can be drawn
-      oSettings.bInitialised = true;
-
-      // Language definitions
-      await _fnHandleLanguageDefinitions(oSettings, oInit, defaults);
-      _fnInitialise(oSettings);
-    });
-    _that = null;
-    return this;
+const DataTable = function (selector, options) {
+  // When creating with `new`, create a new DataTable, returning the API instance
+  if (this instanceof DataTable) {
+    return $(selector).DataTable(options);
+  } else {
+    // Argument switching
+    options = selector;
   }
-}
+
+  var _that = this;
+  var emptyInit = options === undefined;
+  var len = this.length;
+
+  if (emptyInit) {
+    options = {};
+  }
+
+  // Method to get DT API instance from jQuery object
+  this.api = function () {
+    return new _dt_api(this);
+  };
+
+  this.each(async function () {
+    // For each initialisation we want to give it a clean initialisation
+    // object that can be bashed around
+    var o = {};
+    var oInit =
+      len > 1 // optimisation for single table case
+        ? _fnExtend(o, options, true)
+        : options;
+
+    var i = 0,
+      iLen;
+    var sId = this.getAttribute("id");
+    var defaults = DataTable.models.defaults;
+    var $this = $(this);
+
+    // Sanity check
+    if (this.nodeName.toLowerCase() != "table") {
+      _fnLog(
+        null,
+        0,
+        "Non-table node initialisation (" + this.nodeName + ")",
+        2
+      );
+      return;
+    }
+
+    // Special case for options
+    if (oInit.on && oInit.on.options) {
+      _fnListener($this, "options", oInit.on.options);
+    }
+
+    $this.trigger("options.dt", oInit);
+
+    _fnNormalizeDefaults(defaults, $this, oInit);
+
+    try {
+      _fnCheckReInit(DataTable.settings, oInit, defaults, emptyInit);
+    } catch (e) {
+      console.log(e);
+      return;
+    }
+
+    /* Ensure the table has an ID - required for accessibility */
+    if (sId === null || sId === "") {
+      sId = "DataTables_Table_" + DataTable.ext._unique++;
+      this.id = sId;
+    }
+
+    /* Create the settings object for this table and set some of the default parameters */
+    var oSettings = _extend(true, {}, DataTable.models.oSettings, {
+      sDestroyWidth: $this[0].style.width,
+      sInstance: sId,
+      sTableId: sId,
+      colgroup: $("<colgroup>").prependTo(this),
+      fastData: function (row, column, type) {
+        return _fnGetCellData(oSettings, row, column, type);
+      },
+    });
+    oSettings.nTable = this;
+    oSettings.oInit = oInit;
+
+    DataTable.settings.push(oSettings);
+
+    // Make a single API instance available for internal handling
+    oSettings.api = new _dt_api(oSettings);
+
+    // Need to add the instance after the instance after the settings object has been added
+    // to the settings array, so we can self reference the table instance if more than one
+    oSettings.oInstance = _that.length === 1 ? _that : $this.dataTable();
+
+    // Backwards compatibility, before we apply all the defaults
+    _fnCompatOpts(oInit);
+
+    // If the length menu is given, but the init display length is not, use the length menu
+    if (oInit.aLengthMenu && !oInit.iDisplayLength) {
+      oInit.iDisplayLength = Array.isArray(oInit.aLengthMenu[0])
+        ? oInit.aLengthMenu[0][0]
+        : _isPlainObject(oInit.aLengthMenu[0])
+        ? oInit.aLengthMenu[0].value
+        : oInit.aLengthMenu[0];
+    }
+
+    // Apply the defaults and init options to make a single init object will all
+    // options defined from defaults and instance options.
+    oInit = _fnExtend(_extend(true, {}, defaults), oInit);
+
+    // Map the initialisation options onto the settings object
+    _fnMap(oSettings.oFeatures, oInit, [
+      "bPaginate",
+      "bLengthChange",
+      "bFilter",
+      "bSort",
+      "bSortMulti",
+      "bInfo",
+      "bProcessing",
+      "bAutoWidth",
+      "bSortClasses",
+      "bServerSide",
+      "bDeferRender",
+    ]);
+    _fnMap(oSettings, oInit, [
+      "ajax",
+      "fnFormatNumber",
+      "sServerMethod",
+      "aaSorting",
+      "aaSortingFixed",
+      "aLengthMenu",
+      "sPaginationType",
+      "iStateDuration",
+      "bSortCellsTop",
+      "iTabIndex",
+      "sDom",
+      "fnStateLoadCallback",
+      "fnStateSaveCallback",
+      "renderer",
+      "searchDelay",
+      "rowId",
+      "caption",
+      "layout",
+      "orderDescReverse",
+      "orderIndicators",
+      "orderHandler",
+      "titleRow",
+      "typeDetect",
+      ["iCookieDuration", "iStateDuration"], // backwards compat
+      ["oSearch", "oPreviousSearch"],
+      ["aoSearchCols", "aoPreSearchCols"],
+      ["iDisplayLength", "_iDisplayLength"],
+    ]);
+    _fnMap(oSettings.oScroll, oInit, [
+      ["sScrollX", "sX"],
+      ["sScrollXInner", "sXInner"],
+      ["sScrollY", "sY"],
+      ["bScrollCollapse", "bCollapse"],
+    ]);
+    _fnMap(oSettings.oLanguage, oInit, "fnInfoCallback");
+
+    /* Callback functions which are array driven */
+    _fnCallbackReg(oSettings, "aoDrawCallback", oInit.fnDrawCallback);
+    _fnCallbackReg(oSettings, "aoStateSaveParams", oInit.fnStateSaveParams);
+    _fnCallbackReg(oSettings, "aoStateLoadParams", oInit.fnStateLoadParams);
+    _fnCallbackReg(oSettings, "aoStateLoaded", oInit.fnStateLoaded);
+    _fnCallbackReg(oSettings, "aoRowCallback", oInit.fnRowCallback);
+    _fnCallbackReg(oSettings, "aoRowCreatedCallback", oInit.fnCreatedRow);
+    _fnCallbackReg(oSettings, "aoHeaderCallback", oInit.fnHeaderCallback);
+    _fnCallbackReg(oSettings, "aoFooterCallback", oInit.fnFooterCallback);
+    _fnCallbackReg(oSettings, "aoInitComplete", oInit.fnInitComplete);
+    _fnCallbackReg(oSettings, "aoPreDrawCallback", oInit.fnPreDrawCallback);
+
+    oSettings.rowIdFn = _fnGetObjectDataFn(oInit.rowId);
+
+    // Add event listeners
+    if (oInit.on) {
+      Object.keys(oInit.on).forEach(function (key) {
+        _fnListener($this, key, oInit.on[key]);
+      });
+    }
+
+    /* Browser support detection */
+    _fnBrowserDetect(oSettings);
+
+    _fnApplyClasses(oSettings, oInit, $this);
+
+    if (!oSettings.oFeatures.bPaginate) {
+      oInit.iDisplayStart = 0;
+    }
+
+    if (oSettings.iInitDisplayStart === undefined) {
+      /* Display start point, taking into account the save saving */
+      oSettings.iInitDisplayStart = oInit.iDisplayStart;
+      oSettings._iDisplayStart = oInit.iDisplayStart;
+    }
+
+    var defer = oInit.iDeferLoading;
+    if (defer !== null) {
+      oSettings.deferLoading = true;
+
+      var tmp = Array.isArray(defer);
+      oSettings._iRecordsDisplay = tmp ? defer[0] : defer;
+      oSettings._iRecordsTotal = tmp ? defer[1] : defer;
+    }
+
+    var thead = this.getElementsByTagName("thead");
+
+    _fnSetUpColumns(oSettings, oInit, $this, thead);
+
+    // Must be done after everything which can be overridden by the state saving!
+    _fnCallbackReg(oSettings, "aoDrawCallback", _fnSaveState);
+
+    var features = oSettings.oFeatures;
+    if (oInit.bStateSave) {
+      features.bStateSave = true;
+    }
+
+    // If aaSorting is not defined, then we use the first indicator in asSorting
+    // in case that has been altered, so the default sort reflects that option
+    if (oInit.aaSorting === undefined) {
+      var sorting = oSettings.aaSorting;
+      for (i = 0, iLen = sorting.length; i < iLen; i++) {
+        sorting[i][1] = oSettings.aoColumns[i].asSorting[0];
+      }
+    }
+
+    // Do a first pass on the sorting classes (allows any size changes to be taken into
+    // account, and also will apply sorting disabled classes if disabled
+    _fnSortingClasses(oSettings);
+
+    _fnCallbackReg(oSettings, "aoDrawCallback", function () {
+      if (
+        oSettings.bSorted ||
+        _fnDataSource(oSettings) === "ssp" ||
+        features.bDeferRender
+      ) {
+        _fnSortingClasses(oSettings);
+      }
+    });
+
+    _fnStoreHtmlElements(oSettings, $this, thead);
+
+    // Copy the data index array
+    oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+
+    // Initialisation complete - table can be drawn
+    oSettings.bInitialised = true;
+
+    // Language definitions
+    await _fnHandleLanguageDefinitions(oSettings, oInit, defaults);
+    _fnInitialise(oSettings);
+  });
+  _that = null;
+  return this;
+};
+
+DataTable.ext = _dt_ext;
+DataTable.util = _dt_util;
+DataTable.Api = _dt_api;
+DataTable.versionCheck = _dt_versionCheck;
+DataTable.isDataTable = _dt_isDataTable;
+DataTable.tables = _dt_tables;
+DataTable.camelToHungarian = _fnCamelToHungarian;
+DataTable.version = _dt_version;
+DataTable.__browser = _dt_browser.data;
+DataTable.settings = _dt_settings;
+DataTable.datetime = _dt_datetimeFn;
+DataTable.DateTime = _dt_DateTime;
+DataTable.render = _dt_render;
+DataTable.models = _dt_models;
+DataTable.type = _dt_type;
+DataTable.types = _dt_listTypes;
+DataTable.feature = _dt_feature;
 
 // set up DataTable apis, types and features
 _registerBuiltInApis();

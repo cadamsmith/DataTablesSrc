@@ -15,7 +15,7 @@ export default [
     output: {
       file: 'dist/datatables.umd.js',
       format: 'umd',
-      name: 'DataTables',
+      name: 'DataTable',
       sourcemap: true,
       globals: {
         jquery: '$'

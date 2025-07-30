@@ -2,7 +2,7 @@ import { _range } from "../core/core.internal";
 import { _extend } from "../core/core.jq";
 import { _fnRenderer, _fnBindAction } from "../core/core.support";
 import { _fnPageChange } from "../core/core.page";
-import { $ } from "jquery";
+import $ from "jquery";
 import { _dt_ext_pagination, _pagingNumbers } from "../ext/ext.renderer";
 
 // opts

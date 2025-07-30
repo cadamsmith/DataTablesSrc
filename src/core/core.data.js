@@ -3,7 +3,7 @@ import { _dt_models_row } from "../model/model.row";
 import { _fnCallbackFire, _fnLog } from "./core.support";
 import { _addClass, _pluck, _unique } from "./core.internal";
 import { _extend, _isPlainObject } from "./core.jq";
-import { $ } from "jquery";
+import $ from "jquery";
 import { _dt_ext_types } from "../ext/ext.types";
 
 /**
