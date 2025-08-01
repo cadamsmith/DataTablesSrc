@@ -7,7 +7,7 @@ export const _dt_models_search = {
   /**
    * Applied search term
    */
-  search: "",
+  search: '',
 
   /**
    * Flag to indicate if the search term should be interpreted as a

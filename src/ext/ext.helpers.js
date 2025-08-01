@@ -1,6 +1,6 @@
-import { _dt_getLib, _dt_setLib } from "../api/api.lib";
-import { _dt_type, _dt_ext_types } from "./ext.types";
-import { _dt_util_replaceable } from "../api/api.util.replaceable";
+import { _dt_getLib, _dt_setLib } from '../api/api.lib';
+import { _dt_type, _dt_ext_types } from './ext.types';
+import { _dt_util_replaceable } from '../api/api.util.replaceable';
 
 /**
  * Common logic for moment, luxon or a date action.
@@ -8,9 +8,9 @@ import { _dt_util_replaceable } from "../api/api.util.replaceable";
  * Happens after __mldObj, so don't need to call `resolveWindowsLibs` again
  */
 function __mld(dtLib, momentFn, luxonFn, dateFn, arg1) {
-  if (_dt_getLib("moment")) {
+  if (_dt_getLib('moment')) {
     return dtLib[momentFn](arg1);
-  } else if (_dt_getLib("luxon")) {
+  } else if (_dt_getLib('luxon')) {
     return dtLib[luxonFn](arg1);
   }
 
@@ -23,12 +23,12 @@ var __mlWarning = false;
  *
  */
 function resolveWindowLibs() {
-  if (window.luxon && !_dt_getLib("luxon")) {
-    _dt_setLib("luxon", window.luxon);
+  if (window.luxon && !_dt_getLib('luxon')) {
+    _dt_setLib('luxon', window.luxon);
   }
 
-  if (window.moment && !_dt_getLib("moment")) {
-    _dt_setLib("moment", window.moment);
+  if (window.moment && !_dt_getLib('moment')) {
+    _dt_setLib('moment', window.moment);
   }
 }
 
@@ -37,8 +37,8 @@ function __mldObj(d, format, locale) {
 
   resolveWindowLibs();
 
-  const moment = _dt_getLib("moment");
-  const luxon = _dt_getLib("luxon");
+  const moment = _dt_getLib('moment');
+  const luxon = _dt_getLib('luxon');
 
   if (moment) {
     dt = moment.utc(d, format, locale, true);
@@ -48,7 +48,7 @@ function __mldObj(d, format, locale) {
     }
   } else if (luxon) {
     dt =
-      format && typeof d === "string"
+      format && typeof d === 'string'
         ? luxon.DateTime.fromFormat(d, format)
         : luxon.DateTime.fromISO(d);
 
@@ -63,7 +63,7 @@ function __mldObj(d, format, locale) {
   } else {
     if (!__mlWarning) {
       alert(
-        "DataTables warning: Formatted date without Moment.js or Luxon - https://datatables.net/tn/17"
+        'DataTables warning: Formatted date without Moment.js or Luxon - https://datatables.net/tn/17'
       );
     }
 
@@ -80,11 +80,11 @@ function __mlHelper(localeString) {
     // Luxon and Moment support
     // Argument shifting
     if (arguments.length === 0) {
-      locale = "en";
+      locale = 'en';
       to = null; // means toLocaleString
       from = null; // means iso8601
     } else if (arguments.length === 1) {
-      locale = "en";
+      locale = 'en';
       to = from;
       from = null;
     } else if (arguments.length === 2) {
@@ -93,11 +93,11 @@ function __mlHelper(localeString) {
       from = null;
     }
 
-    var typeName = "datetime" + (to ? "-" + to : "");
+    var typeName = 'datetime' + (to ? '-' + to : '');
 
     // Add type detection and sorting specific to this date format - we need to be able to identify
     // date type columns as such, rather than as numbers in extensions. Hence the need for this.
-    if (!_dt_ext_types.order[typeName + "-pre"]) {
+    if (!_dt_ext_types.order[typeName + '-pre']) {
       _dt_type(typeName, {
         detect: function (d) {
           // The renderer will give the value to type detect as the type!
@@ -110,14 +110,14 @@ function __mlHelper(localeString) {
             return d.valueOf();
           },
         },
-        className: "dt-right",
+        className: 'dt-right',
       });
     }
 
     return function (d, type) {
       // Allow for a default value
       if (d === null || d === undefined) {
-        if (def === "--now") {
+        if (def === '--now') {
           // We treat everything as UTC further down, so no changes are
           // made, as such need to get the local date / time as if it were
           // UTC
@@ -133,19 +133,19 @@ function __mlHelper(localeString) {
             )
           );
         } else {
-          d = "";
+          d = '';
         }
       }
 
-      if (type === "type") {
+      if (type === 'type') {
         // Typing uses the type name for fast matching
         return typeName;
       }
 
-      if (d === "") {
-        return type !== "sort"
-          ? ""
-          : __mldObj("0000-01-01 00:00:00", null, locale);
+      if (d === '') {
+        return type !== 'sort'
+          ? ''
+          : __mldObj('0000-01-01 00:00:00', null, locale);
       }
 
       // Shortcut. If `from` and `to` are the same, we are using the renderer to
@@ -153,8 +153,8 @@ function __mlHelper(localeString) {
       if (
         to !== null &&
         from === to &&
-        type !== "sort" &&
-        type !== "type" &&
+        type !== 'sort' &&
+        type !== 'type' &&
         !(d instanceof Date)
       ) {
         return d;
@@ -166,34 +166,36 @@ function __mlHelper(localeString) {
         return d;
       }
 
-      if (type === "sort") {
+      if (type === 'sort') {
         return dt;
       }
 
       var formatted =
         to === null
-          ? __mld(dt, "toDate", "toJSDate", "")[localeString]()
-          : __mld(dt, "format", "toFormat", "toISOString", to);
+          ? __mld(dt, 'toDate', 'toJSDate', '')[localeString]()
+          : __mld(dt, 'format', 'toFormat', 'toISOString', to);
 
       // XSS protection
-      return type === "display" ? _dt_util_replaceable.escapeHtml(formatted) : formatted;
+      return type === 'display'
+        ? _dt_util_replaceable.escapeHtml(formatted)
+        : formatted;
     };
   };
 }
 
 // Based on locale, determine standard number formatting
 // Fallback for legacy browsers is US English
-var __thousands = ",";
-var __decimal = ".";
+var __thousands = ',';
+var __decimal = '.';
 
 if (window.Intl !== undefined) {
   try {
     var num = new Intl.NumberFormat().formatToParts(100000.1);
 
     for (var i = 0; i < num.length; i++) {
-      if (num[i].type === "group") {
+      if (num[i].type === 'group') {
         __thousands = num[i].value;
-      } else if (num[i].type === "decimal") {
+      } else if (num[i].type === 'decimal') {
         __decimal = num[i].value;
       }
     }
@@ -204,24 +206,24 @@ if (window.Intl !== undefined) {
 
 // Formatted date time detection - use by declaring the formats you are going to use
 export var _dt_datetimeFn = function (format, locale) {
-  var typeName = "datetime-" + format;
+  var typeName = 'datetime-' + format;
 
   if (!locale) {
-    locale = "en";
+    locale = 'en';
   }
 
   if (!_dt_ext_types.order[typeName]) {
     _dt_type(typeName, {
       detect: function (d) {
         var dt = __mldObj(d, format, locale);
-        return d === "" || dt ? typeName : false;
+        return d === '' || dt ? typeName : false;
       },
       order: {
         pre: function (d) {
           return __mldObj(d, format, locale) || 0;
         },
       },
-      className: "dt-right",
+      className: 'dt-right',
     });
   }
 };
@@ -264,9 +266,9 @@ export var _dt_datetimeFn = function (format, locale) {
  * @namespace
  */
 export var _dt_render = {
-  date: __mlHelper("toLocaleDateString"),
-  datetime: __mlHelper("toLocaleString"),
-  time: __mlHelper("toLocaleTimeString"),
+  date: __mlHelper('toLocaleDateString'),
+  datetime: __mlHelper('toLocaleString'),
+  time: __mlHelper('toLocaleTimeString'),
   number: function (thousands, decimal, precision, prefix, postfix) {
     // Auto locale detection
     if (thousands === null || thousands === undefined) {
@@ -279,22 +281,22 @@ export var _dt_render = {
 
     return {
       display: function (d) {
-        if (typeof d !== "number" && typeof d !== "string") {
+        if (typeof d !== 'number' && typeof d !== 'string') {
           return d;
         }
 
-        if (d === "" || d === null) {
+        if (d === '' || d === null) {
           return d;
         }
 
-        var negative = d < 0 ? "-" : "";
+        var negative = d < 0 ? '-' : '';
         var flo = parseFloat(d);
         var abs = Math.abs(flo);
 
         // Scientific notation for large and small numbers
         if (abs >= 100000000000 || (abs < 0.0001 && abs !== 0)) {
           var exp = flo.toExponential(precision).split(/e\+?/);
-          return exp[0] + " x 10<sup>" + exp[1] + "</sup>";
+          return exp[0] + ' x 10<sup>' + exp[1] + '</sup>';
         }
 
         // If NaN then there isn't much formatting that we can do - just
@@ -310,19 +312,19 @@ export var _dt_render = {
         var intPart = parseInt(d, 10);
         var floatPart = precision
           ? decimal + (d - intPart).toFixed(precision).substring(2)
-          : "";
+          : '';
 
         // If zero, then can't have a negative prefix
         if (intPart === 0 && parseFloat(floatPart) === 0) {
-          negative = "";
+          negative = '';
         }
 
         return (
           negative +
-          (prefix || "") +
+          (prefix || '') +
           intPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, thousands) +
           floatPart +
-          (postfix || "")
+          (postfix || '')
         );
       },
     };

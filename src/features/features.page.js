@@ -1,9 +1,8 @@
-import { _range } from "../core/core.internal";
-import { _extend } from "../core/core.jq";
-import { _fnRenderer, _fnBindAction } from "../core/core.support";
-import { _fnPageChange } from "../core/core.page";
-import $ from "jquery";
-import { _dt_ext_pagination, _pagingNumbers } from "../ext/ext.renderer";
+import { _extend } from '../core/core.jq';
+import { _fnRenderer, _fnBindAction } from '../core/core.support';
+import { _fnPageChange } from '../core/core.page';
+import $ from 'jquery';
+import { _dt_ext_pagination, _pagingNumbers } from '../ext/ext.renderer';
 
 // opts
 // - type - button configuration
@@ -26,14 +25,14 @@ export function _constructFeature_page(settings, opts) {
     opts
   );
 
-  var host = $("<div/>")
+  var host = $('<div/>')
     .addClass(
       settings.oClasses.paging.container +
-        (opts.type ? " paging_" + opts.type : "")
+        (opts.type ? ' paging_' + opts.type : '')
     )
     .append(
-      $("<nav>")
-        .attr("aria-label", "pagination")
+      $('<nav>')
+        .attr('aria-label', 'pagination')
         .addClass(settings.oClasses.paging.nav)
     );
   var draw = function () {
@@ -43,7 +42,7 @@ export function _constructFeature_page(settings, opts) {
   settings.aoDrawCallback.push(draw);
 
   // Responsive redraw of paging control
-  $(settings.nTable).on("column-sizing.dt.DT", draw);
+  $(settings.nTable).on('column-sizing.dt.DT', draw);
 
   return host;
 }
@@ -56,17 +55,17 @@ function _pagingDynamic(opts) {
   var out = [];
 
   if (opts.numbers) {
-    out.push("numbers");
+    out.push('numbers');
   }
 
   if (opts.previousNext) {
-    out.unshift("previous");
-    out.push("next");
+    out.unshift('previous');
+    out.push('next');
   }
 
   if (opts.firstLast) {
-    out.unshift("first");
-    out.push("last");
+    out.unshift('first');
+    out.push('last');
   }
 
   return out;
@@ -88,7 +87,7 @@ function _pagingDraw(settings, host, opts) {
     buttons = [],
     buttonEls = [],
     buttonsNested = plugin(opts).map(function (val) {
-      return val === "numbers"
+      return val === 'numbers'
         ? _pagingNumbers(page, pages, opts.buttons, opts.boundaryNumbers)
         : val;
     });
@@ -100,7 +99,7 @@ function _pagingDraw(settings, host, opts) {
     var button = buttons[i];
 
     var btnInfo = _pagingButtonInfo(settings, button, page, pages);
-    var btn = _fnRenderer(settings, "pagingButton")(
+    var btn = _fnRenderer(settings, 'pagingButton')(
       settings,
       button,
       btnInfo.display,
@@ -109,7 +108,7 @@ function _pagingDraw(settings, host, opts) {
     );
 
     var ariaLabel =
-      typeof button === "string"
+      typeof button === 'string'
         ? aria[button]
         : aria.number
           ? aria.number + (button + 1)
@@ -117,19 +116,19 @@ function _pagingDraw(settings, host, opts) {
 
     // Common attributes
     $(btn.clicker).attr({
-      "aria-controls": settings.sTableId,
-      "aria-disabled": btnInfo.disabled ? "true" : null,
-      "aria-current": btnInfo.active ? "page" : null,
-      "aria-label": ariaLabel,
-      "data-dt-idx": button,
+      'aria-controls': settings.sTableId,
+      'aria-disabled': btnInfo.disabled ? 'true' : null,
+      'aria-current': btnInfo.active ? 'page' : null,
+      'aria-label': ariaLabel,
+      'data-dt-idx': button,
       tabIndex: btnInfo.disabled
         ? -1
-        : settings.iTabIndex && btn.clicker[0].nodeName.toLowerCase() !== "span"
+        : settings.iTabIndex && btn.clicker[0].nodeName.toLowerCase() !== 'span'
           ? settings.iTabIndex
           : null, // `0` doesn't need a tabIndex since it is the default
     });
 
-    if (typeof button !== "number") {
+    if (typeof button !== 'number') {
       $(btn.clicker).addClass(button);
     }
 
@@ -142,14 +141,14 @@ function _pagingDraw(settings, host, opts) {
     buttonEls.push(btn.display);
   }
 
-  var wrapped = _fnRenderer(settings, "pagingContainer")(settings, buttonEls);
+  var wrapped = _fnRenderer(settings, 'pagingContainer')(settings, buttonEls);
 
-  var activeEl = host.find(document.activeElement).data("dt-idx");
+  var activeEl = host.find(document.activeElement).data('dt-idx');
 
   host.empty().append(wrapped);
 
   if (activeEl !== undefined) {
-    host.find("[data-dt-idx=" + activeEl + "]").trigger("focus");
+    host.find('[data-dt-idx=' + activeEl + ']').trigger('focus');
   }
 
   // Responsive - check if the buttons are over two lines based on the
@@ -183,17 +182,17 @@ function _pagingDraw(settings, host, opts) {
 function _pagingButtonInfo(settings, button, page, pages) {
   var lang = settings.oLanguage.oPaginate;
   var o = {
-    display: "",
+    display: '',
     active: false,
     disabled: false,
   };
 
   switch (button) {
-    case "ellipsis":
-      o.display = "&#x2026;";
+    case 'ellipsis':
+      o.display = '&#x2026;';
       break;
 
-    case "first":
+    case 'first':
       o.display = lang.sFirst;
 
       if (page === 0) {
@@ -201,7 +200,7 @@ function _pagingButtonInfo(settings, button, page, pages) {
       }
       break;
 
-    case "previous":
+    case 'previous':
       o.display = lang.sPrevious;
 
       if (page === 0) {
@@ -209,7 +208,7 @@ function _pagingButtonInfo(settings, button, page, pages) {
       }
       break;
 
-    case "next":
+    case 'next':
       o.display = lang.sNext;
 
       if (pages === 0 || page === pages - 1) {
@@ -217,7 +216,7 @@ function _pagingButtonInfo(settings, button, page, pages) {
       }
       break;
 
-    case "last":
+    case 'last':
       o.display = lang.sLast;
 
       if (pages === 0 || page === pages - 1) {
@@ -226,7 +225,7 @@ function _pagingButtonInfo(settings, button, page, pages) {
       break;
 
     default:
-      if (typeof button === "number") {
+      if (typeof button === 'number') {
         o.display = settings.fnFormatNumber(button + 1);
 
         if (page === button) {

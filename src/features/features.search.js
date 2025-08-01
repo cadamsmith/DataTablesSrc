@@ -1,10 +1,10 @@
-import { _fnMacros } from "../core/core.support";
-import { _fnProcessingRun } from "../core/core.processing";
-import { _fnFilterComplete } from "../core/core.filter";
-import { _fnDraw } from "../core/core.draw";
-import { _dt_util } from "../api/api.util";
-import $ from "jquery";
-import { _extend } from "../core/core.jq";
+import { _fnMacros } from '../core/core.support';
+import { _fnProcessingRun } from '../core/core.processing';
+import { _fnFilterComplete } from '../core/core.filter';
+import { _fnDraw } from '../core/core.draw';
+import { _dt_util } from '../api/api.util';
+import $ from 'jquery';
+import { _extend } from '../core/core.jq';
 
 var __searchCounter = 0;
 
@@ -33,8 +33,8 @@ export function _constructFeature_search(settings, opts) {
   );
 
   // The _INPUT_ is optional - is appended if not present
-  if (opts.text.indexOf("_INPUT_") === -1) {
-    opts.text += "_INPUT_";
+  if (opts.text.indexOf('_INPUT_') === -1) {
+    opts.text += '_INPUT_';
   }
 
   opts.text = _fnMacros(settings, opts.text);
@@ -44,28 +44,28 @@ export function _constructFeature_search(settings, opts) {
   // for elements).
   var end = opts.text.match(/_INPUT_$/);
   var start = opts.text.match(/^_INPUT_/);
-  var removed = opts.text.replace(/_INPUT_/, "");
-  var str = "<label>" + opts.text + "</label>";
+  var removed = opts.text.replace(/_INPUT_/, '');
+  var str = '<label>' + opts.text + '</label>';
 
   if (start) {
-    str = "_INPUT_<label>" + removed + "</label>";
+    str = '_INPUT_<label>' + removed + '</label>';
   } else if (end) {
-    str = "<label>" + removed + "</label>_INPUT_";
+    str = '<label>' + removed + '</label>_INPUT_';
   }
 
-  var filter = $("<div>")
+  var filter = $('<div>')
     .addClass(classes.container)
     .append(str.replace(/_INPUT_/, input));
 
   // add for and id to label and input
-  filter.find("label").attr("for", "dt-search-" + __searchCounter);
-  filter.find("input").attr("id", "dt-search-" + __searchCounter);
+  filter.find('label').attr('for', 'dt-search-' + __searchCounter);
+  filter.find('input').attr('id', 'dt-search-' + __searchCounter);
   __searchCounter++;
 
   var searchFn = function (event) {
     var val = this.value;
 
-    if (previousSearch.return && event.key !== "Enter") {
+    if (previousSearch.return && event.key !== 'Enter') {
       return;
     }
 
@@ -85,14 +85,14 @@ export function _constructFeature_search(settings, opts) {
 
   var searchDelay = settings.searchDelay !== null ? settings.searchDelay : 0;
 
-  var jqFilter = $("input", filter)
+  var jqFilter = $('input', filter)
     .val(previousSearch.search)
-    .attr("placeholder", opts.placeholder)
+    .attr('placeholder', opts.placeholder)
     .on(
-      "keyup.DT search.DT input.DT paste.DT cut.DT",
+      'keyup.DT search.DT input.DT paste.DT cut.DT',
       searchDelay ? _dt_util.debounce(searchFn, searchDelay) : searchFn
     )
-    .on("mouseup.DT", function (e) {
+    .on('mouseup.DT', function (e) {
       // Edge fix! Edge 17 does not trigger anything other than mouse events when clicking
       // on the clear icon (Edge bug 17584515). This is safe in other browsers as `searchFn`
       // checks the value to see if it has changed. In other browsers it won't have.
@@ -100,19 +100,19 @@ export function _constructFeature_search(settings, opts) {
         searchFn.call(jqFilter[0], e);
       }, 10);
     })
-    .on("keypress.DT", function (e) {
+    .on('keypress.DT', function (e) {
       /* Prevent form submission */
       if (e.keyCode == 13) {
         return false;
       }
     })
-    .attr("aria-controls", tableId);
+    .attr('aria-controls', tableId);
 
   // Update the input elements whenever the table is filtered
-  $(settings.nTable).on("search.dt.DT", function (ev, s) {
+  $(settings.nTable).on('search.dt.DT', function (ev, s) {
     if (settings === s && jqFilter[0] !== document.activeElement) {
       jqFilter.val(
-        typeof previousSearch.search !== "function" ? previousSearch.search : ""
+        typeof previousSearch.search !== 'function' ? previousSearch.search : ''
       );
     }
   });

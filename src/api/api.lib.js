@@ -6,13 +6,13 @@ var __moment; // Can be assigned in DateTable.use()
 
 export function _dt_getLib(type) {
   switch (type) {
-    case "bootstrap":
+    case 'bootstrap':
       return __bootstrap;
-    case "foundation":
+    case 'foundation':
       return __foundation;
-    case "luxon":
+    case 'luxon':
       return __luxon;
-    case "moment":
+    case 'moment':
       return __moment;
     default:
       return null;
@@ -21,16 +21,16 @@ export function _dt_getLib(type) {
 
 export function _dt_setLib(type, newValue) {
   switch (type) {
-    case "bootstrap":
+    case 'bootstrap':
       __bootstrap = newValue;
       break;
-    case "foundation":
+    case 'foundation':
       __foundation = newValue;
       break;
-    case "luxon":
+    case 'luxon':
       __luxon = newValue;
       break;
-    case "moment":
+    case 'moment':
       __moment = newValue;
       break;
     default:

@@ -10,13 +10,13 @@ export function _processingHtml(settings) {
   var scrolling = settings.oScroll.sX !== "" || settings.oScroll.sY !== "";
 
   if (settings.oFeatures.bProcessing) {
-    var n = $("<div/>", {
-      id: settings.sTableId + "_processing",
+    var n = $('<div/>', {
+      id: settings.sTableId + '_processing',
       class: settings.oClasses.processing.container,
-      role: "status",
+      role: 'status',
     })
       .html(settings.oLanguage.sProcessing)
-      .append("<div><div></div><div></div><div></div><div></div></div>");
+      .append('<div><div></div><div></div><div></div><div></div></div>');
 
     // Different positioning depending on if scrolling is enabled or not
     if (scrolling) {

@@ -125,7 +125,7 @@ export const _dt_models_column = {
    * Custom sorting data type - defines which of the available plug-ins in
    * afnSortData the custom sorting will use - if any is defined.
    */
-  sSortDataType: "std",
+  sSortDataType: 'std',
 
   /**
    * Class to be applied to the header element when sorting on this column

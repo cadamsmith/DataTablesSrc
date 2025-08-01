@@ -1,14 +1,14 @@
-import { _fnClearTable, _fnGetObjectDataFn } from "../core/core.data";
-import { _fnLog, _fnCallbackFire } from "../core/core.support";
-import { _fnSortingClasses } from "../core/core.sort";
-import { _pluck } from "../core/core.internal";
-import { _each, _isPlainObject, _map } from "../core/core.jq";
-import { _dt_settings } from "./api.settings";
-import $ from "jquery";
-import { _dt_ext_types } from "../ext/ext.types";
+import { _fnClearTable, _fnGetObjectDataFn } from '../core/core.data';
+import { _fnLog, _fnCallbackFire } from '../core/core.support';
+import { _fnSortingClasses } from '../core/core.sort';
+import { _pluck } from '../core/core.internal';
+import { _each, _isPlainObject, _map } from '../core/core.jq';
+import { _dt_settings } from './api.settings';
+import $ from 'jquery';
+import { _dt_ext_types } from '../ext/ext.types';
 
 export function _registerApis_core(register, registerPlural, constructNewApi) {
-  register("$()", function (selector, opts) {
+  register('$()', function (selector, opts) {
     var rows = this.rows(opts).nodes(), // Get all rows
       jqRows = $(rows);
 
@@ -21,17 +21,17 @@ export function _registerApis_core(register, registerPlural, constructNewApi) {
   });
 
   // jQuery functions to operate on the tables
-  _each(["on", "one", "off"], function (i, key) {
-    register(key + "()", function (/* event, handler */) {
+  _each(['on', 'one', 'off'], function (i, key) {
+    register(key + '()', function (/* event, handler */) {
       var args = Array.prototype.slice.call(arguments);
 
       // Add the `dt` namespace automatically if it isn't already present
       args[0] = args[0]
         .split(/\s/)
         .map(function (e) {
-          return !e.match(/\.dt\b/) ? e + ".dt" : e;
+          return !e.match(/\.dt\b/) ? e + '.dt' : e;
         })
-        .join(" ");
+        .join(' ');
 
       var inst = $(this.tables().nodes());
       inst[key].apply(inst, args);
@@ -39,40 +39,40 @@ export function _registerApis_core(register, registerPlural, constructNewApi) {
     });
   });
 
-  register("clear()", function () {
-    return this.iterator("table", function (settings) {
+  register('clear()', function () {
+    return this.iterator('table', function (settings) {
       _fnClearTable(settings);
     });
   });
 
-  register("error()", function (msg) {
-    return this.iterator("table", function (settings) {
+  register('error()', function (msg) {
+    return this.iterator('table', function (settings) {
       _fnLog(settings, 0, msg);
     });
   });
 
-  register("settings()", function () {
+  register('settings()', function () {
     return new constructNewApi(this.context, this.context);
   });
 
-  register("init()", function () {
+  register('init()', function () {
     var ctx = this.context;
     return ctx.length ? ctx[0].oInit : null;
   });
 
-  register("data()", function () {
-    return this.iterator("table", function (settings) {
-      return _pluck(settings.aoData, "_aData");
+  register('data()', function () {
+    return this.iterator('table', function (settings) {
+      return _pluck(settings.aoData, '_aData');
     }).flatten();
   });
 
-  register("trigger()", function (name, args, bubbles) {
-    return this.iterator("table", function (settings) {
+  register('trigger()', function (name, args, bubbles) {
+    return this.iterator('table', function (settings) {
       return _fnCallbackFire(settings, null, name, args, bubbles);
     }).flatten();
   });
 
-  register("ready()", function (fn) {
+  register('ready()', function (fn) {
     var ctx = this.context;
 
     // Get status of first table
@@ -88,17 +88,17 @@ export function _registerApis_core(register, registerPlural, constructNewApi) {
       if (this.context[0]._bInitComplete) {
         fn.call(api);
       } else {
-        this.on("init.dt.DT", function () {
+        this.on('init.dt.DT', function () {
           fn.call(api);
         });
       }
     });
   });
 
-  register("destroy()", function (remove) {
+  register('destroy()', function (remove) {
     remove = remove || false;
 
-    return this.iterator("table", function (settings) {
+    return this.iterator('table', function (settings) {
       var classes = settings.oClasses;
       var table = settings.nTable;
       var tbody = settings.nTBody;
@@ -119,8 +119,8 @@ export function _registerApis_core(register, registerPlural, constructNewApi) {
       // Fire off the destroy callbacks for plug-ins etc
       _fnCallbackFire(
         settings,
-        "aoDestroyCallback",
-        "destroy",
+        'aoDestroyCallback',
+        'destroy',
         [settings],
         true
       );
@@ -138,23 +138,23 @@ export function _registerApis_core(register, registerPlural, constructNewApi) {
       // Blitz all `DT` namespaced events (these are internal events, the
       // lowercase, `dt` events are user subscribed and they are responsible
       // for removing them
-      jqWrapper.off(".DT").find(":not(tbody *)").off(".DT");
-      $(window).off(".DT-" + settings.sInstance);
+      jqWrapper.off('.DT').find(':not(tbody *)').off('.DT');
+      $(window).off('.DT-' + settings.sInstance);
 
       // When scrolling we had to break the table up - restore it
       if (table != thead.parentNode) {
-        jqTable.children("thead").detach();
+        jqTable.children('thead').detach();
         jqTable.append(thead);
       }
 
       if (tfoot && table != tfoot.parentNode) {
-        jqTable.children("tfoot").detach();
+        jqTable.children('tfoot').detach();
         jqTable.append(tfoot);
       }
 
       // Clean up the header / footer
-      cleanHeader(thead, "header");
-      cleanHeader(tfoot, "footer");
+      cleanHeader(thead, 'header');
+      cleanHeader(tfoot, 'footer');
       settings.colgroup.remove();
 
       settings.aaSorting = [];
@@ -162,27 +162,27 @@ export function _registerApis_core(register, registerPlural, constructNewApi) {
       _fnSortingClasses(settings);
 
       $(jqTable)
-        .find("th, td")
+        .find('th, td')
         .removeClass(
           _map(_dt_ext_types.className, function (v) {
             return v;
-          }).join(" ")
+          }).join(' ')
         );
 
-      $("th, td", thead)
+      $('th, td', thead)
         .removeClass(
           orderClasses.none +
-            " " +
+            ' ' +
             orderClasses.canAsc +
-            " " +
+            ' ' +
             orderClasses.canDesc +
-            " " +
+            ' ' +
             orderClasses.isAsc +
-            " " +
+            ' ' +
             orderClasses.isDesc
         )
-        .css("width", "")
-        .removeAttr("aria-sort");
+        .css('width', '')
+        .removeAttr('aria-sort');
 
       // Add the TR elements back into the table in their original order
       jqTbody.children().detach();
@@ -192,7 +192,7 @@ export function _registerApis_core(register, registerPlural, constructNewApi) {
       var insertBefore = settings.nTableWrapper.nextSibling;
 
       // Remove the DataTables generated nodes, events and classes
-      var removedMethod = remove ? "remove" : "detach";
+      var removedMethod = remove ? 'remove' : 'detach';
       jqTable[removedMethod]();
       jqWrapper[removedMethod]();
 
@@ -203,7 +203,7 @@ export function _registerApis_core(register, registerPlural, constructNewApi) {
 
         // Restore the width of the original table - was read from the style property,
         // so we can restore directly to that
-        jqTable.css("width", settings.sDestroyWidth).removeClass(classes.table);
+        jqTable.css('width', settings.sDestroyWidth).removeClass(classes.table);
       }
 
       /* Remove the settings object from the settings array */
@@ -215,17 +215,17 @@ export function _registerApis_core(register, registerPlural, constructNewApi) {
   });
 
   // Add the `every()` method for rows, columns and cells in a compact form
-  _each(["column", "row", "cell"], function (i, type) {
-    register(type + "s().every()", function (fn) {
+  _each(['column', 'row', 'cell'], function (i, type) {
+    register(type + 's().every()', function (fn) {
       var opts = this.selector.opts;
       var api = this;
       var inst;
       var counter = 0;
 
-      return this.iterator("every", function (settings, selectedIdx, tableIdx) {
+      return this.iterator('every', function (settings, selectedIdx, tableIdx) {
         inst = api[type](selectedIdx, opts);
 
-        if (type === "cell") {
+        if (type === 'cell') {
           fn.call(inst, inst[0][0].row, inst[0][0].column, tableIdx, counter);
         } else {
           fn.call(inst, selectedIdx, tableIdx, counter);
@@ -238,7 +238,7 @@ export function _registerApis_core(register, registerPlural, constructNewApi) {
 
   // i18n method for extensions to be able to use the language object from the
   // DataTable
-  register("i18n()", function (token, def, plural) {
+  register('i18n()', function (token, def, plural) {
     var ctx = this.context[0];
     var resolved = _fnGetObjectDataFn(token)(ctx.oLanguage);
 
@@ -255,25 +255,25 @@ export function _registerApis_core(register, registerPlural, constructNewApi) {
             : resolved._;
     }
 
-    return typeof resolved === "string"
-      ? resolved.replace("%d", plural) // nb: plural might be undefined,
+    return typeof resolved === 'string'
+      ? resolved.replace('%d', plural) // nb: plural might be undefined,
       : resolved;
   });
 }
 
 // Needed for header and footer, so pulled into its own function
 function cleanHeader(node, className) {
-  $(node).find("span.dt-column-order").remove();
+  $(node).find('span.dt-column-order').remove();
   $(node)
-    .find("span.dt-column-title")
+    .find('span.dt-column-title')
     .each(function () {
       var title = $(this).html();
       $(this).parent().parent().append(title);
       $(this).remove();
     });
   $(node)
-    .find("div.dt-column-" + className)
+    .find('div.dt-column-' + className)
     .remove();
 
-  $("th, td", node).removeAttr("data-dt-column");
+  $('th, td', node).removeAttr('data-dt-column');
 }

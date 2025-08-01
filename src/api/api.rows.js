@@ -1,29 +1,34 @@
-import { _pluck_order, _removeEmpty, _intVal } from "../core/core.internal";
-import { _isPlainObject } from "../core/core.jq";
-import { _fnLengthOverflow, _fnArrayApply } from "../core/core.support";
+import { _pluck_order, _removeEmpty, _intVal } from '../core/core.internal';
+import { _isPlainObject } from '../core/core.jq';
+import { _fnLengthOverflow, _fnArrayApply } from '../core/core.support';
 import {
   _fnInvalidate,
   _fnAddData,
   _fnSetObjectDataFn,
   _fnAddTr,
-} from "../core/core.data";
-import { _fnSortDisplay } from "../core/core.sort";
-import $ from "jquery";
+} from '../core/core.data';
+import { _fnSortDisplay } from '../core/core.sort';
+import $ from 'jquery';
 
-export function _registerApis_rows(register, registerPlural, constructNewApi, selectorFns) {
-  register("rows()", function (selector, opts) {
+export function _registerApis_rows(
+  register,
+  registerPlural,
+  constructNewApi,
+  selectorFns
+) {
+  register('rows()', function (selector, opts) {
     // argument shifting
     if (selector === undefined) {
-      selector = "";
+      selector = '';
     } else if (_isPlainObject(selector)) {
       opts = selector;
-      selector = "";
+      selector = '';
     }
 
     opts = selectorFns.opts(opts);
 
     var inst = this.iterator(
-      "table",
+      'table',
       function (settings) {
         return __row_selector(settings, selector, opts, selectorFns);
       },
@@ -37,9 +42,9 @@ export function _registerApis_rows(register, registerPlural, constructNewApi, se
     return inst;
   });
 
-  register("rows().nodes()", function () {
+  register('rows().nodes()', function () {
     return this.iterator(
-      "row",
+      'row',
       function (settings, row) {
         return settings.aoData[row].nTr || undefined;
       },
@@ -47,41 +52,37 @@ export function _registerApis_rows(register, registerPlural, constructNewApi, se
     );
   });
 
-  register("rows().data()", function () {
+  register('rows().data()', function () {
     return this.iterator(
       true,
-      "rows",
+      'rows',
       function (settings, rows) {
-        return _pluck_order(settings.aoData, rows, "_aData");
+        return _pluck_order(settings.aoData, rows, '_aData');
       },
       1
     );
   });
 
-  registerPlural("rows().cache()", "row().cache()", function (type) {
+  registerPlural('rows().cache()', 'row().cache()', function (type) {
     return this.iterator(
-      "row",
+      'row',
       function (settings, row) {
         var r = settings.aoData[row];
-        return type === "search" ? r._aFilterData : r._aSortData;
+        return type === 'search' ? r._aFilterData : r._aSortData;
       },
       1
     );
   });
 
-  registerPlural(
-    "rows().invalidate()",
-    "row().invalidate()",
-    function (src) {
-      return this.iterator("row", function (settings, row) {
-        _fnInvalidate(settings, row, src);
-      });
-    }
-  );
+  registerPlural('rows().invalidate()', 'row().invalidate()', function (src) {
+    return this.iterator('row', function (settings, row) {
+      _fnInvalidate(settings, row, src);
+    });
+  });
 
-  registerPlural("rows().indexes()", "row().index()", function () {
+  registerPlural('rows().indexes()', 'row().index()', function () {
     return this.iterator(
-      "row",
+      'row',
       function (settings, row) {
         return row;
       },
@@ -89,7 +90,7 @@ export function _registerApis_rows(register, registerPlural, constructNewApi, se
     );
   });
 
-  registerPlural("rows().ids()", "row().id()", function (hash) {
+  registerPlural('rows().ids()', 'row().id()', function (hash) {
     var a = [];
     var context = this.context;
 
@@ -97,15 +98,15 @@ export function _registerApis_rows(register, registerPlural, constructNewApi, se
     for (var i = 0, ien = context.length; i < ien; i++) {
       for (var j = 0, jen = this[i].length; j < jen; j++) {
         var id = context[i].rowIdFn(context[i].aoData[this[i][j]]._aData);
-        a.push((hash === true ? "#" : "") + id);
+        a.push((hash === true ? '#' : '') + id);
       }
     }
 
     return new constructNewApi(context, a);
   });
 
-  registerPlural("rows().remove()", "row().remove()", function () {
-    this.iterator("row", function (settings, row) {
+  registerPlural('rows().remove()', 'row().remove()', function () {
+    this.iterator('row', function (settings, row) {
       var data = settings.aoData;
       var rowData = data[row];
 
@@ -135,9 +136,9 @@ export function _registerApis_rows(register, registerPlural, constructNewApi, se
     return this;
   });
 
-  register("rows.add()", function (rows) {
+  register('rows.add()', function (rows) {
     var newRows = this.iterator(
-      "table",
+      'table',
       function (settings) {
         var row, i, ien;
         var out = [];
@@ -145,7 +146,7 @@ export function _registerApis_rows(register, registerPlural, constructNewApi, se
         for (i = 0, ien = rows.length; i < ien; i++) {
           row = rows[i];
 
-          if (row.nodeName && row.nodeName.toUpperCase() === "TR") {
+          if (row.nodeName && row.nodeName.toUpperCase() === 'TR') {
             out.push(_fnAddTr(settings, row)[0]);
           } else {
             out.push(_fnAddData(settings, row));
@@ -168,11 +169,11 @@ export function _registerApis_rows(register, registerPlural, constructNewApi, se
   /**
    *
    */
-  register("row()", function (selector, opts) {
+  register('row()', function (selector, opts) {
     return selectorFns.first(this.rows(selector, opts));
   });
 
-  register("row().data()", function (data) {
+  register('row().data()', function (data) {
     var ctx = this.context;
 
     if (data === undefined) {
@@ -192,12 +193,12 @@ export function _registerApis_rows(register, registerPlural, constructNewApi, se
     }
 
     // Automatically invalidate
-    _fnInvalidate(ctx[0], this[0], "data");
+    _fnInvalidate(ctx[0], this[0], 'data');
 
     return this;
   });
 
-  register("row().node()", function () {
+  register('row().node()', function () {
     var ctx = this.context;
 
     if (ctx.length && this.length && this[0].length) {
@@ -211,15 +212,15 @@ export function _registerApis_rows(register, registerPlural, constructNewApi, se
     return null;
   });
 
-  register("row.add()", function (row) {
+  register('row.add()', function (row) {
     // Allow a jQuery object to be passed in - only a single row is added from
     // it though - the first element in the set
     if (row instanceof $ && row.length) {
       row = row[0];
     }
 
-    var rows = this.iterator("table", function (settings) {
-      if (row.nodeName && row.nodeName.toUpperCase() === "TR") {
+    var rows = this.iterator('table', function (settings) {
+      if (row.nodeName && row.nodeName.toUpperCase() === 'TR') {
         return _fnAddTr(settings, row)[0];
       }
       return _fnAddData(settings, row);
@@ -260,13 +261,13 @@ var __row_selector = function (settings, selector, opts, selectorFns) {
     if (selInt !== null && rows.indexOf(selInt) !== -1) {
       // Selector - integer
       return [selInt];
-    } else if (sel === null || sel === undefined || sel === "") {
+    } else if (sel === null || sel === undefined || sel === '') {
       // Selector - none
       return rows;
     }
 
     // Selector - function
-    if (typeof sel === "function") {
+    if (typeof sel === 'function') {
       return rows.map(function (idx) {
         var row = aoData[idx];
         return sel(idx, row._aData, row.nTr) ? idx : null;
@@ -286,8 +287,8 @@ var __row_selector = function (settings, selector, opts, selectorFns) {
           ? [cellIdx.row]
           : [];
       } else {
-        var host = $(sel).closest("*[data-dt-row]");
-        return host.length ? [host.data("dt-row")] : [];
+        var host = $(sel).closest('*[data-dt-row]');
+        return host.length ? [host.data('dt-row')] : [];
       }
     }
 
@@ -300,9 +301,9 @@ var __row_selector = function (settings, selector, opts, selectorFns) {
     // DataTables simplifies this for row selectors since you can select
     // only a row. A # indicates an id any anything that follows is the id -
     // unescaped.
-    if (typeof sel === "string" && sel.charAt(0) === "#") {
+    if (typeof sel === 'string' && sel.charAt(0) === '#') {
       // get row index from id
-      var rowObj = settings.aIds[sel.replace(/^#/, "")];
+      var rowObj = settings.aIds[sel.replace(/^#/, '')];
       if (rowObj !== undefined) {
         return [rowObj.idx];
       }
@@ -312,7 +313,7 @@ var __row_selector = function (settings, selector, opts, selectorFns) {
     }
 
     // Get nodes in the order from the `rows` array with null values removed
-    var nodes = _removeEmpty(_pluck_order(settings.aoData, rows, "nTr"));
+    var nodes = _removeEmpty(_pluck_order(settings.aoData, rows, 'nTr'));
 
     // Selector - jQuery selector string, array of nodes or jQuery object/
     // As jQuery's .filter() allows jQuery objects to be passed in filter,
@@ -325,9 +326,9 @@ var __row_selector = function (settings, selector, opts, selectorFns) {
       .toArray();
   };
 
-  var matched = selectorFns.run("row", selector, run, settings, opts);
+  var matched = selectorFns.run('row', selector, run, settings, opts);
 
-  if (opts.order === "current" || opts.order === "applied") {
+  if (opts.order === 'current' || opts.order === 'applied') {
     _fnSortDisplay(settings, matched);
   }
 

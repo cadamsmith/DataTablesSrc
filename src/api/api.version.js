@@ -6,7 +6,7 @@
  *  @type string
  *  @default Version number
  */
-export var _dt_version = "2.3.2";
+export var _dt_version = '2.3.2';
 
 /**
  * Provide a common method for plug-ins to check the version of DataTables being
@@ -26,8 +26,8 @@ export var _dt_version = "2.3.2";
  *    alert( $.fn.dataTable.versionCheck( '1.9.0' ) );
  */
 export var _dt_versionCheck = function (version, version2) {
-  var aThis = version2 ? version2.split(".") : _dt_version.split(".");
-  var aThat = version.split(".");
+  var aThis = version2 ? version2.split('.') : _dt_version.split('.');
+  var aThat = version.split('.');
   var iThis, iThat;
 
   for (var i = 0, iLen = aThat.length; i < iLen; i++) {

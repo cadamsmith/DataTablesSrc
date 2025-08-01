@@ -1,5 +1,5 @@
-import { _pluck, _range } from "../core/core.internal";
-import $ from "jquery";
+import { _pluck, _range } from '../core/core.internal';
+import $ from 'jquery';
 
 const _dt_ext_footer = {
   _: function (settings, cell, classes) {
@@ -16,18 +16,18 @@ const _dt_ext_header = {
     }
 
     var titleRow = settings.titleRow;
-    var headerRows = cell.closest("thead").find("tr");
+    var headerRows = cell.closest('thead').find('tr');
     var rowIdx = cell.parent().index();
 
     // Conditions to not apply the ordering icons
     if (
       // Cells and rows which have the attribute to disable the icons
-      cell.attr("data-dt-order") === "disable" ||
-      cell.parent().attr("data-dt-order") === "disable" ||
+      cell.attr('data-dt-order') === 'disable' ||
+      cell.parent().attr('data-dt-order') === 'disable' ||
       // titleRow support, for defining a specific row in the header
       (titleRow === true && rowIdx !== 0) ||
       (titleRow === false && rowIdx !== headerRows.length - 1) ||
-      (typeof titleRow === "number" && rowIdx !== titleRow)
+      (typeof titleRow === 'number' && rowIdx !== titleRow)
     ) {
       return;
     }
@@ -38,7 +38,7 @@ const _dt_ext_header = {
     // on destroy, while the `dt` namespaced event is the one we are
     // listening for
     $(settings.nTable).on(
-      "order.dt.DT column-visibility.dt.DT",
+      'order.dt.DT column-visibility.dt.DT',
       function (e, ctx, column) {
         if (settings !== ctx) {
           // need to check this this is the host
@@ -51,14 +51,14 @@ const _dt_ext_header = {
           return;
         }
 
-        var orderedColumns = _pluck(sorting, "col");
+        var orderedColumns = _pluck(sorting, 'col');
 
         // This handler is only needed on column visibility if the column is part of the
         // ordering. If it isn't, then we can bail out to save performance. It could be a
         // separate event handler, but this is a balance between code reuse / size and performance
         // console.log(e, e.name, column, orderedColumns, orderedColumns.includes(column))
         if (
-          e.type === "column-visibility" &&
+          e.type === 'column-visibility' &&
           !orderedColumns.includes(column)
         ) {
           return;
@@ -69,22 +69,22 @@ const _dt_ext_header = {
         var columns = ctx.api.columns(cell);
         var col = settings.aoColumns[columns.flatten()[0]];
         var orderable = columns.orderable().includes(true);
-        var ariaType = "";
+        var ariaType = '';
         var indexes = columns.indexes();
         var sortDirs = columns.orderable(true).flatten();
         var tabIndex = settings.iTabIndex;
         var canOrder = ctx.orderHandler && orderable;
 
         cell
-          .removeClass(orderClasses.isAsc + " " + orderClasses.isDesc)
+          .removeClass(orderClasses.isAsc + ' ' + orderClasses.isDesc)
           .toggleClass(orderClasses.none, !orderable)
           .toggleClass(
             orderClasses.canAsc,
-            canOrder && sortDirs.includes("asc")
+            canOrder && sortDirs.includes('asc')
           )
           .toggleClass(
             orderClasses.canDesc,
-            canOrder && sortDirs.includes("desc")
+            canOrder && sortDirs.includes('desc')
           );
 
         // Determine if all of the columns that this cell covers are included in the
@@ -104,11 +104,11 @@ const _dt_ext_header = {
           var orderDirs = columns.order();
 
           cell.addClass(
-            orderDirs.includes("asc")
+            orderDirs.includes('asc')
               ? orderClasses.isAsc
-              : "" + orderDirs.includes("desc")
-              ? orderClasses.isDesc
-              : ""
+              : '' + orderDirs.includes('desc')
+                ? orderClasses.isDesc
+                : ''
           );
         }
 
@@ -129,31 +129,31 @@ const _dt_ext_header = {
           var sortOrder = col.asSorting;
 
           cell.attr(
-            "aria-sort",
-            firstSort.dir === "asc" ? "ascending" : "descending"
+            'aria-sort',
+            firstSort.dir === 'asc' ? 'ascending' : 'descending'
           );
 
           // Determine if the next click will remove sorting or change the sort
-          ariaType = !sortOrder[firstSort.index + 1] ? "Remove" : "Reverse";
+          ariaType = !sortOrder[firstSort.index + 1] ? 'Remove' : 'Reverse';
         } else {
-          cell.removeAttr("aria-sort");
+          cell.removeAttr('aria-sort');
         }
 
         // Make the headers tab-able for keyboard navigation
         if (orderable) {
-          var orderSpan = cell.find(".dt-column-order");
+          var orderSpan = cell.find('.dt-column-order');
 
           orderSpan
-            .attr("role", "button")
+            .attr('role', 'button')
             .attr(
-              "aria-label",
+              'aria-label',
               orderable
-                ? col.ariaTitle + ctx.api.i18n("oAria.orderable" + ariaType)
+                ? col.ariaTitle + ctx.api.i18n('oAria.orderable' + ariaType)
                 : col.ariaTitle
             );
 
           if (tabIndex !== -1) {
-            orderSpan.attr("tabindex", tabIndex);
+            orderSpan.attr('tabindex', tabIndex);
           }
         }
       }
@@ -164,35 +164,35 @@ const _dt_ext_header = {
 const _dt_ext_layout = {
   _: function (settings, container, items) {
     var classes = settings.oClasses.layout;
-    var row = $("<div/>")
-      .attr("id", items.id || null)
+    var row = $('<div/>')
+      .attr('id', items.id || null)
       .addClass(items.className || classes.row)
       .appendTo(container);
 
     _dt_ext_layout._forLayoutRow(items, function (key, val) {
-      if (key === "id" || key === "className") {
+      if (key === 'id' || key === 'className') {
         return;
       }
 
-      var klass = "";
+      var klass = '';
 
       if (val.table) {
         row.addClass(classes.tableRow);
-        klass += classes.tableCell + " ";
+        klass += classes.tableCell + ' ';
       }
 
-      if (key === "start") {
+      if (key === 'start') {
         klass += classes.start;
-      } else if (key === "end") {
+      } else if (key === 'end') {
         klass += classes.end;
       } else {
         klass += classes.full;
       }
 
-      $("<div/>")
+      $('<div/>')
         .attr({
           id: val.id || null,
-          class: val.className ? val.className : classes.cell + " " + klass,
+          class: val.className ? val.className : classes.cell + ' ' + klass,
         })
         .append(val.contents)
         .appendTo(row);
@@ -206,11 +206,11 @@ const _dt_ext_layout = {
     // keys.
     var layoutEnum = function (x) {
       switch (x) {
-        case "":
+        case '':
           return 0;
-        case "start":
+        case 'start':
           return 1;
-        case "end":
+        case 'end':
           return 2;
         default:
           return 3;
@@ -241,13 +241,13 @@ const _dt_ext_paging_button = {
       btnClasses.push(classes.disabled);
     }
 
-    if (buttonType === "ellipsis") {
+    if (buttonType === 'ellipsis') {
       btn = $('<span class="ellipsis"></span>').html(content)[0];
     } else {
-      btn = $("<button>", {
-        class: btnClasses.join(" "),
-        role: "link",
-        type: "button",
+      btn = $('<button>', {
+        class: btnClasses.join(' '),
+        role: 'link',
+        type: 'button',
       }).html(content);
     }
 
@@ -276,31 +276,31 @@ export const _dt_ext_renderer = {
 
 export const _dt_ext_pagination = {
   simple: function () {
-    return ["previous", "next"];
+    return ['previous', 'next'];
   },
 
   full: function () {
-    return ["first", "previous", "next", "last"];
+    return ['first', 'previous', 'next', 'last'];
   },
 
   numbers: function () {
-    return ["numbers"];
+    return ['numbers'];
   },
 
   simple_numbers: function () {
-    return ["previous", "numbers", "next"];
+    return ['previous', 'numbers', 'next'];
   },
 
   full_numbers: function () {
-    return ["first", "previous", "numbers", "next", "last"];
+    return ['first', 'previous', 'numbers', 'next', 'last'];
   },
 
   first_last: function () {
-    return ["first", "last"];
+    return ['first', 'last'];
   },
 
   first_last_numbers: function () {
-    return ["first", "numbers", "last"];
+    return ['first', 'numbers', 'last'];
   },
 
   // For testing and plug-ins to use
@@ -333,31 +333,31 @@ export function _pagingNumbers(page, pages, buttons, addFirstLast) {
   } else if (buttons === 3) {
     // Special logic for just three buttons
     if (page <= 1) {
-      numbers = [0, 1, "ellipsis"];
+      numbers = [0, 1, 'ellipsis'];
     } else if (page >= pages - 2) {
       numbers = _range(pages - 2, pages);
-      numbers.unshift("ellipsis");
+      numbers.unshift('ellipsis');
     } else {
-      numbers = ["ellipsis", page, "ellipsis"];
+      numbers = ['ellipsis', page, 'ellipsis'];
     }
   } else if (page <= half) {
     numbers = _range(0, buttons - before);
-    numbers.push("ellipsis");
+    numbers.push('ellipsis');
 
     if (addFirstLast) {
       numbers.push(pages - 1);
     }
   } else if (page >= pages - 1 - half) {
     numbers = _range(pages - (buttons - before), pages);
-    numbers.unshift("ellipsis");
+    numbers.unshift('ellipsis');
 
     if (addFirstLast) {
       numbers.unshift(0);
     }
   } else {
     numbers = _range(page - half + before, page + half - after);
-    numbers.push("ellipsis");
-    numbers.unshift("ellipsis");
+    numbers.push('ellipsis');
+    numbers.unshift('ellipsis');
 
     if (addFirstLast) {
       numbers.push(pages - 1);

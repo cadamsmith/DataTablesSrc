@@ -2,14 +2,14 @@ import {
   _fnGetCellData,
   _fnSetCellData,
   _fnInvalidate,
-} from "../core/core.data";
-import { _removeEmpty, _pluck_order, _flatten } from "../core/core.internal";
-import { _isPlainObject, _extend } from "../core/core.jq";
-import { _fnColumnIndexToVisible } from "../core/core.columns";
-import { $ } from "jquery";
+} from '../core/core.data';
+import { _removeEmpty, _pluck_order, _flatten } from '../core/core.internal';
+import { _isPlainObject, _extend } from '../core/core.jq';
+import { _fnColumnIndexToVisible } from '../core/core.columns';
+import { $ } from 'jquery';
 
 export function _registerApis_cells(register, registerPlural, _, selectorFns) {
-  register("cells()", function (rowSelector, columnSelector, opts) {
+  register('cells()', function (rowSelector, columnSelector, opts) {
     // Argument shifting
     if (_isPlainObject(rowSelector)) {
       // Indexes
@@ -30,8 +30,13 @@ export function _registerApis_cells(register, registerPlural, _, selectorFns) {
 
     // Cell selector
     if (columnSelector === null || columnSelector === undefined) {
-      return this.iterator("table", function (settings) {
-        return __cell_selector(settings, rowSelector, selectorFns.opts(opts), selectorFns);
+      return this.iterator('table', function (settings) {
+        return __cell_selector(
+          settings,
+          rowSelector,
+          selectorFns.opts(opts),
+          selectorFns
+        );
       });
     }
 
@@ -50,7 +55,7 @@ export function _registerApis_cells(register, registerPlural, _, selectorFns) {
     var i, ien, j, jen;
 
     var cellsNoOpts = this.iterator(
-      "table",
+      'table',
       function (settings, idx) {
         var a = [];
 
@@ -83,9 +88,9 @@ export function _registerApis_cells(register, registerPlural, _, selectorFns) {
     return cells;
   });
 
-  registerPlural("cells().nodes()", "cell().node()", function () {
+  registerPlural('cells().nodes()', 'cell().node()', function () {
     return this.iterator(
-      "cell",
+      'cell',
       function (settings, row, column) {
         var data = settings.aoData[row];
 
@@ -95,9 +100,9 @@ export function _registerApis_cells(register, registerPlural, _, selectorFns) {
     );
   });
 
-  register("cells().data()", function () {
+  register('cells().data()', function () {
     return this.iterator(
-      "cell",
+      'cell',
       function (settings, row, column) {
         return _fnGetCellData(settings, row, column);
       },
@@ -105,11 +110,11 @@ export function _registerApis_cells(register, registerPlural, _, selectorFns) {
     );
   });
 
-  registerPlural("cells().cache()", "cell().cache()", function (type) {
-    type = type === "search" ? "_aFilterData" : "_aSortData";
+  registerPlural('cells().cache()', 'cell().cache()', function (type) {
+    type = type === 'search' ? '_aFilterData' : '_aSortData';
 
     return this.iterator(
-      "cell",
+      'cell',
       function (settings, row, column) {
         return settings.aoData[row][type][column];
       },
@@ -117,23 +122,19 @@ export function _registerApis_cells(register, registerPlural, _, selectorFns) {
     );
   });
 
-  registerPlural(
-    "cells().render()",
-    "cell().render()",
-    function (type) {
-      return this.iterator(
-        "cell",
-        function (settings, row, column) {
-          return _fnGetCellData(settings, row, column, type);
-        },
-        1
-      );
-    }
-  );
-
-  registerPlural("cells().indexes()", "cell().index()", function () {
+  registerPlural('cells().render()', 'cell().render()', function (type) {
     return this.iterator(
-      "cell",
+      'cell',
+      function (settings, row, column) {
+        return _fnGetCellData(settings, row, column, type);
+      },
+      1
+    );
+  });
+
+  registerPlural('cells().indexes()', 'cell().index()', function () {
+    return this.iterator(
+      'cell',
       function (settings, row, column) {
         return {
           row: row,
@@ -145,21 +146,17 @@ export function _registerApis_cells(register, registerPlural, _, selectorFns) {
     );
   });
 
-  registerPlural(
-    "cells().invalidate()",
-    "cell().invalidate()",
-    function (src) {
-      return this.iterator("cell", function (settings, row, column) {
-        _fnInvalidate(settings, row, src, column);
-      });
-    }
-  );
+  registerPlural('cells().invalidate()', 'cell().invalidate()', function (src) {
+    return this.iterator('cell', function (settings, row, column) {
+      _fnInvalidate(settings, row, src, column);
+    });
+  });
 
-  register("cell()", function (rowSelector, columnSelector, opts) {
+  register('cell()', function (rowSelector, columnSelector, opts) {
     return selectorFns.first(this.cells(rowSelector, columnSelector, opts));
   });
 
-  register("cell().data()", function (data) {
+  register('cell().data()', function (data) {
     var ctx = this.context;
     var cell = this[0];
 
@@ -172,7 +169,7 @@ export function _registerApis_cells(register, registerPlural, _, selectorFns) {
 
     // Set
     _fnSetCellData(ctx[0], cell[0].row, cell[0].column, data);
-    _fnInvalidate(ctx[0], cell[0].row, "data", cell[0].column);
+    _fnInvalidate(ctx[0], cell[0].row, 'data', cell[0].column);
 
     return this;
   });
@@ -181,14 +178,14 @@ export function _registerApis_cells(register, registerPlural, _, selectorFns) {
 var __cell_selector = function (settings, selector, opts, selectorFns) {
   var data = settings.aoData;
   var rows = selectorFns.row_indexes(settings, opts);
-  var cells = _removeEmpty(_pluck_order(data, rows, "anCells"));
+  var cells = _removeEmpty(_pluck_order(data, rows, 'anCells'));
   var allCells = $(_flatten([], cells));
   var row;
   var columns = settings.aoColumns.length;
   var a, i, ien, j, o, host;
 
   var run = function (s) {
-    var fnSelector = typeof s === "function";
+    var fnSelector = typeof s === 'function';
 
     if (s === null || s === undefined || fnSelector) {
       // All cells and function selectors
@@ -255,16 +252,16 @@ var __cell_selector = function (settings, selector, opts, selectorFns) {
     // Otherwise the selector is a node, and there is one last option - the
     // element might be a child of an element which has dt-row and dt-column
     // data attributes
-    host = $(s).closest("*[data-dt-row]");
+    host = $(s).closest('*[data-dt-row]');
     return host.length
       ? [
           {
-            row: host.data("dt-row"),
-            column: host.data("dt-column"),
+            row: host.data('dt-row'),
+            column: host.data('dt-column'),
           },
         ]
       : [];
   };
 
-  return selectorFns.run("cell", selector, run, settings, opts);
+  return selectorFns.run('cell', selector, run, settings, opts);
 };

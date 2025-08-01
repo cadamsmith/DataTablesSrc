@@ -1,8 +1,8 @@
-import { _fnFilterComplete } from "../core/core.filter";
-import { _extend } from "../core/core.jq";
+import { _fnFilterComplete } from '../core/core.filter';
+import { _extend } from '../core/core.jq';
 
 export function _registerApis_search(register, registerPlural) {
-  register("search()", function (input, regex, smart, caseInsen) {
+  register('search()', function (input, regex, smart, caseInsen) {
     var ctx = this.context;
 
     if (input === undefined) {
@@ -11,12 +11,12 @@ export function _registerApis_search(register, registerPlural) {
     }
 
     // set
-    return this.iterator("table", function (settings) {
+    return this.iterator('table', function (settings) {
       if (!settings.oFeatures.bFilter) {
         return;
       }
 
-      if (typeof regex === "object") {
+      if (typeof regex === 'object') {
         // New style options to pass to the search builder
         _fnFilterComplete(
           settings,
@@ -39,8 +39,8 @@ export function _registerApis_search(register, registerPlural) {
     });
   });
 
-  register("search.fixed()", function (name, search) {
-    var ret = this.iterator(true, "table", function (settings) {
+  register('search.fixed()', function (name, search) {
+    var ret = this.iterator(true, 'table', function (settings) {
       var fixed = settings.searchFixed;
 
       if (!name) {
@@ -60,10 +60,10 @@ export function _registerApis_search(register, registerPlural) {
   });
 
   registerPlural(
-    "columns().search()",
-    "column().search()",
+    'columns().search()',
+    'column().search()',
     function (input, regex, smart, caseInsen) {
-      return this.iterator("column", function (settings, column) {
+      return this.iterator('column', function (settings, column) {
         var preSearch = settings.aoPreSearchCols;
 
         if (input === undefined) {
@@ -76,7 +76,7 @@ export function _registerApis_search(register, registerPlural) {
           return;
         }
 
-        if (typeof regex === "object") {
+        if (typeof regex === 'object') {
           // New style options to pass to the search builder
           _extend(preSearch[column], regex, {
             search: input,
@@ -97,9 +97,9 @@ export function _registerApis_search(register, registerPlural) {
   );
 
   register(
-    ["columns().search.fixed()", "column().search.fixed()"],
+    ['columns().search.fixed()', 'column().search.fixed()'],
     function (name, search) {
-      var ret = this.iterator(true, "column", function (settings, colIdx) {
+      var ret = this.iterator(true, 'column', function (settings, colIdx) {
         var fixed = settings.aoColumns[colIdx].searchFixed;
 
         if (!name) {

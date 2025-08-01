@@ -1,7 +1,7 @@
-import { _each, _isPlainObject } from "../core/core.jq";
-import { _dt_api } from "./api.base";
-import $ from "jquery";
-import { _dt_settings } from "./api.settings";
+import { _each, _isPlainObject } from '../core/core.jq';
+import { _dt_api } from './api.base';
+import $ from 'jquery';
+import { _dt_settings } from './api.settings';
 
 export var _dt_DateTime;
 
@@ -29,8 +29,8 @@ export var _dt_isDataTable = function (table) {
   }
 
   _each(_dt_settings, function (i, o) {
-    var head = o.nScrollHead ? $("table", o.nScrollHead)[0] : null;
-    var foot = o.nScrollFoot ? $("table", o.nScrollFoot)[0] : null;
+    var head = o.nScrollHead ? $('table', o.nScrollHead)[0] : null;
+    var foot = o.nScrollFoot ? $('table', o.nScrollFoot)[0] : null;
 
     if (o.nTable === t || head === t || foot === t) {
       is = true;
@@ -66,7 +66,7 @@ export var _dt_tables = function (visible) {
 
   var a = _dt_settings
     .filter(function (o) {
-      return !visible || (visible && $(o.nTable).is(":visible")) ? true : false;
+      return !visible || (visible && $(o.nTable).is(':visible')) ? true : false;
     })
     .map(function (o) {
       return o.nTable;

@@ -1,13 +1,14 @@
-import { _fnPageChange } from "../core/core.page";
-import { _fnLengthChange } from "../core/core.length";
-import { _fnDataSource } from "../core/core.support";
+import { _fnPageChange } from '../core/core.page';
+import { _fnLengthChange } from '../core/core.length';
+import { _fnDataSource } from '../core/core.support';
 
 export function _registerApis_page(register) {
   /**
    * Get the current page index.
    *
    * @return {integer} Current page index (zero based)
-   *//**
+   */
+  /**
    * Set the current page.
    *
    * Note that if you attempt to show a page which does not exist, DataTables will
@@ -22,13 +23,13 @@ export function _registerApis_page(register) {
    *    * `last` - Jump to the last page.
    * @returns {DataTables.Api} this
    */
-  register("page()", function (action) {
+  register('page()', function (action) {
     if (action === undefined) {
       return this.page.info().page; // not an expensive call
     }
 
     // else, have an action to take on all tables
-    return this.iterator("table", function (settings) {
+    return this.iterator('table', function (settings) {
       _fnPageChange(settings, action);
     });
   });
@@ -51,7 +52,7 @@ export function _registerApis_page(register) {
    *  * `recordsDisplay` - Data set length once the current filtering criterion
    *    are applied.
    */
-  register("page.info()", function () {
+  register('page.info()', function () {
     if (this.context.length === 0) {
       return undefined;
     }
@@ -70,7 +71,7 @@ export function _registerApis_page(register) {
       length: len,
       recordsTotal: settings.fnRecordsTotal(),
       recordsDisplay: visRecords,
-      serverSide: _fnDataSource(settings) === "ssp",
+      serverSide: _fnDataSource(settings) === 'ssp',
     };
   });
 
@@ -79,13 +80,14 @@ export function _registerApis_page(register) {
    *
    * @return {integer} Current page length. Note `-1` indicates that all records
    *   are to be shown.
-   *//**
+   */
+  /**
    * Set the current page length.
    *
    * @param {integer} Page length to set. Use `-1` to show all records.
    * @returns {DataTables.Api} this
    */
-  register("page.len()", function (len) {
+  register('page.len()', function (len) {
     // Note that we can't call this function 'length()' because `length`
     // is a Javascript property of functions which defines how many arguments
     // the function expects.
@@ -96,7 +98,7 @@ export function _registerApis_page(register) {
     }
 
     // else, set the page length
-    return this.iterator("table", function (settings) {
+    return this.iterator('table', function (settings) {
       _fnLengthChange(settings, len);
     });
   });

@@ -1,6 +1,6 @@
-import { _extend } from "../core/core.jq";
-import { _fnCallbackFire, _fnMacros } from "../core/core.support";
-import $ from "jquery";
+import { _extend } from '../core/core.jq';
+import { _fnCallbackFire, _fnMacros } from '../core/core.support';
+import $ from 'jquery';
 
 export function _constructFeature_info(settings, opts) {
   // For compatibility with the legacy `info` top level option
@@ -10,7 +10,7 @@ export function _constructFeature_info(settings, opts) {
 
   var lang = settings.oLanguage,
     tid = settings.sTableId,
-    n = $("<div/>", {
+    n = $('<div/>', {
       class: settings.oClasses.info.container,
     });
 
@@ -33,13 +33,13 @@ export function _constructFeature_info(settings, opts) {
   // For the first info display in the table, we add a callback and aria information.
   if (!settings._infoEl) {
     n.attr({
-      "aria-live": "polite",
-      id: tid + "_info",
-      role: "status",
+      'aria-live': 'polite',
+      id: tid + '_info',
+      role: 'status',
     });
 
     // Table is described by our info div
-    $(settings.nTable).attr("aria-describedby", tid + "_info");
+    $(settings.nTable).attr('aria-describedby', tid + '_info');
 
     settings._infoEl = n;
   }
@@ -61,7 +61,7 @@ function _fnUpdateInfo(settings, opts, node) {
 
   if (total !== max) {
     // Record set after filtering
-    out += " " + opts.search;
+    out += ' ' + opts.search;
   }
 
   // Convert the macros
@@ -82,5 +82,5 @@ function _fnUpdateInfo(settings, opts, node) {
 
   node.html(out);
 
-  _fnCallbackFire(settings, null, "info", [settings, node[0], out]);
+  _fnCallbackFire(settings, null, 'info', [settings, node[0], out]);
 }

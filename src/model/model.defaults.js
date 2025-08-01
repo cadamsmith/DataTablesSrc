@@ -1,6 +1,6 @@
-import { _fnHungarianMap } from "../core/core.compat";
-import { _extend } from "../core/core.jq";
-import { _dt_models_search } from "./model.search";
+import { _fnHungarianMap } from '../core/core.compat';
+import { _extend } from '../core/core.jq';
+import { _dt_models_search } from './model.search';
 
 /*
  * Developer note - See note in model.defaults.js about the use of Hungarian
@@ -18,14 +18,14 @@ const _dt_models_defaults_column = {
   aDataSort: null,
   iDataSort: -1,
 
-  ariaTitle: "",
+  ariaTitle: '',
 
   /**
    * You can control the default ordering direction, and even alter the
    * behaviour of the sort handler (i.e. only allow ascending ordering etc)
    * using this parameter.
    */
-  asSorting: ["asc", "desc", ""],
+  asSorting: ['asc', 'desc', ''],
 
   /**
    * Enable or disable filtering on the data in this column.
@@ -171,12 +171,12 @@ const _dt_models_defaults_column = {
    * can be useful as TH cells have semantic meaning in the table body, allowing them
    * to act as a header for a row (you may wish to add scope='row' to the TH elements).
    */
-  sCellType: "td",
+  sCellType: 'td',
 
   /**
    * Class to give to each cell in this column.
    */
-  sClass: "",
+  sClass: '',
 
   /**
    * When DataTables calculates the column widths to assign to each column,
@@ -189,7 +189,7 @@ const _dt_models_defaults_column = {
    * text that is found to be the longest string for the column - i.e. padding.
    * Generally you shouldn't need this!
    */
-  sContentPadding: "",
+  sContentPadding: '',
 
   /**
    * Allows a default value to be given for a column's data, and will be used
@@ -206,7 +206,7 @@ const _dt_models_defaults_column = {
    * back in an unexpected order (i.e. if you switch your columns around on the
    * client-side, your server-side code does not also need updating).
    */
-  sName: "",
+  sName: '',
 
   /**
    * Defines a data source type for the ordering which can be used to read
@@ -214,7 +214,7 @@ const _dt_models_defaults_column = {
    * version) prior to ordering. This allows ordering to occur on user
    * editable elements such as form inputs.
    */
-  sSortDataType: "std",
+  sSortDataType: 'std',
 
   /**
    * The title of this column.
@@ -274,7 +274,7 @@ const _dt_models_defaults = {
    * should contain an array for each column to be sorted initially containing
    * the column's index and a direction string ('asc' or 'desc').
    */
-  aaSorting: [[0, "asc"]],
+  aaSorting: [[0, 'asc']],
 
   /**
    * This parameter is basically identical to the `sorting` parameter, but
@@ -615,7 +615,7 @@ const _dt_models_defaults = {
         (settings.iStateDuration === -1
           ? sessionStorage
           : localStorage
-        ).getItem("DataTables_" + settings.sInstance + "_" + location.pathname)
+        ).getItem('DataTables_' + settings.sInstance + '_' + location.pathname)
       );
     } catch (e) {
       return {};
@@ -645,7 +645,7 @@ const _dt_models_defaults = {
   fnStateSaveCallback: function (settings, data) {
     try {
       (settings.iStateDuration === -1 ? sessionStorage : localStorage).setItem(
-        "DataTables_" + settings.sInstance + "_" + location.pathname,
+        'DataTables_' + settings.sInstance + '_' + location.pathname,
         JSON.stringify(data)
       );
     } catch (e) {
@@ -717,25 +717,25 @@ const _dt_models_defaults = {
       /**
        * ARIA label that is added to the table headers when the column may be sorted
        */
-      orderable: ": Activate to sort",
+      orderable: ': Activate to sort',
 
       /**
        * ARIA label that is added to the table headers when the column is currently being sorted
        */
-      orderableReverse: ": Activate to invert sorting",
+      orderableReverse: ': Activate to invert sorting',
 
       /**
        * ARIA label that is added to the table headers when the column is currently being
        * sorted and next step is to remove sorting
        */
-      orderableRemove: ": Activate to remove sorting",
+      orderableRemove: ': Activate to remove sorting',
 
       paginate: {
-        first: "First",
-        last: "Last",
-        next: "Next",
-        previous: "Previous",
-        number: "",
+        first: 'First',
+        last: 'Last',
+        next: 'Next',
+        previous: 'Previous',
+        number: '',
       },
     },
 
@@ -747,37 +747,37 @@ const _dt_models_defaults = {
       /**
        * Label and character for first page button («)
        */
-      sFirst: "\u00AB",
+      sFirst: '\u00AB',
 
       /**
        * Last page button (»)
        */
-      sLast: "\u00BB",
+      sLast: '\u00BB',
 
       /**
        * Next page button (›)
        */
-      sNext: "\u203A",
+      sNext: '\u203A',
 
       /**
        * Previous page button (‹)
        */
-      sPrevious: "\u2039",
+      sPrevious: '\u2039',
     },
 
     /**
      * Plural object for the data type the table is showing
      */
     entries: {
-      _: "entries",
-      1: "entry",
+      _: 'entries',
+      1: 'entry',
     },
 
     /**
      * Page length options
      */
     lengthLabels: {
-      "-1": "All",
+      '-1': 'All',
     },
 
     /**
@@ -786,7 +786,7 @@ const _dt_models_defaults = {
      * parameter - if it is not given, the value of `zeroRecords` will be used
      * instead (either the default or given value).
      */
-    sEmptyTable: "No data available in table",
+    sEmptyTable: 'No data available in table',
 
     /**
      * This string gives information to the end user about the information
@@ -802,20 +802,20 @@ const _dt_models_defaults = {
      * * `\_PAGE\_` - Current page number
      * * `\_PAGES\_` - Total number of pages of data in the table
      */
-    sInfo: "Showing _START_ to _END_ of _TOTAL_ _ENTRIES-TOTAL_",
+    sInfo: 'Showing _START_ to _END_ of _TOTAL_ _ENTRIES-TOTAL_',
 
     /**
      * Display information string for when the table is empty. Typically the
      * format of this string should match `info`.
      */
-    sInfoEmpty: "Showing 0 to 0 of 0 _ENTRIES-TOTAL_",
+    sInfoEmpty: 'Showing 0 to 0 of 0 _ENTRIES-TOTAL_',
 
     /**
      * When a user filters the information in a table, this string is appended
      * to the information (`info`) to give an idea of how strong the filtering
      * is. The variable _MAX_ is dynamically updated.
      */
-    sInfoFiltered: "(filtered from _MAX_ total _ENTRIES-MAX_)",
+    sInfoFiltered: '(filtered from _MAX_ total _ENTRIES-MAX_)',
 
     /**
      * If can be useful to append extra information to the info string at times,
@@ -823,7 +823,7 @@ const _dt_models_defaults = {
      * the `info` (`infoEmpty` and `infoFiltered` in whatever combination they are
      * being used) at all times.
      */
-    sInfoPostFix: "",
+    sInfoPostFix: '',
 
     /**
      * This decimal place operator is a little different from the other
@@ -838,7 +838,7 @@ const _dt_models_defaults = {
      * However, multiple different tables on the page can use different
      * decimal place characters.
      */
-    sDecimal: "",
+    sDecimal: '',
 
     /**
      * DataTables has a build in number formatter (`formatNumber`) which is
@@ -846,7 +846,7 @@ const _dt_models_defaults = {
      * By default a comma is used, but this can be trivially changed to any
      * character you wish with this parameter.
      */
-    sThousands: ",",
+    sThousands: ',',
 
     /**
      * Detail the action that will be taken when the drop down menu for the
@@ -854,7 +854,7 @@ const _dt_models_defaults = {
      * with a default select list of 10, 25, 50 and 100, and can be replaced
      * with a custom select box if required.
      */
-    sLengthMenu: "_MENU_ _ENTRIES_ per page",
+    sLengthMenu: '_MENU_ _ENTRIES_ per page',
 
     /**
      * When using Ajax sourced data and during the first draw when DataTables is
@@ -863,13 +863,13 @@ const _dt_models_defaults = {
      * parameter is not used when loading data by server-side processing, just
      * Ajax sourced data with client-side processing.
      */
-    sLoadingRecords: "Loading...",
+    sLoadingRecords: 'Loading...',
 
     /**
      * Text which is displayed when the table is processing a user action
      * (usually a sort command or similar).
      */
-    sProcessing: "",
+    sProcessing: '',
 
     /**
      * Details the actions that will be taken when the user types into the
@@ -878,7 +878,7 @@ const _dt_models_defaults = {
      * control over where it appears in the string. If "_INPUT_" is not given
      * then the input box is appended to the string automatically.
      */
-    sSearch: "Search:",
+    sSearch: 'Search:',
 
     /**
      * Assign a `placeholder` attribute to the search `input` element
@@ -888,7 +888,7 @@ const _dt_models_defaults = {
      *  @dtopt Language
      *  @name DataTable.defaults.language.searchPlaceholder
      */
-    sSearchPlaceholder: "",
+    sSearchPlaceholder: '',
 
     /**
      * All of the language information can be stored in a file on the
@@ -898,14 +898,14 @@ const _dt_models_defaults = {
      * initialiser object (i.e. the above parameters). Please refer to one of
      * the example language files to see how this works in action.
      */
-    sUrl: "",
+    sUrl: '',
 
     /**
      * Text shown inside the table records when the is no information to be
      * displayed after filtering. `emptyTable` is shown when there is simply no
      * information in the table at all (regardless of filtering).
      */
-    sZeroRecords: "No matching records found",
+    sZeroRecords: 'No matching records found',
   },
 
   /** The initial data order is reversed when `desc` ordering */
@@ -926,10 +926,10 @@ const _dt_models_defaults = {
    * Table and control layout. This replaces the legacy `dom` option.
    */
   layout: {
-    topStart: "pageLength",
-    topEnd: "search",
-    bottomStart: "info",
-    bottomEnd: "paging",
+    topStart: 'pageLength',
+    topEnd: 'search',
+    bottomStart: 'info',
+    bottomEnd: 'paging',
   },
 
   /**
@@ -955,7 +955,7 @@ const _dt_models_defaults = {
    * * `full_numbers` - 'First', 'Previous', 'Next' and 'Last' buttons, plus page numbers
    * * `first_last_numbers` - 'First' and 'Last' buttons, plus page numbers
    */
-  sPaginationType: "",
+  sPaginationType: '',
 
   /**
    * Enable horizontal scrolling. When a table is too wide to fit into a
@@ -966,7 +966,7 @@ const _dt_models_defaults = {
    * case it will be treated as a pixel measurement). Setting as simply `true`
    * is recommended.
    */
-  sScrollX: "",
+  sScrollX: '',
 
   /**
    * This property can be used to force a DataTable to use more width than it
@@ -976,7 +976,7 @@ const _dt_models_defaults = {
    * any CSS unit, or a number (in which case it will be treated as a pixel
    * measurement).
    */
-  sScrollXInner: "",
+  sScrollXInner: '',
 
   /**
    * Enable vertical scrolling. Vertical scrolling will constrain the DataTable
@@ -986,7 +986,7 @@ const _dt_models_defaults = {
    * enabled at the same time). This property can be any CSS unit, or a number
    * (in which case it will be treated as a pixel measurement).
    */
-  sScrollY: "",
+  sScrollY: '',
 
   /**
    * __Deprecated__ The functionality provided by this parameter has now been
@@ -995,7 +995,7 @@ const _dt_models_defaults = {
    * Set the HTTP method that is used to make the Ajax call for server-side
    * processing or Ajax sourced data.
    */
-  sServerMethod: "GET",
+  sServerMethod: 'GET',
 
   /**
    * DataTables makes use of renderers when displaying HTML elements for
@@ -1013,7 +1013,7 @@ const _dt_models_defaults = {
    * Set the data property name that DataTables should use to get a row's id
    * to set as the `id` property in the node.
    */
-  rowId: "DT_RowId",
+  rowId: 'DT_RowId',
 
   /**
    * Caption value

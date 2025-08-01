@@ -1,10 +1,10 @@
-import { _dt_util } from "../api/api.util";
-import { _dt_models_row } from "../model/model.row";
-import { _fnCallbackFire, _fnLog } from "./core.support";
-import { _addClass, _pluck, _unique } from "./core.internal";
-import { _extend, _isPlainObject } from "./core.jq";
-import $ from "jquery";
-import { _dt_ext_types } from "../ext/ext.types";
+import { _dt_util } from '../api/api.util';
+import { _dt_models_row } from '../model/model.row';
+import { _fnCallbackFire, _fnLog } from './core.support';
+import { _addClass, _pluck, _unique } from './core.internal';
+import { _extend, _isPlainObject } from './core.jq';
+import $ from 'jquery';
+import { _dt_ext_types } from '../ext/ext.types';
 
 /**
  * Return a function that can be used to get data from a source object, taking
@@ -34,10 +34,10 @@ export var _fnSetObjectDataFn = _dt_util.set;
  *  @memberof DataTable#oApi
  */
 export function _fnGetCellData(settings, rowIdx, colIdx, type) {
-  if (type === "search") {
-    type = "filter";
-  } else if (type === "order") {
-    type = "sort";
+  if (type === 'search') {
+    type = 'filter';
+  } else if (type === 'order') {
+    type = 'sort';
   }
 
   var row = settings.aoData[rowIdx];
@@ -58,9 +58,9 @@ export function _fnGetCellData(settings, rowIdx, colIdx, type) {
 
   // Allow for a node being returned for non-display types
   if (
-    type !== "display" &&
+    type !== 'display' &&
     cellData &&
-    typeof cellData === "object" &&
+    typeof cellData === 'object' &&
     cellData.nodeName
   ) {
     cellData = cellData.innerHTML;
@@ -71,13 +71,13 @@ export function _fnGetCellData(settings, rowIdx, colIdx, type) {
       _fnLog(
         settings,
         0,
-        "Requested unknown parameter " +
-          (typeof col.mData == "function"
-            ? "{function}"
+        'Requested unknown parameter ' +
+          (typeof col.mData == 'function'
+            ? '{function}'
             : "'" + col.mData + "'") +
-          " for row " +
+          ' for row ' +
           rowIdx +
-          ", column " +
+          ', column ' +
           colIdx,
         4
       );
@@ -94,17 +94,17 @@ export function _fnGetCellData(settings, rowIdx, colIdx, type) {
     type !== undefined
   ) {
     cellData = defaultContent;
-  } else if (typeof cellData === "function") {
+  } else if (typeof cellData === 'function') {
     // If the data source is a function, then we run it and use the return,
     // executing in the scope of the data object (for instances)
     return cellData.call(rowData);
   }
 
-  if (cellData === null && type === "display") {
-    return "";
+  if (cellData === null && type === 'display') {
+    return '';
   }
 
-  if (type === "filter") {
+  if (type === 'filter') {
     var fomatters = _dt_ext_types.search;
 
     if (fomatters[col.sType]) {
@@ -121,7 +121,7 @@ export function _fnGetCellData(settings, rowIdx, colIdx, type) {
  * @param {*} val Value
  */
 export function _fnWriteCell(td, val) {
-  if (val && typeof val === "object" && val.nodeName) {
+  if (val && typeof val === 'object' && val.nodeName) {
     $(td).empty().append(val);
   } else {
     td.innerHTML = val;
@@ -145,7 +145,7 @@ export function _fnAddData(settings, dataIn, tr, tds) {
   /* Create the object for storing information about this new row */
   var rowIdx = settings.aoData.length;
   var rowModel = _extend(true, {}, _dt_models_row, {
-    src: tr ? "dom" : "data",
+    src: tr ? 'dom' : 'data',
     idx: rowIdx,
   });
 
@@ -225,7 +225,7 @@ export function _fnSetCellData(settings, rowIdx, colIdx, val) {
  *  @memberof DataTable#oApi
  */
 export function _fnGetDataMaster(settings) {
-  return _pluck(settings.aoData, "_aData");
+  return _pluck(settings.aoData, '_aData');
 }
 
 /**
@@ -266,7 +266,7 @@ export function _fnInvalidate(settings, rowIdx, src, colIdx) {
   row.displayData = null;
 
   // Are we reading last data from DOM or the data object?
-  if (src === "dom" || ((!src || src === "auto") && row.src === "dom")) {
+  if (src === 'dom' || ((!src || src === 'auto') && row.src === 'dom')) {
     // Read the data from the DOM
     row._aData = _fnGetRowElements(
       settings,
@@ -341,8 +341,8 @@ function _fnGetRowElements(settings, row, colIdx, d) {
   d = d !== undefined ? d : objectRead ? {} : [];
 
   var attr = function (str, td) {
-    if (typeof str === "string") {
-      var idx = str.indexOf("@");
+    if (typeof str === 'string') {
+      var idx = str.indexOf('@');
 
       if (idx !== -1) {
         var attr = str.substring(idx + 1);
@@ -388,7 +388,7 @@ function _fnGetRowElements(settings, row, colIdx, d) {
     while (td) {
       name = td.nodeName.toUpperCase();
 
-      if (name == "TD" || name == "TH") {
+      if (name == 'TD' || name == 'TH') {
         cellProcess(td);
         tds.push(td);
       }
@@ -408,7 +408,7 @@ function _fnGetRowElements(settings, row, colIdx, d) {
   var rowNode = row.firstChild ? row : row.nTr;
 
   if (rowNode) {
-    var id = rowNode.getAttribute("id");
+    var id = rowNode.getAttribute('id');
 
     if (id) {
       _fnSetObjectDataFn(settings.rowId)(d, id);
@@ -444,7 +444,7 @@ export function _fnCreateTr(oSettings, iRow, nTrIn, anTds) {
     trClass = oSettings.oClasses.tbody.row;
 
   if (row.nTr === null) {
-    nTr = nTrIn || document.createElement("tr");
+    nTr = nTrIn || document.createElement('tr');
 
     row.nTr = nTr;
     row.anCells = cells;
@@ -467,7 +467,7 @@ export function _fnCreateTr(oSettings, iRow, nTrIn, anTds) {
       nTd = create ? document.createElement(oCol.sCellType) : anTds[i];
 
       if (!nTd) {
-        _fnLog(oSettings, 0, "Incorrect column count", 18);
+        _fnLog(oSettings, 0, 'Incorrect column count', 18);
       }
 
       nTd._DT_CellIndex = {
@@ -483,7 +483,7 @@ export function _fnCreateTr(oSettings, iRow, nTrIn, anTds) {
       if (
         create ||
         ((oCol.mRender || oCol.mData !== i) &&
-          (!_isPlainObject(oCol.mData) || oCol.mData._ !== i + ".display"))
+          (!_isPlainObject(oCol.mData) || oCol.mData._ !== i + '.display'))
       ) {
         _fnWriteCell(nTd, display[i]);
       }
@@ -510,7 +510,7 @@ export function _fnCreateTr(oSettings, iRow, nTrIn, anTds) {
       }
     }
 
-    _fnCallbackFire(oSettings, "aoRowCreatedCallback", "row-created", [
+    _fnCallbackFire(oSettings, 'aoRowCreatedCallback', 'row-created', [
       nTr,
       rowData,
       iRow,
@@ -541,10 +541,10 @@ function _fnRowAttributes(settings, row) {
 
     if (data.DT_RowClass) {
       // Remove any classes added by DT_RowClass before
-      var a = data.DT_RowClass.split(" ");
+      var a = data.DT_RowClass.split(' ');
       row.__rowc = row.__rowc ? _unique(row.__rowc.concat(a)) : a;
 
-      $(tr).removeClass(row.__rowc.join(" ")).addClass(data.DT_RowClass);
+      $(tr).removeClass(row.__rowc.join(' ')).addClass(data.DT_RowClass);
     }
 
     if (data.DT_RowAttr) {
@@ -571,7 +571,7 @@ export function _fnGetRowDisplay(settings, rowIdx) {
 
     for (var colIdx = 0, len = columns.length; colIdx < len; colIdx++) {
       rowModal.displayData.push(
-        _fnGetCellData(settings, rowIdx, colIdx, "display")
+        _fnGetCellData(settings, rowIdx, colIdx, 'display')
       );
     }
   }

@@ -1,7 +1,7 @@
-import { _pluck } from "./core.internal";
-import { _each, _extend } from "./core.jq";
-import { _fnCallbackFire } from "./core.support";
-import { _fnSortResolve } from "./core.sortAlgo";
+import { _pluck } from './core.internal';
+import { _each, _extend } from './core.jq';
+import { _fnCallbackFire } from './core.support';
+import { _fnSortResolve } from './core.sortAlgo';
 
 /**
  * Attempt to load a saved table state
@@ -37,7 +37,7 @@ export function _fnLoadState(settings, init, callback) {
 export function _fnImplementState(settings, s, callback) {
   var i, ien;
   var columns = settings.aoColumns;
-  var currentNames = _pluck(settings.aoColumns, "sName");
+  var currentNames = _pluck(settings.aoColumns, 'sName');
 
   settings._bLoadingState = true;
 
@@ -59,8 +59,8 @@ export function _fnImplementState(settings, s, callback) {
   // cancelling of loading by returning false
   var abStateLoad = _fnCallbackFire(
     settings,
-    "aoStateLoadParams",
-    "stateLoadParams",
+    'aoStateLoadParams',
+    'stateLoadParams',
     [settings, s]
   );
   if (abStateLoad.indexOf(false) !== -1) {
@@ -74,7 +74,7 @@ export function _fnImplementState(settings, s, callback) {
 
   // This is needed for ColReorder, which has to happen first to allow all
   // the stored indexes to be usable. It is not publicly documented.
-  _fnCallbackFire(settings, null, "stateLoadInit", [settings, s], true);
+  _fnCallbackFire(settings, null, 'stateLoadInit', [settings, s], true);
 
   // Page Length
   if (s.length !== undefined) {
@@ -95,7 +95,7 @@ export function _fnImplementState(settings, s, callback) {
       var set = [col[0], col[1]];
 
       // A column name was stored and should be used for restore
-      if (typeof col[0] === "string") {
+      if (typeof col[0] === 'string') {
         // Find the name from the current list of column names
         var idx = currentNames.indexOf(col[0]);
 
@@ -122,20 +122,20 @@ export function _fnImplementState(settings, s, callback) {
   // Columns
   if (s.columns) {
     var set = s.columns;
-    var incoming = _pluck(s.columns, "name");
+    var incoming = _pluck(s.columns, 'name');
 
     // Check if it is a 2.2 style state object with a `name` property for the columns, and if
     // the name was defined. If so, then create a new array that will map the state object
     // given, to the current columns (don't bother if they are already matching tho).
     if (
-      incoming.join("").length &&
-      incoming.join("") !== currentNames.join("")
+      incoming.join('').length &&
+      incoming.join('') !== currentNames.join('')
     ) {
       set = [];
 
       // For each column, try to find the name in the incoming array
       for (i = 0; i < currentNames.length; i++) {
-        if (currentNames[i] != "") {
+        if (currentNames[i] != '') {
           var idx = incoming.indexOf(currentNames[i]);
 
           if (idx >= 0) {
@@ -172,7 +172,7 @@ export function _fnImplementState(settings, s, callback) {
   }
 
   settings._bLoadingState = false;
-  _fnCallbackFire(settings, "aoStateLoaded", "stateLoaded", [settings, s]);
+  _fnCallbackFire(settings, 'aoStateLoaded', 'stateLoaded', [settings, s]);
   callback();
 }
 
@@ -208,7 +208,7 @@ export function _fnSaveState(settings) {
   };
 
   settings.oSavedState = state;
-  _fnCallbackFire(settings, "aoStateSaveParams", "stateSaveParams", [
+  _fnCallbackFire(settings, 'aoStateSaveParams', 'stateSaveParams', [
     settings,
     state,
   ]);

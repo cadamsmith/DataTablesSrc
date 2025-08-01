@@ -1,7 +1,7 @@
-import { _dt_models_search } from "../model/model.search.js";
-import { _dt_browser } from "../api/api.browser.js";
-import $ from "jquery";
-import { _each, _extend } from "./core.jq.js";
+import { _dt_models_search } from '../model/model.search.js';
+import { _dt_browser } from '../api/api.browser.js';
+import $ from 'jquery';
+import { _each, _extend } from './core.jq.js';
 
 /**
  * Create a mapping object that allows camel case parameters to be looked up
@@ -11,7 +11,7 @@ import { _each, _extend } from "./core.jq.js";
  *  @memberof DataTable#oApi
  */
 export function _fnHungarianMap(o) {
-  var hungarian = "a aa ai ao as b fn i m o s ",
+  var hungarian = 'a aa ai ao as b fn i m o s ',
     match,
     newKey,
     map = {};
@@ -19,11 +19,11 @@ export function _fnHungarianMap(o) {
   _each(o, function (key) {
     match = key.match(/^([^A-Z]+?)([A-Z])/);
 
-    if (match && hungarian.indexOf(match[1] + " ") !== -1) {
+    if (match && hungarian.indexOf(match[1] + ' ') !== -1) {
       newKey = key.replace(match[0], match[2].toLowerCase());
       map[newKey] = key;
 
-      if (match[1] === "o") {
+      if (match[1] === 'o') {
         _fnHungarianMap(o[key]);
       }
     }
@@ -58,7 +58,7 @@ export function _fnCamelToHungarian(src, user, force) {
       (force || user[hungarianKey] === undefined)
     ) {
       // For objects, we need to buzz down into the object to copy parameters
-      if (hungarianKey.charAt(0) === "o") {
+      if (hungarianKey.charAt(0) === 'o') {
         // Copy the camelCase options over to the hungarian
         if (!user[hungarianKey]) {
           user[hungarianKey] = {};
@@ -92,27 +92,27 @@ var _fnCompatMap = function (o, knew, old) {
  *  @param {object} init Object to map
  */
 export function _fnCompatOpts(init) {
-  _fnCompatMap(init, "ordering", "bSort");
-  _fnCompatMap(init, "orderMulti", "bSortMulti");
-  _fnCompatMap(init, "orderClasses", "bSortClasses");
-  _fnCompatMap(init, "orderCellsTop", "bSortCellsTop");
-  _fnCompatMap(init, "order", "aaSorting");
-  _fnCompatMap(init, "orderFixed", "aaSortingFixed");
-  _fnCompatMap(init, "paging", "bPaginate");
-  _fnCompatMap(init, "pagingType", "sPaginationType");
-  _fnCompatMap(init, "pageLength", "iDisplayLength");
-  _fnCompatMap(init, "searching", "bFilter");
+  _fnCompatMap(init, 'ordering', 'bSort');
+  _fnCompatMap(init, 'orderMulti', 'bSortMulti');
+  _fnCompatMap(init, 'orderClasses', 'bSortClasses');
+  _fnCompatMap(init, 'orderCellsTop', 'bSortCellsTop');
+  _fnCompatMap(init, 'order', 'aaSorting');
+  _fnCompatMap(init, 'orderFixed', 'aaSortingFixed');
+  _fnCompatMap(init, 'paging', 'bPaginate');
+  _fnCompatMap(init, 'pagingType', 'sPaginationType');
+  _fnCompatMap(init, 'pageLength', 'iDisplayLength');
+  _fnCompatMap(init, 'searching', 'bFilter');
 
   // Boolean initialisation of x-scrolling
-  if (typeof init.sScrollX === "boolean") {
-    init.sScrollX = init.sScrollX ? "100%" : "";
+  if (typeof init.sScrollX === 'boolean') {
+    init.sScrollX = init.sScrollX ? '100%' : '';
   }
-  if (typeof init.scrollX === "boolean") {
-    init.scrollX = init.scrollX ? "100%" : "";
+  if (typeof init.scrollX === 'boolean') {
+    init.scrollX = init.scrollX ? '100%' : '';
   }
 
   // Objects for ordering
-  if (typeof init.bSort === "object") {
+  if (typeof init.bSort === 'object') {
     init.orderIndicators =
       init.bSort.indicators !== undefined ? init.bSort.indicators : true;
     init.orderHandler =
@@ -127,7 +127,7 @@ export function _fnCompatOpts(init) {
   }
 
   // Which cells are the title cells?
-  if (typeof init.bSortCellsTop === "boolean") {
+  if (typeof init.bSortCellsTop === 'boolean') {
     init.titleRow = init.bSortCellsTop;
   }
 
@@ -156,14 +156,14 @@ export function _fnCompatOpts(init) {
  *  @param {object} init Object to map
  */
 export function _fnCompatCols(init) {
-  _fnCompatMap(init, "orderable", "bSortable");
-  _fnCompatMap(init, "orderData", "aDataSort");
-  _fnCompatMap(init, "orderSequence", "asSorting");
-  _fnCompatMap(init, "orderDataType", "sortDataType");
+  _fnCompatMap(init, 'orderable', 'bSortable');
+  _fnCompatMap(init, 'orderData', 'aDataSort');
+  _fnCompatMap(init, 'orderSequence', 'asSorting');
+  _fnCompatMap(init, 'orderDataType', 'sortDataType');
 
   // orderData can be given as an integer
   var dataSort = init.aDataSort;
-  if (typeof dataSort === "number" && !Array.isArray(dataSort)) {
+  if (typeof dataSort === 'number' && !Array.isArray(dataSort)) {
     init.aDataSort = [dataSort];
   }
 }
@@ -182,32 +182,32 @@ export function _fnBrowserDetect(settings) {
     _dt_browser.data = browser;
 
     // Scrolling feature / quirks detection
-    var n = $("<div/>")
+    var n = $('<div/>')
       .css({
-        position: "fixed",
+        position: 'fixed',
         top: 0,
         left: -1 * window.pageXOffset, // allow for scrolling
         height: 1,
         width: 1,
-        overflow: "hidden",
+        overflow: 'hidden',
       })
       .append(
-        $("<div/>")
+        $('<div/>')
           .css({
-            position: "absolute",
+            position: 'absolute',
             top: 1,
             left: 1,
             width: 100,
-            overflow: "scroll",
+            overflow: 'scroll',
           })
           .append(
-            $("<div/>").css({
-              width: "100%",
+            $('<div/>').css({
+              width: '100%',
               height: 10,
             })
           )
       )
-      .appendTo("body");
+      .appendTo('body');
 
     var outer = n.children();
     var inner = outer.children();

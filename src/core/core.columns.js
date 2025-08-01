@@ -1,22 +1,22 @@
-import { _fnCompatCols, _fnCamelToHungarian } from "./core.compat";
-import { _addClass, _empty, _stringToCss } from "./core.internal";
-import { _extend, _isPlainObject } from "./core.jq";
-import { _dt_models_column } from "../model/model.column";
-import { _dt_models_search } from "../model/model.search";
-import { _dt_models_defaults } from "../model/model.defaults";
-import { _fnMap, _fnCallbackFire, _fnDataSource } from "./core.support";
+import { _fnCompatCols, _fnCamelToHungarian } from './core.compat';
+import { _addClass, _empty, _stringToCss } from './core.internal';
+import { _extend, _isPlainObject } from './core.jq';
+import { _dt_models_column } from '../model/model.column';
+import { _dt_models_search } from '../model/model.search';
+import { _dt_models_defaults } from '../model/model.defaults';
+import { _fnMap, _fnCallbackFire, _fnDataSource } from './core.support';
 import {
   _fnGetObjectDataFn,
   _fnSetObjectDataFn,
   _fnGetCellData,
   _fnWriteCell,
-  _fnGetRowDisplay
-} from "./core.data";
-import { _dt_util } from "../api/api.util";
-import { _dt_render } from "../ext/ext.helpers";
-import $ from "jquery";
-import { _dt_ext_types } from "../ext/ext.types";
-import { _dt_util_replaceable } from "../api/api.util.replaceable";
+  _fnGetRowDisplay,
+} from './core.data';
+import { _dt_util } from '../api/api.util';
+import { _dt_render } from '../ext/ext.helpers';
+import $ from 'jquery';
+import { _dt_ext_types } from '../ext/ext.types';
+import { _dt_util_replaceable } from '../api/api.util.replaceable';
 
 /**
  * Add a column to the list used for the table with default values
@@ -32,7 +32,7 @@ export function _fnAddColumn(oSettings) {
     mData: oDefaults.mData ? oDefaults.mData : iCol,
     idx: iCol,
     searchFixed: {},
-    colEl: $("<col>").attr("data-dt-column", iCol),
+    colEl: $('<col>').attr('data-dt-column', iCol),
   });
   oSettings.aoColumns.push(oCol);
 
@@ -79,12 +79,12 @@ export function _fnColumnOptions(oSettings, iCol, oOptions) {
     var origClass = oCol.sClass;
 
     _extend(oCol, oOptions);
-    _fnMap(oCol, oOptions, "sWidth", "sWidthOrig");
+    _fnMap(oCol, oOptions, 'sWidth', 'sWidthOrig');
 
     // Merge class from previously defined classes with this one, rather than just
     // overwriting it in the extend above
     if (origClass !== oCol.sClass) {
-      oCol.sClass = origClass + " " + oCol.sClass;
+      oCol.sClass = origClass + ' ' + oCol.sClass;
     }
 
     /* iDataSort to be applied (backwards compatibility), but aDataSort will take
@@ -93,7 +93,7 @@ export function _fnColumnOptions(oSettings, iCol, oOptions) {
     if (oOptions.iDataSort !== undefined) {
       oCol.aDataSort = [oOptions.iDataSort];
     }
-    _fnMap(oCol, oOptions, "aDataSort");
+    _fnMap(oCol, oOptions, 'aDataSort');
   }
 
   /* Cache the data get and set functions for speed */
@@ -112,7 +112,7 @@ export function _fnColumnOptions(oSettings, iCol, oOptions) {
   oCol._render = oCol.mRender ? _fnGetObjectDataFn(oCol.mRender) : null;
 
   var attrTest = function (src) {
-    return typeof src === "string" && src.indexOf("@") !== -1;
+    return typeof src === 'string' && src.indexOf('@') !== -1;
   };
   oCol._bAttrSrc =
     _isPlainObject(mDataSrc) &&
@@ -134,7 +134,7 @@ export function _fnColumnOptions(oSettings, iCol, oOptions) {
 
   // Indicate if DataTables should read DOM data as an object or array
   // Used in _fnGetRowElements
-  if (typeof mDataSrc !== "number" && !oCol._isArrayHost) {
+  if (typeof mDataSrc !== 'number' && !oCol._isArrayHost) {
     oSettings._rowReadObject = true;
   }
 
@@ -155,11 +155,11 @@ export function _fnAdjustColumnSizing(settings) {
   _fnColumnSizes(settings);
 
   var scroll = settings.oScroll;
-  if (scroll.sY !== "" || scroll.sX !== "") {
+  if (scroll.sY !== '' || scroll.sX !== '') {
     _fnScrollDraw(settings);
   }
 
-  _fnCallbackFire(settings, null, "column-sizing", [settings]);
+  _fnCallbackFire(settings, null, 'column-sizing', [settings]);
 }
 
 /**
@@ -173,10 +173,10 @@ function _fnColumnSizes(settings) {
   for (var i = 0; i < cols.length; i++) {
     var width = _fnColumnsSumWidth(settings, [i], false, false);
 
-    cols[i].colEl.css("width", width);
+    cols[i].colEl.css('width', width);
 
     if (settings.oScroll.sX) {
-      cols[i].colEl.css("min-width", width);
+      cols[i].colEl.css('min-width', width);
     }
   }
 }
@@ -190,9 +190,9 @@ function _fnColumnSizes(settings) {
  *  @memberof DataTable#oApi
  */
 export function _fnVisibleToColumnIndex(oSettings, iMatch) {
-  var aiVis = _fnGetColumns(oSettings, "bVisible");
+  var aiVis = _fnGetColumns(oSettings, 'bVisible');
 
-  return typeof aiVis[iMatch] === "number" ? aiVis[iMatch] : null;
+  return typeof aiVis[iMatch] === 'number' ? aiVis[iMatch] : null;
 }
 
 /**
@@ -204,7 +204,7 @@ export function _fnVisibleToColumnIndex(oSettings, iMatch) {
  *  @memberof DataTable#oApi
  */
 export function _fnColumnIndexToVisible(oSettings, iMatch) {
-  var aiVis = _fnGetColumns(oSettings, "bVisible");
+  var aiVis = _fnGetColumns(oSettings, 'bVisible');
   var iPos = aiVis.indexOf(iMatch);
 
   return iPos !== -1 ? iPos : null;
@@ -225,7 +225,7 @@ export function _fnVisbleColumns(settings) {
     for (var i = 0, ien = layout[0].length; i < ien; i++) {
       if (
         columns[i].bVisible &&
-        $(layout[0][i].cell).css("display") !== "none"
+        $(layout[0][i].cell).css('display') !== 'none'
       ) {
         vis++;
       }
@@ -324,7 +324,7 @@ export function _fnColumnTypes(settings) {
           // Use a cache array so we only need to get the type data
           // from the formatter once (when using multiple detectors)
           if (cache[k] === undefined) {
-            cache[k] = _fnGetCellData(settings, k, i, "type");
+            cache[k] = _fnGetCellData(settings, k, i, 'type');
           }
 
           // Only one data point in the column needs to match this function
@@ -347,7 +347,7 @@ export function _fnColumnTypes(settings) {
           // Only a single match is needed for html type since it is
           // bottom of the pile and very similar to string - but it
           // must not be empty
-          if (detectedType === "html" && !_empty(cache[k])) {
+          if (detectedType === 'html' && !_empty(cache[k])) {
             break;
           }
         }
@@ -362,7 +362,7 @@ export function _fnColumnTypes(settings) {
 
       // Fall back - if no type was detected, always use string
       if (!col.sType) {
-        col.sType = "string";
+        col.sType = 'string';
       }
     }
 
@@ -398,7 +398,7 @@ function _columnAutoRender(settings, colIdx) {
     if (data[i].nTr) {
       // We have to update the display here since there is no
       // invalidation check for the data
-      var display = _fnGetCellData(settings, i, colIdx, "display");
+      var display = _fnGetCellData(settings, i, colIdx, 'display');
 
       data[i].displayData[colIdx] = display;
       _fnWriteCell(data[i].anCells[colIdx], display);
@@ -472,7 +472,7 @@ export function _fnApplyColumnDefs(
       for (j = 0, jLen = aTargets.length; j < jLen; j++) {
         var target = aTargets[j];
 
-        if (typeof target === "number" && target >= 0) {
+        if (typeof target === 'number' && target >= 0) {
           /* Add columns that we don't yet know about */
           while (columns.length <= target) {
             _fnAddColumn(oSettings);
@@ -480,17 +480,17 @@ export function _fnApplyColumnDefs(
 
           /* Integer, basic index */
           fn(target, def);
-        } else if (typeof target === "number" && target < 0) {
+        } else if (typeof target === 'number' && target < 0) {
           /* Negative integer, right to left column counting */
           fn(columns.length + target, def);
-        } else if (typeof target === "string") {
+        } else if (typeof target === 'string') {
           for (k = 0, kLen = columns.length; k < kLen; k++) {
-            if (target === "_all") {
+            if (target === '_all') {
               // Apply to all columns
               fn(k, def);
-            } else if (target.indexOf(":name") !== -1) {
+            } else if (target.indexOf(':name') !== -1) {
               // Column selector
-              if (columns[k].sName === target.replace(":name", "")) {
+              if (columns[k].sName === target.replace(':name', '')) {
                 fn(k, def);
               }
             } else {
@@ -503,7 +503,7 @@ export function _fnApplyColumnDefs(
                   // an element name selector only, since they are treated as
                   // class names for 1.x compat.
                   if (target.match(/^[a-z][\w-]*$/i)) {
-                    target = "." + target;
+                    target = '.' + target;
                   }
 
                   if (cell.is(target)) {
@@ -554,15 +554,15 @@ export function _fnColumnsSumWidth(settings, targets, original, incVisible) {
 
     if (definedWidth === null || definedWidth === undefined) {
       return null; // can't determine a defined width - browser defined
-    } else if (typeof definedWidth === "number") {
-      unit = "px";
+    } else if (typeof definedWidth === 'number') {
+      unit = 'px';
       sum += definedWidth;
     } else {
       var matched = definedWidth.match(/([\d\.]+)([^\d]*)/);
 
       if (matched) {
         sum += matched[1] * 1;
-        unit = matched.length === 3 ? matched[2] : "px";
+        unit = matched.length === 3 ? matched[2] : 'px';
       }
     }
   }
@@ -571,17 +571,16 @@ export function _fnColumnsSumWidth(settings, targets, original, incVisible) {
 }
 
 export function _fnColumnsFromHeader(cell) {
-  var attr = $(cell).closest("[data-dt-column]").attr("data-dt-column");
+  var attr = $(cell).closest('[data-dt-column]').attr('data-dt-column');
 
   if (!attr) {
     return [];
   }
 
-  return attr.split(",").map(function (val) {
+  return attr.split(',').map(function (val) {
     return val * 1;
   });
 }
-
 
 /**
  * Calculate the width of columns for the table
@@ -600,8 +599,8 @@ export function _fnCalculateColumnWidths(settings) {
     scrollY = scroll.sY,
     scrollX = scroll.sX,
     scrollXInner = scroll.sXInner,
-    visibleColumns = _fnGetColumns(settings, "bVisible"),
-    tableWidthAttr = table.getAttribute("width"), // from DOM element
+    visibleColumns = _fnGetColumns(settings, 'bVisible'),
+    tableWidthAttr = table.getAttribute('width'), // from DOM element
     tableContainer = table.parentNode,
     i,
     column,
@@ -621,11 +620,11 @@ export function _fnCalculateColumnWidths(settings) {
   // the width is intended to be 100%, which is usually is in CSS, but it is very
   // difficult to correctly parse the rules to get the final result.
   if (!styleWidth && !tableWidthAttr) {
-    table.style.width = "100%";
-    styleWidth = "100%";
+    table.style.width = '100%';
+    styleWidth = '100%';
   }
 
-  if (styleWidth && styleWidth.indexOf("%") !== -1) {
+  if (styleWidth && styleWidth.indexOf('%') !== -1) {
     tableWidthAttr = styleWidth;
   }
 
@@ -634,7 +633,7 @@ export function _fnCalculateColumnWidths(settings) {
   _fnCallbackFire(
     settings,
     null,
-    "column-calc",
+    'column-calc',
     { visible: visibleColumns },
     false
   );
@@ -644,12 +643,12 @@ export function _fnCalculateColumnWidths(settings) {
   // the DOM and allow the browser to do all the hard work of calculating
   // table widths
   var tmpTable = $(table.cloneNode())
-    .css("visibility", "hidden")
-    .removeAttr("id");
+    .css('visibility', 'hidden')
+    .removeAttr('id');
 
   // Clean up the table body
-  tmpTable.append("<tbody/>");
-  var tr = $("<tr/>").appendTo(tmpTable.find("tbody"));
+  tmpTable.append('<tbody/>');
+  var tr = $('<tr/>').appendTo(tmpTable.find('tbody'));
 
   // Clone the table header and footer - we can't use the header / footer
   // from the cloned table, since if scrolling is active, the table's
@@ -659,10 +658,10 @@ export function _fnCalculateColumnWidths(settings) {
     .append($(settings.nTFoot).clone());
 
   // Remove any assigned widths from the footer (from scrolling)
-  tmpTable.find("tfoot th, tfoot td").css("width", "");
+  tmpTable.find('tfoot th, tfoot td').css('width', '');
 
   // Apply custom sizing to the cloned header
-  tmpTable.find("thead th, thead td").each(function () {
+  tmpTable.find('thead th, thead td').each(function () {
     // Get the `width` from the header layout
     var width = _fnColumnsSumWidth(settings, this, true, false);
 
@@ -676,7 +675,7 @@ export function _fnCalculateColumnWidths(settings) {
         this.style.minWidth = width;
 
         $(this).append(
-          $("<div/>").css({
+          $('<div/>').css({
             width: width,
             margin: 0,
             padding: 0,
@@ -686,7 +685,7 @@ export function _fnCalculateColumnWidths(settings) {
         );
       }
     } else {
-      this.style.width = "";
+      this.style.width = '';
     }
   });
 
@@ -699,9 +698,9 @@ export function _fnCalculateColumnWidths(settings) {
     var autoClass = _dt_ext_types.className[column.sType];
     var text = longest + column.sContentPadding;
     var insert =
-      longest.indexOf("<") === -1 ? document.createTextNode(text) : text;
+      longest.indexOf('<') === -1 ? document.createTextNode(text) : text;
 
-    $("<td/>")
+    $('<td/>')
       .addClass(autoClass)
       .addClass(column.sClass)
       .append(insert)
@@ -710,23 +709,23 @@ export function _fnCalculateColumnWidths(settings) {
 
   // Tidy the temporary table - remove name attributes so there aren't
   // duplicated in the dom (radio elements for example)
-  $("[name]", tmpTable).removeAttr("name");
+  $('[name]', tmpTable).removeAttr('name');
 
   // Table has been built, attach to the document so we can work with it.
   // A holding element is used, positioned at the top of the container
   // with minimal height, so it has no effect on if the container scrolls
   // or not. Otherwise it might trigger scrolling when it actually isn't
   // needed
-  var holder = $("<div/>")
+  var holder = $('<div/>')
     .css(
       scrollX || scrollY
         ? {
-            position: "absolute",
+            position: 'absolute',
             top: 0,
             left: 0,
             height: 1,
             right: 0,
-            overflow: "hidden",
+            overflow: 'hidden',
           }
         : {}
     )
@@ -739,8 +738,8 @@ export function _fnCalculateColumnWidths(settings) {
   if (scrollX && scrollXInner) {
     tmpTable.width(scrollXInner);
   } else if (scrollX) {
-    tmpTable.css("width", "auto");
-    tmpTable.removeAttr("width");
+    tmpTable.css('width', 'auto');
+    tmpTable.removeAttr('width');
 
     // If there is no width attribute or style, then allow the table to
     // collapse
@@ -755,7 +754,7 @@ export function _fnCalculateColumnWidths(settings) {
 
   // Get the width of each column in the constructed table
   var total = 0;
-  var bodyCells = tmpTable.find("tbody tr").eq(0).children();
+  var bodyCells = tmpTable.find('tbody tr').eq(0).children();
 
   for (i = 0; i < visibleColumns.length; i++) {
     // Use getBounding for sub-pixel accuracy, which we then want to round up!
@@ -799,15 +798,15 @@ export function _fnCalculateColumnWidths(settings) {
       // then the callback is immediately run. Which we don't want. If the element isn't
       // visible, then it isn't run, but we want it to run when it is then made visible.
       // This flag allows the above to be satisfied.
-      var first = $(settings.nTableWrapper).is(":visible");
+      var first = $(settings.nTableWrapper).is(':visible');
 
       // Use an empty div to attach the observer so it isn't impacted by height changes
-      var resizer = $("<div>")
+      var resizer = $('<div>')
         .css({
-          width: "100%",
+          width: '100%',
           height: 0,
         })
-        .addClass("dt-autosize")
+        .addClass('dt-autosize')
         .appendTo(settings.nTableWrapper);
 
       settings.resizeObserver = new ResizeObserver(function (e) {
@@ -821,7 +820,7 @@ export function _fnCalculateColumnWidths(settings) {
       settings.resizeObserver.observe(resizer[0]);
     } else {
       // For old browsers, the best we can do is listen for a window resize
-      $(window).on("resize.DT-" + settings.sInstance, resize);
+      $(window).on('resize.DT-' + settings.sInstance, resize);
     }
 
     settings._reszEvt = true;
@@ -835,7 +834,7 @@ export function _fnCalculateColumnWidths(settings) {
  * @returns Width
  */
 function _fnWrapperWidth(settings) {
-  return $(settings.nTableWrapper).is(":visible")
+  return $(settings.nTableWrapper).is(':visible')
     ? $(settings.nTableWrapper).width()
     : 0;
 }
@@ -852,7 +851,7 @@ function _fnGetMaxLenString(settings, colIdx) {
 
   if (!column.maxLenString) {
     var s,
-      max = "",
+      max = '',
       maxLen = -1;
 
     for (var i = 0, ien = settings.aiDisplayMaster.length; i < ien; i++) {
@@ -860,17 +859,17 @@ function _fnGetMaxLenString(settings, colIdx) {
       var data = _fnGetRowDisplay(settings, rowIdx)[colIdx];
 
       var cellString =
-        data && typeof data === "object" && data.nodeType
+        data && typeof data === 'object' && data.nodeType
           ? data.innerHTML
-          : data + "";
+          : data + '';
 
       // Remove id / name attributes from elements so they
       // don't interfere with existing elements
       cellString = cellString
-        .replace(/id=".*?"/g, "")
-        .replace(/name=".*?"/g, "");
+        .replace(/id=".*?"/g, '')
+        .replace(/name=".*?"/g, '');
 
-      s = _dt_util_replaceable.stripHtml(cellString).replace(/&nbsp;/g, " ");
+      s = _dt_util_replaceable.stripHtml(cellString).replace(/&nbsp;/g, ' ');
 
       if (s.length > maxLen) {
         // We want the HTML in the string, but the length that
@@ -903,7 +902,6 @@ export function _colGroup(settings) {
   }
 }
 
-
 /**
  * Update the header, footer and body tables for resizing - i.e. column
  * alignment.
@@ -924,17 +922,17 @@ export function _fnScrollDraw(settings) {
   var scroll = settings.oScroll,
     barWidth = scroll.iBarWidth,
     divHeader = $(settings.nScrollHead),
-    divHeaderInner = divHeader.children("div"),
-    divHeaderTable = divHeaderInner.children("table"),
+    divHeaderInner = divHeader.children('div'),
+    divHeaderTable = divHeaderInner.children('table'),
     divBodyEl = settings.nScrollBody,
     divBody = $(divBodyEl),
     divFooter = $(settings.nScrollFoot),
-    divFooterInner = divFooter.children("div"),
-    divFooterTable = divFooterInner.children("table"),
+    divFooterInner = divFooter.children('div'),
+    divFooterTable = divFooterInner.children('table'),
     header = $(settings.nTHead),
     table = $(settings.nTable),
     footer =
-      settings.nTFoot && $("th, td", settings.nTFoot).length
+      settings.nTFoot && $('th, td', settings.nTFoot).length
         ? $(settings.nTFoot)
         : null,
     browser = settings.oBrowser,
@@ -959,16 +957,16 @@ export function _fnScrollDraw(settings) {
 
   // 1. Re-create the table inside the scrolling div
   // Remove the old minimised thead and tfoot elements in the inner table
-  table.children("thead, tfoot").remove();
+  table.children('thead, tfoot').remove();
 
   // Clone the current header and footer elements and then place it into the inner table
   headerCopy = header.clone().prependTo(table);
-  headerCopy.find("th, td").removeAttr("tabindex");
-  headerCopy.find("[id]").removeAttr("id");
+  headerCopy.find('th, td').removeAttr('tabindex');
+  headerCopy.find('[id]').removeAttr('id');
 
   if (footer) {
     footerCopy = footer.clone().prependTo(table);
-    footerCopy.find("[id]").removeAttr("id");
+    footerCopy.find('[id]').removeAttr('id');
   }
 
   // 2. Correct colgroup > col values if needed
@@ -985,7 +983,7 @@ export function _fnScrollDraw(settings) {
     // [].find, but it wasn't supported in Chrome until Sept 2015, and DT has 10 year
     // browser support
     var firstTr = null;
-    var start = _fnDataSource(settings) !== "ssp" ? settings._iDisplayStart : 0;
+    var start = _fnDataSource(settings) !== 'ssp' ? settings._iDisplayStart : 0;
 
     for (i = start; i < start + settings.aiDisplay.length; i++) {
       var idx = settings.aiDisplay[i];
@@ -999,7 +997,7 @@ export function _fnScrollDraw(settings) {
 
     if (firstTr) {
       var colSizes = $(firstTr)
-        .children("th, td")
+        .children('th, td')
         .map(function (vis) {
           return {
             idx: _fnVisibleToColumnIndex(settings, vis),
@@ -1010,13 +1008,13 @@ export function _fnScrollDraw(settings) {
       // Check against what the colgroup > col is set to and correct if needed
       for (var i = 0; i < colSizes.length; i++) {
         var colEl = settings.aoColumns[colSizes[i].idx].colEl[0];
-        var colWidth = colEl.style.width.replace("px", "");
+        var colWidth = colEl.style.width.replace('px', '');
 
         if (colWidth !== colSizes[i].width) {
-          colEl.style.width = colSizes[i].width + "px";
+          colEl.style.width = colSizes[i].width + 'px';
 
           if (scroll.sX) {
-            colEl.style.minWidth = colSizes[i].width + "px";
+            colEl.style.minWidth = colSizes[i].width + 'px';
           }
         }
       }
@@ -1024,12 +1022,12 @@ export function _fnScrollDraw(settings) {
   }
 
   // 3. Copy the colgroup over to the header and footer
-  divHeaderTable.find("colgroup").remove();
+  divHeaderTable.find('colgroup').remove();
 
   divHeaderTable.append(settings.colgroup.clone());
 
   if (footer) {
-    divFooterTable.find("colgroup").remove();
+    divFooterTable.find('colgroup').remove();
 
     divFooterTable.append(settings.colgroup.clone());
   }
@@ -1037,12 +1035,12 @@ export function _fnScrollDraw(settings) {
   // "Hide" the header and footer that we used for the sizing. We need to keep
   // the content of the cell so that the width applied to the header and body
   // both match, but we want to hide it completely.
-  $("th, td", headerCopy).each(function () {
+  $('th, td', headerCopy).each(function () {
     $(this.childNodes).wrapAll('<div class="dt-scroll-sizing">');
   });
 
   if (footer) {
-    $("th, td", footerCopy).each(function () {
+    $('th, td', footerCopy).each(function () {
       $(this.childNodes).wrapAll('<div class="dt-scroll-sizing">');
     });
   }
@@ -1052,29 +1050,29 @@ export function _fnScrollDraw(settings) {
   // provide a bit more space to allow "overflow" scrolling (i.e. past the scrollbar)
   var isScrolling =
     Math.floor(table.height()) > divBodyEl.clientHeight ||
-    divBody.css("overflow-y") == "scroll";
-  var paddingSide = "padding" + (browser.bScrollbarLeft ? "Left" : "Right");
+    divBody.css('overflow-y') == 'scroll';
+  var paddingSide = 'padding' + (browser.bScrollbarLeft ? 'Left' : 'Right');
 
   // Set the width's of the header and footer tables
   var outerWidth = table.outerWidth();
 
-  divHeaderTable.css("width", _stringToCss(outerWidth));
+  divHeaderTable.css('width', _stringToCss(outerWidth));
   divHeaderInner
-    .css("width", _stringToCss(outerWidth))
-    .css(paddingSide, isScrolling ? barWidth + "px" : "0px");
+    .css('width', _stringToCss(outerWidth))
+    .css(paddingSide, isScrolling ? barWidth + 'px' : '0px');
 
   if (footer) {
-    divFooterTable.css("width", _stringToCss(outerWidth));
+    divFooterTable.css('width', _stringToCss(outerWidth));
     divFooterInner
-      .css("width", _stringToCss(outerWidth))
-      .css(paddingSide, isScrolling ? barWidth + "px" : "0px");
+      .css('width', _stringToCss(outerWidth))
+      .css(paddingSide, isScrolling ? barWidth + 'px' : '0px');
   }
 
   // Correct DOM ordering for colgroup - comes before the thead
-  table.children("colgroup").prependTo(table);
+  table.children('colgroup').prependTo(table);
 
   // Adjust the position of the header in case we loose the y-scrollbar
-  divBody.trigger("scroll");
+  divBody.trigger('scroll');
 
   // If sorting or filtering has occurred, jump the scrolling back to the top
   // only if we aren't holding the position

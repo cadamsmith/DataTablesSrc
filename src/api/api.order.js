@@ -1,6 +1,6 @@
-import { _extend } from "../core/core.jq";
-import { _fnSortAttachListener } from "../core/core.sort";
-import { _fnSortFlatten, _fnSortResolve } from "../core/core.sortAlgo";
+import { _extend } from '../core/core.jq';
+import { _fnSortAttachListener } from '../core/core.sort';
+import { _fnSortFlatten, _fnSortResolve } from '../core/core.sortAlgo';
 
 export function _registerApis_order(register, registerPlural) {
   /**
@@ -25,13 +25,14 @@ export function _registerApis_order(register, registerPlural) {
    * @param {array} order 1D array of sorting information to be applied.
    * @param {array} [...] Optional additional sorting conditions
    * @returns {DataTables.Api} this
-   */ /**
+   */
+  /**
    * Set the ordering for the table.
    *
    * @param {array} order 2D array of sorting information to be applied.
    * @returns {DataTables.Api} this
    */
-  register("order()", function (order, dir) {
+  register('order()', function (order, dir) {
     var ctx = this.context;
     var args = Array.prototype.slice.call(arguments);
 
@@ -41,7 +42,7 @@ export function _registerApis_order(register, registerPlural) {
     }
 
     // set
-    if (typeof order === "number") {
+    if (typeof order === 'number') {
       // Simple column / direction passed in
       order = [[order, dir]];
     } else if (args.length > 1) {
@@ -50,7 +51,7 @@ export function _registerApis_order(register, registerPlural) {
     }
     // otherwise a 2D array was passed in
 
-    return this.iterator("table", function (settings) {
+    return this.iterator('table', function (settings) {
       var resolved = [];
       _fnSortResolve(settings, resolved, order);
 
@@ -68,13 +69,13 @@ export function _registerApis_order(register, registerPlural) {
    * @param {function} [callback] callback function when sort is run
    * @returns {DataTables.Api} this
    */
-  register("order.listener()", function (node, column, callback) {
-    return this.iterator("table", function (settings) {
+  register('order.listener()', function (node, column, callback) {
+    return this.iterator('table', function (settings) {
       _fnSortAttachListener(settings, node, {}, column, callback);
     });
   });
 
-  register("order.fixed()", function (set) {
+  register('order.fixed()', function (set) {
     if (!set) {
       var ctx = this.context;
       var fixed = ctx.length ? ctx[0].aaSortingFixed : undefined;
@@ -82,18 +83,18 @@ export function _registerApis_order(register, registerPlural) {
       return Array.isArray(fixed) ? { pre: fixed } : fixed;
     }
 
-    return this.iterator("table", function (settings) {
+    return this.iterator('table', function (settings) {
       settings.aaSortingFixed = _extend(true, {}, set);
     });
   });
 
   // Order by the selected column(s)
-  register(["columns().order()", "column().order()"], function (dir) {
+  register(['columns().order()', 'column().order()'], function (dir) {
     var that = this;
 
     if (!dir) {
       return this.iterator(
-        "column",
+        'column',
         function (settings, idx) {
           var sort = _fnSortFlatten(settings);
 
@@ -108,7 +109,7 @@ export function _registerApis_order(register, registerPlural) {
         1
       );
     } else {
-      return this.iterator("table", function (settings, i) {
+      return this.iterator('table', function (settings, i) {
         settings.aaSorting = that[i].map(function (col) {
           return [col, dir];
         });
@@ -117,11 +118,11 @@ export function _registerApis_order(register, registerPlural) {
   });
 
   registerPlural(
-    "columns().orderable()",
-    "column().orderable()",
+    'columns().orderable()',
+    'column().orderable()',
     function (directions) {
       return this.iterator(
-        "column",
+        'column',
         function (settings, idx) {
           var col = settings.aoColumns[idx];
 

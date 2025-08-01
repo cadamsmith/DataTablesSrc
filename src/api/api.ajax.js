@@ -1,11 +1,11 @@
-import { _fnReDraw } from "../core/core.draw";
-import { _fnProcessingDisplay } from "../core/core.processing";
-import { _fnBuildAjax, _fnAjaxDataSrc } from "../core/core.ajax";
-import { _fnAddData, _fnClearTable } from "../core/core.data";
-import { _fnInitComplete } from "../core/core.initComplete";
-import { _fnDataSource } from "../core/core.support";
-import { _isPlainObject } from "../core/core.jq";
-import { _fnSort } from "../core/core.sort";
+import { _fnReDraw } from '../core/core.draw';
+import { _fnProcessingDisplay } from '../core/core.processing';
+import { _fnBuildAjax, _fnAjaxDataSrc } from '../core/core.ajax';
+import { _fnAddData, _fnClearTable } from '../core/core.data';
+import { _fnInitComplete } from '../core/core.initComplete';
+import { _fnDataSource } from '../core/core.support';
+import { _isPlainObject } from '../core/core.jq';
+import { _fnSort } from '../core/core.sort';
 
 export function _registerApis_ajax(register) {
   /**
@@ -15,7 +15,7 @@ export function _registerApis_ajax(register) {
    *
    * @return {object} JSON received from the server.
    */
-  register("ajax.json()", function () {
+  register('ajax.json()', function () {
     var ctx = this.context;
 
     if (ctx.length > 0) {
@@ -28,7 +28,7 @@ export function _registerApis_ajax(register) {
   /**
    * Get the data submitted in the last Ajax request
    */
-  register("ajax.params()", function () {
+  register('ajax.params()', function () {
     var ctx = this.context;
 
     if (ctx.length > 0) {
@@ -47,8 +47,8 @@ export function _registerApis_ajax(register) {
    *   called, which is why the pagination reset is the default action.
    * @returns {DataTables.Api} this
    */
-  register("ajax.reload()", function (callback, resetPaging) {
-    return this.iterator("table", function (settings) {
+  register('ajax.reload()', function (callback, resetPaging) {
+    return this.iterator('table', function (settings) {
       __reload(settings, resetPaging === false, callback);
     });
   });
@@ -58,14 +58,15 @@ export function _registerApis_ajax(register) {
    * table in the current context.
    *
    * @return {string} Current Ajax source URL
-   *//**
+   */
+  /**
    * Set the Ajax URL. Note that this will set the URL for all tables in the
    * current context.
    *
    * @param {string} url URL to set.
    * @returns {DataTables.Api} this
    */
-  register("ajax.url()", function (url) {
+  register('ajax.url()', function (url) {
     var ctx = this.context;
 
     if (url === undefined) {
@@ -79,7 +80,7 @@ export function _registerApis_ajax(register) {
     }
 
     // set
-    return this.iterator("table", function (settings) {
+    return this.iterator('table', function (settings) {
       if (_isPlainObject(settings.ajax)) {
         settings.ajax.url = url;
       } else {
@@ -97,10 +98,10 @@ export function _registerApis_ajax(register) {
    *
    * @returns {DataTables.Api} this
    */
-  register("ajax.url().load()", function (callback, resetPaging) {
+  register('ajax.url().load()', function (callback, resetPaging) {
     // Same as a reload, but makes sense to present it for easy access after a
     // url change
-    return this.iterator("table", function (ctx) {
+    return this.iterator('table', function (ctx) {
       __reload(ctx, resetPaging === false, callback);
     });
   });
@@ -111,12 +112,12 @@ var __reload = function (settings, holdPosition, callback) {
   if (callback) {
     var api = new api(settings);
 
-    api.one("draw", function () {
+    api.one('draw', function () {
       callback(api.ajax.json());
     });
   }
 
-  if (_fnDataSource(settings) == "ssp") {
+  if (_fnDataSource(settings) == 'ssp') {
     _fnReDraw(settings, holdPosition, undefined, _fnSort);
   } else {
     _fnProcessingDisplay(settings, true);

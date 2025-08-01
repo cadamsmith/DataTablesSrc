@@ -1,24 +1,24 @@
-import {_pluck, _range, _unique } from "../core/core.internal";
-import { _extend, _isPlainObject } from "../core/core.jq";
-import { _fnArrayApply, _fnDataSource } from "../core/core.support";
-import { _registerApis_ajax } from "./api.ajax";
-import { _registerApis_cells } from "./api.cells";
-import { _registerApis_columns } from "./api.columns";
-import { _registerApis_draw } from "./api.draw";
-import { _registerApis_order } from "./api.order";
-import { _registerApis_page } from "./api.page";
-import { _registerApis_processing } from "./api.processing";
-import { _registerApis_rowDetails } from "./api.row.details";
-import { _registerApis_rows } from "./api.rows";
-import { _registerApis_search } from "./api.search";
-import { _registerApis_state } from "./api.state";
-import { _dt_settings } from "./api.settings";
-import { _registerApis_table } from "./api.table";
-import { _registerApis_core } from "./api.core";
-import { _dt_util } from "./api.util";
-import $ from "jquery";
-import { _dt_ext_selector } from "../ext/ext.selector";
-import { _fnSort } from "../core/core.sort";
+import { _pluck, _range, _unique } from '../core/core.internal';
+import { _extend, _isPlainObject } from '../core/core.jq';
+import { _fnArrayApply, _fnDataSource } from '../core/core.support';
+import { _registerApis_ajax } from './api.ajax';
+import { _registerApis_cells } from './api.cells';
+import { _registerApis_columns } from './api.columns';
+import { _registerApis_draw } from './api.draw';
+import { _registerApis_order } from './api.order';
+import { _registerApis_page } from './api.page';
+import { _registerApis_processing } from './api.processing';
+import { _registerApis_rowDetails } from './api.row.details';
+import { _registerApis_rows } from './api.rows';
+import { _registerApis_search } from './api.search';
+import { _registerApis_state } from './api.state';
+import { _dt_settings } from './api.settings';
+import { _registerApis_table } from './api.table';
+import { _registerApis_core } from './api.core';
+import { _dt_util } from './api.util';
+import $ from 'jquery';
+import { _dt_ext_selector } from '../ext/ext.selector';
+import { _fnSort } from '../core/core.sort';
 
 /**
  * Computed structure of the DataTables API, defined by the options passed to
@@ -89,20 +89,20 @@ var __arrayProto = Array.prototype;
 var _toSettings = function (mixed) {
   var idx, jq;
   var settings = _dt_settings;
-  var tables = _pluck(settings, "nTable");
+  var tables = _pluck(settings, 'nTable');
 
   if (!mixed) {
     return [];
   } else if (mixed.nTable && mixed.oFeatures) {
     // DataTables settings object
     return [mixed];
-  } else if (mixed.nodeName && mixed.nodeName.toLowerCase() === "table") {
+  } else if (mixed.nodeName && mixed.nodeName.toLowerCase() === 'table') {
     // Table node
     idx = tables.indexOf(mixed);
     return idx !== -1 ? [settings[idx]] : null;
-  } else if (mixed && typeof mixed.settings === "function") {
+  } else if (mixed && typeof mixed.settings === 'function') {
     return mixed.settings().toArray();
-  } else if (typeof mixed === "string") {
+  } else if (typeof mixed === 'string') {
     // jQuery selector
     jq = $(mixed).get();
   } else if (mixed instanceof $) {
@@ -274,7 +274,7 @@ _extend(_dt_api.prototype, {
       selector = this.selector;
 
     // Argument shifting
-    if (typeof flatten === "string") {
+    if (typeof flatten === 'string') {
       alwaysNew = fn;
       fn = type;
       type = flatten;
@@ -284,13 +284,13 @@ _extend(_dt_api.prototype, {
     for (i = 0, ien = context.length; i < ien; i++) {
       var apiInst = new _dt_api(context[i]);
 
-      if (type === "table") {
+      if (type === 'table') {
         ret = fn.call(apiInst, context[i], i);
 
         if (ret !== undefined) {
           a.push(ret);
         }
-      } else if (type === "columns" || type === "rows") {
+      } else if (type === 'columns' || type === 'rows') {
         // this has same length as context - one entry for each table
         ret = fn.call(apiInst, context[i], this[i], i);
 
@@ -298,24 +298,24 @@ _extend(_dt_api.prototype, {
           a.push(ret);
         }
       } else if (
-        type === "every" ||
-        type === "column" ||
-        type === "column-rows" ||
-        type === "row" ||
-        type === "cell"
+        type === 'every' ||
+        type === 'column' ||
+        type === 'column-rows' ||
+        type === 'row' ||
+        type === 'cell'
       ) {
         // columns and rows share the same structure.
         // 'this' is an array of column indexes for each context
         items = this[i];
 
-        if (type === "column-rows") {
+        if (type === 'column-rows') {
           rows = _dt_api._selector_row_indexes(context[i], selector.opts);
         }
 
         for (j = 0, jen = items.length; j < jen; j++) {
           item = items[j];
 
-          if (type === "cell") {
+          if (type === 'cell') {
             ret = fn.call(apiInst, context[i], item.row, item.column, i, j);
           } else {
             ret = fn.call(apiInst, context[i], item, i, j, rows);
@@ -431,15 +431,15 @@ _dt_api.extend = function (scope, obj, ext) {
   for (i = 0, ien = ext.length; i < ien; i++) {
     struct = ext[i];
 
-    if (struct.name === "__proto__") {
+    if (struct.name === '__proto__') {
       continue;
     }
 
     // Value
     obj[struct.name] =
-      struct.type === "function"
+      struct.type === 'function'
         ? _api_scope(scope, struct.val, struct)
-        : struct.type === "object"
+        : struct.type === 'object'
           ? {}
           : struct.val;
 
@@ -483,14 +483,14 @@ _dt_api.register = function (name, val) {
 
   var i,
     ien,
-    heir = name.split("."),
+    heir = name.split('.'),
     struct = __apiStruct,
     key,
     method;
 
   for (i = 0, ien = heir.length; i < ien; i++) {
-    method = heir[i].indexOf("()") !== -1;
-    key = method ? heir[i].replace("()", "") : heir[i];
+    method = heir[i].indexOf('()') !== -1;
+    key = method ? heir[i].replace('()', '') : heir[i];
 
     var src = _api_find(struct, key);
     if (!src) {
@@ -499,7 +499,7 @@ _dt_api.register = function (name, val) {
         val: {},
         methodExt: [],
         propExt: [],
-        type: "object",
+        type: 'object',
       };
       struct.push(src);
     }
@@ -507,11 +507,11 @@ _dt_api.register = function (name, val) {
     if (i === ien - 1) {
       src.val = val;
       src.type =
-        typeof val === "function"
-          ? "function"
+        typeof val === 'function'
+          ? 'function'
           : _isPlainObject(val)
-            ? "object"
-            : "other";
+            ? 'object'
+            : 'other';
     } else {
       struct = method ? src.methodExt : src.propExt;
     }
@@ -542,7 +542,7 @@ _dt_api.registerPlural = function (pluralName, singularName, val) {
   });
 };
 
-// SELECTORS 
+// SELECTORS
 _dt_api._selector_run = function (type, selector, selectFn, settings, opts) {
   var out = [],
     res,
@@ -554,8 +554,8 @@ _dt_api._selector_run = function (type, selector, selectFn, settings, opts) {
   // given with their array like look
   if (
     !selector ||
-    selectorType === "string" ||
-    selectorType === "function" ||
+    selectorType === 'string' ||
+    selectorType === 'function' ||
     selector.length === undefined
   ) {
     selector = [selector];
@@ -563,7 +563,7 @@ _dt_api._selector_run = function (type, selector, selectFn, settings, opts) {
 
   for (i = 0, ien = selector.length; i < ien; i++) {
     res = selectFn(
-      typeof selector[i] === "string" ? selector[i].trim() : selector[i]
+      typeof selector[i] === 'string' ? selector[i].trim() : selector[i]
     );
 
     // Remove empty items
@@ -600,10 +600,10 @@ _dt_api._selector_opts = function (opts) {
 
   return _extend(
     {
-      columnOrder: "implied",
-      search: "none",
-      order: "current",
-      page: "all",
+      columnOrder: 'implied',
+      search: 'none',
+      order: 'current',
+      page: 'all',
     },
     opts
   );
@@ -641,15 +641,15 @@ _dt_api._selector_row_indexes = function (settings, opts) {
     order = opts.order, // applied, current, index (original - compatibility with 1.9)
     page = opts.page; // all, current
 
-  if (_fnDataSource(settings) == "ssp") {
+  if (_fnDataSource(settings) == 'ssp') {
     // In server-side processing mode, most options are irrelevant since
     // rows not shown don't exist and the index order is the applied order
     // Removed is a special case - for consistency just return an empty
     // array
-    return search === "removed" ? [] : _range(0, displayMaster.length);
+    return search === 'removed' ? [] : _range(0, displayMaster.length);
   }
 
-  if (page == "current") {
+  if (page == 'current') {
     // Current page implies that order=current and filter=applied, since it is
     // fairly senseless otherwise, regardless of what order and search actually
     // are
@@ -660,12 +660,12 @@ _dt_api._selector_row_indexes = function (settings, opts) {
     ) {
       a.push(displayFiltered[i]);
     }
-  } else if (order == "current" || order == "applied") {
-    if (search == "none") {
+  } else if (order == 'current' || order == 'applied') {
+    if (search == 'none') {
       a = displayMaster.slice();
-    } else if (search == "applied") {
+    } else if (search == 'applied') {
       a = displayFiltered.slice();
-    } else if (search == "removed") {
+    } else if (search == 'removed') {
       // O(n+m) solution by creating a hash map
       var displayFilteredMap = {};
 
@@ -679,31 +679,31 @@ _dt_api._selector_row_indexes = function (settings, opts) {
         }
       });
     }
-  } else if (order == "index" || order == "original") {
+  } else if (order == 'index' || order == 'original') {
     for (i = 0, ien = settings.aoData.length; i < ien; i++) {
       if (!settings.aoData[i]) {
         continue;
       }
 
-      if (search == "none") {
+      if (search == 'none') {
         a.push(i);
       } else {
         // applied | removed
         tmp = displayFiltered.indexOf(i);
 
         if (
-          (tmp === -1 && search == "removed") ||
-          (tmp >= 0 && search == "applied")
+          (tmp === -1 && search == 'removed') ||
+          (tmp >= 0 && search == 'applied')
         ) {
           a.push(i);
         }
       }
     }
-  } else if (typeof order === "number") {
+  } else if (typeof order === 'number') {
     // Order the rows by the given column
-    var ordered = _fnSort(settings, order, "asc");
+    var ordered = _fnSort(settings, order, 'asc');
 
-    if (search === "none") {
+    if (search === 'none') {
       a = ordered;
     } else {
       // applied | removed
@@ -711,8 +711,8 @@ _dt_api._selector_row_indexes = function (settings, opts) {
         tmp = displayFiltered.indexOf(ordered[i]);
 
         if (
-          (tmp === -1 && search == "removed") ||
-          (tmp >= 0 && search == "applied")
+          (tmp === -1 && search == 'removed') ||
+          (tmp >= 0 && search == 'applied')
         ) {
           a.push(ordered[i]);
         }
@@ -733,7 +733,7 @@ export function _registerBuiltInApis() {
     opts: _dt_api._selector_opts,
     run: _dt_api._selector_run,
     first: _dt_api._selector_first,
-    row_indexes: _dt_api._selector_row_indexes
+    row_indexes: _dt_api._selector_row_indexes,
   };
 
   _registerApis_table(register, registerPlural, constructNewApi, selectorFns);
@@ -741,11 +741,21 @@ export function _registerBuiltInApis() {
   _registerApis_page(register, registerPlural, constructNewApi, selectorFns);
   _registerApis_ajax(register, registerPlural, constructNewApi, selectorFns);
   _registerApis_rows(register, registerPlural, constructNewApi, selectorFns);
-  _registerApis_rowDetails(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_rowDetails(
+    register,
+    registerPlural,
+    constructNewApi,
+    selectorFns
+  );
   _registerApis_columns(register, registerPlural, constructNewApi, selectorFns);
   _registerApis_cells(register, registerPlural, constructNewApi, selectorFns);
   _registerApis_order(register, registerPlural, constructNewApi, selectorFns);
-  _registerApis_processing(register, registerPlural, constructNewApi, selectorFns);
+  _registerApis_processing(
+    register,
+    registerPlural,
+    constructNewApi,
+    selectorFns
+  );
   _registerApis_search(register, registerPlural, constructNewApi, selectorFns);
   _registerApis_state(register, registerPlural, constructNewApi, selectorFns);
   _registerApis_core(register, registerPlural, constructNewApi, selectorFns);

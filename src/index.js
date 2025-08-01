@@ -2,13 +2,13 @@
  * © SpryMedia Ltd - datatables.net/license
  */
 
-import $ from "jquery";
-import { _dt_util } from "./api/api.util";
+import $ from 'jquery';
+import { _dt_util } from './api/api.util';
 import {
   _fnCamelToHungarian,
   _fnCompatOpts,
   _fnBrowserDetect,
-} from "./core/core.compat";
+} from './core/core.compat';
 import {
   _fnDataSource,
   _fnMap,
@@ -16,9 +16,9 @@ import {
   _fnListener,
   _fnCallbackReg,
   _fnExtend,
-} from "./core/core.support";
-import { _fnGetObjectDataFn, _fnGetCellData } from "./core/core.data";
-import { _fnSortingClasses } from "./core/core.sort";
+} from './core/core.support';
+import { _fnGetObjectDataFn, _fnGetCellData } from './core/core.data';
+import { _fnSortingClasses } from './core/core.sort';
 import {
   _fnApplyClasses,
   _fnHandleLanguageDefinitions,
@@ -27,23 +27,23 @@ import {
   _fnNormalizeDefaults,
   _fnSetUpColumns,
   _fnStoreHtmlElements,
-} from "./core/core.init";
-import { _fnSaveState } from "./core/core.state";
-import { _dt_DateTime, _dt_isDataTable, _dt_tables } from "./api/api.static";
-import { _dt_settings } from "./api/api.settings";
-import { _dt_datetimeFn, _dt_render } from "./ext/ext.helpers";
-import { _dt_ext } from "./ext/ext";
-import { _dt_feature, _registerBuiltInFeatures } from "./features/features.api";
+} from './core/core.init';
+import { _fnSaveState } from './core/core.state';
+import { _dt_DateTime, _dt_isDataTable, _dt_tables } from './api/api.static';
+import { _dt_settings } from './api/api.settings';
+import { _dt_datetimeFn, _dt_render } from './ext/ext.helpers';
+import { _dt_ext } from './ext/ext';
+import { _dt_feature, _registerBuiltInFeatures } from './features/features.api';
 import {
   _dt_listTypes,
   _dt_type,
   _registerBuiltInTypes,
-} from "./ext/ext.types";
-import { _dt_api, _registerBuiltInApis } from "./api/api.base";
-import { _dt_models } from "./model/model.all";
-import { _each, _extend, _isPlainObject } from "./core/core.jq";
-import { _dt_version, _dt_versionCheck } from "./api/api.version";
-import { _dt_browser } from "./api/api.browser";
+} from './ext/ext.types';
+import { _dt_api, _registerBuiltInApis } from './api/api.base';
+import { _dt_models } from './model/model.all';
+import { _each, _extend, _isPlainObject } from './core/core.jq';
+import { _dt_version, _dt_versionCheck } from './api/api.version';
+import { _dt_browser } from './api/api.browser';
 
 const DataTable = function (selector, options) {
   // When creating with `new`, create a new DataTable, returning the API instance
@@ -78,16 +78,16 @@ const DataTable = function (selector, options) {
 
     var i = 0,
       iLen;
-    var sId = this.getAttribute("id");
+    var sId = this.getAttribute('id');
     var defaults = DataTable.models.defaults;
     var $this = $(this);
 
     // Sanity check
-    if (this.nodeName.toLowerCase() != "table") {
+    if (this.nodeName.toLowerCase() != 'table') {
       _fnLog(
         null,
         0,
-        "Non-table node initialisation (" + this.nodeName + ")",
+        'Non-table node initialisation (' + this.nodeName + ')',
         2
       );
       return;
@@ -95,10 +95,10 @@ const DataTable = function (selector, options) {
 
     // Special case for options
     if (oInit.on && oInit.on.options) {
-      _fnListener($this, "options", oInit.on.options);
+      _fnListener($this, 'options', oInit.on.options);
     }
 
-    $this.trigger("options.dt", oInit);
+    $this.trigger('options.dt', oInit);
 
     _fnNormalizeDefaults(defaults, $this, oInit);
 
@@ -110,8 +110,8 @@ const DataTable = function (selector, options) {
     }
 
     /* Ensure the table has an ID - required for accessibility */
-    if (sId === null || sId === "") {
-      sId = "DataTables_Table_" + DataTable.ext._unique++;
+    if (sId === null || sId === '') {
+      sId = 'DataTables_Table_' + DataTable.ext._unique++;
       this.id = sId;
     }
 
@@ -120,7 +120,7 @@ const DataTable = function (selector, options) {
       sDestroyWidth: $this[0].style.width,
       sInstance: sId,
       sTableId: sId,
-      colgroup: $("<colgroup>").prependTo(this),
+      colgroup: $('<colgroup>').prependTo(this),
       fastData: function (row, column, type) {
         return _fnGetCellData(oSettings, row, column, type);
       },
@@ -145,8 +145,8 @@ const DataTable = function (selector, options) {
       oInit.iDisplayLength = Array.isArray(oInit.aLengthMenu[0])
         ? oInit.aLengthMenu[0][0]
         : _isPlainObject(oInit.aLengthMenu[0])
-        ? oInit.aLengthMenu[0].value
-        : oInit.aLengthMenu[0];
+          ? oInit.aLengthMenu[0].value
+          : oInit.aLengthMenu[0];
     }
 
     // Apply the defaults and init options to make a single init object will all
@@ -155,66 +155,66 @@ const DataTable = function (selector, options) {
 
     // Map the initialisation options onto the settings object
     _fnMap(oSettings.oFeatures, oInit, [
-      "bPaginate",
-      "bLengthChange",
-      "bFilter",
-      "bSort",
-      "bSortMulti",
-      "bInfo",
-      "bProcessing",
-      "bAutoWidth",
-      "bSortClasses",
-      "bServerSide",
-      "bDeferRender",
+      'bPaginate',
+      'bLengthChange',
+      'bFilter',
+      'bSort',
+      'bSortMulti',
+      'bInfo',
+      'bProcessing',
+      'bAutoWidth',
+      'bSortClasses',
+      'bServerSide',
+      'bDeferRender',
     ]);
     _fnMap(oSettings, oInit, [
-      "ajax",
-      "fnFormatNumber",
-      "sServerMethod",
-      "aaSorting",
-      "aaSortingFixed",
-      "aLengthMenu",
-      "sPaginationType",
-      "iStateDuration",
-      "bSortCellsTop",
-      "iTabIndex",
-      "sDom",
-      "fnStateLoadCallback",
-      "fnStateSaveCallback",
-      "renderer",
-      "searchDelay",
-      "rowId",
-      "caption",
-      "layout",
-      "orderDescReverse",
-      "orderIndicators",
-      "orderHandler",
-      "titleRow",
-      "typeDetect",
-      ["iCookieDuration", "iStateDuration"], // backwards compat
-      ["oSearch", "oPreviousSearch"],
-      ["aoSearchCols", "aoPreSearchCols"],
-      ["iDisplayLength", "_iDisplayLength"],
+      'ajax',
+      'fnFormatNumber',
+      'sServerMethod',
+      'aaSorting',
+      'aaSortingFixed',
+      'aLengthMenu',
+      'sPaginationType',
+      'iStateDuration',
+      'bSortCellsTop',
+      'iTabIndex',
+      'sDom',
+      'fnStateLoadCallback',
+      'fnStateSaveCallback',
+      'renderer',
+      'searchDelay',
+      'rowId',
+      'caption',
+      'layout',
+      'orderDescReverse',
+      'orderIndicators',
+      'orderHandler',
+      'titleRow',
+      'typeDetect',
+      ['iCookieDuration', 'iStateDuration'], // backwards compat
+      ['oSearch', 'oPreviousSearch'],
+      ['aoSearchCols', 'aoPreSearchCols'],
+      ['iDisplayLength', '_iDisplayLength'],
     ]);
     _fnMap(oSettings.oScroll, oInit, [
-      ["sScrollX", "sX"],
-      ["sScrollXInner", "sXInner"],
-      ["sScrollY", "sY"],
-      ["bScrollCollapse", "bCollapse"],
+      ['sScrollX', 'sX'],
+      ['sScrollXInner', 'sXInner'],
+      ['sScrollY', 'sY'],
+      ['bScrollCollapse', 'bCollapse'],
     ]);
-    _fnMap(oSettings.oLanguage, oInit, "fnInfoCallback");
+    _fnMap(oSettings.oLanguage, oInit, 'fnInfoCallback');
 
     /* Callback functions which are array driven */
-    _fnCallbackReg(oSettings, "aoDrawCallback", oInit.fnDrawCallback);
-    _fnCallbackReg(oSettings, "aoStateSaveParams", oInit.fnStateSaveParams);
-    _fnCallbackReg(oSettings, "aoStateLoadParams", oInit.fnStateLoadParams);
-    _fnCallbackReg(oSettings, "aoStateLoaded", oInit.fnStateLoaded);
-    _fnCallbackReg(oSettings, "aoRowCallback", oInit.fnRowCallback);
-    _fnCallbackReg(oSettings, "aoRowCreatedCallback", oInit.fnCreatedRow);
-    _fnCallbackReg(oSettings, "aoHeaderCallback", oInit.fnHeaderCallback);
-    _fnCallbackReg(oSettings, "aoFooterCallback", oInit.fnFooterCallback);
-    _fnCallbackReg(oSettings, "aoInitComplete", oInit.fnInitComplete);
-    _fnCallbackReg(oSettings, "aoPreDrawCallback", oInit.fnPreDrawCallback);
+    _fnCallbackReg(oSettings, 'aoDrawCallback', oInit.fnDrawCallback);
+    _fnCallbackReg(oSettings, 'aoStateSaveParams', oInit.fnStateSaveParams);
+    _fnCallbackReg(oSettings, 'aoStateLoadParams', oInit.fnStateLoadParams);
+    _fnCallbackReg(oSettings, 'aoStateLoaded', oInit.fnStateLoaded);
+    _fnCallbackReg(oSettings, 'aoRowCallback', oInit.fnRowCallback);
+    _fnCallbackReg(oSettings, 'aoRowCreatedCallback', oInit.fnCreatedRow);
+    _fnCallbackReg(oSettings, 'aoHeaderCallback', oInit.fnHeaderCallback);
+    _fnCallbackReg(oSettings, 'aoFooterCallback', oInit.fnFooterCallback);
+    _fnCallbackReg(oSettings, 'aoInitComplete', oInit.fnInitComplete);
+    _fnCallbackReg(oSettings, 'aoPreDrawCallback', oInit.fnPreDrawCallback);
 
     oSettings.rowIdFn = _fnGetObjectDataFn(oInit.rowId);
 
@@ -249,12 +249,12 @@ const DataTable = function (selector, options) {
       oSettings._iRecordsTotal = tmp ? defer[1] : defer;
     }
 
-    var thead = this.getElementsByTagName("thead");
+    var thead = this.getElementsByTagName('thead');
 
     _fnSetUpColumns(oSettings, oInit, $this, thead);
 
     // Must be done after everything which can be overridden by the state saving!
-    _fnCallbackReg(oSettings, "aoDrawCallback", _fnSaveState);
+    _fnCallbackReg(oSettings, 'aoDrawCallback', _fnSaveState);
 
     var features = oSettings.oFeatures;
     if (oInit.bStateSave) {
@@ -274,10 +274,10 @@ const DataTable = function (selector, options) {
     // account, and also will apply sorting disabled classes if disabled
     _fnSortingClasses(oSettings);
 
-    _fnCallbackReg(oSettings, "aoDrawCallback", function () {
+    _fnCallbackReg(oSettings, 'aoDrawCallback', function () {
       if (
         oSettings.bSorted ||
-        _fnDataSource(oSettings) === "ssp" ||
+        _fnDataSource(oSettings) === 'ssp' ||
         features.bDeferRender
       ) {
         _fnSortingClasses(oSettings);

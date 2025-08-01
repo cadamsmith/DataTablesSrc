@@ -1,13 +1,17 @@
-import { _pluck } from "./core.internal";
-import { _fnColumnTypes, _fnColumnIndexToVisible, _fnColumnsFromHeader } from "./core.columns";
-import { _fnDataSource, _fnCallbackFire, _fnBindAction } from "./core.support";
-import { _fnGetCellData } from "./core.data";
-import { _fnReDraw } from "./core.draw";
-import { _fnProcessingRun } from "./core.processing";
-import $ from "jquery";
-import { _dt_ext_types } from "../ext/ext.types";
-import { _dt_ext_order } from "../ext/ext.order";
-import { _fnSortFlatten, _fnSortResolve } from "./core.sortAlgo";
+import { _pluck } from './core.internal';
+import {
+  _fnColumnTypes,
+  _fnColumnIndexToVisible,
+  _fnColumnsFromHeader,
+} from './core.columns';
+import { _fnDataSource, _fnCallbackFire, _fnBindAction } from './core.support';
+import { _fnGetCellData } from './core.data';
+import { _fnReDraw } from './core.draw';
+import { _fnProcessingRun } from './core.processing';
+import $ from 'jquery';
+import { _dt_ext_types } from '../ext/ext.types';
+import { _dt_ext_order } from '../ext/ext.order';
+import { _fnSortFlatten, _fnSortResolve } from './core.sortAlgo';
 
 /**
  * Change the order of the table
@@ -40,8 +44,8 @@ export function _fnSort(oSettings, col, dir) {
         dir: dir,
         index: 0,
         type: srcCol.sType,
-        formatter: extSort[srcCol.sType + "-pre"],
-        sorter: extSort[srcCol.sType + "-" + dir],
+        formatter: extSort[srcCol.sType + '-pre'],
+        sorter: extSort[srcCol.sType + '-' + dir],
       },
     ];
     displayMaster = displayMaster.slice();
@@ -57,7 +61,7 @@ export function _fnSort(oSettings, col, dir) {
   }
 
   /* No sorting required if server-side or no sorting array */
-  if (_fnDataSource(oSettings) != "ssp" && aSort.length !== 0) {
+  if (_fnDataSource(oSettings) != 'ssp' && aSort.length !== 0) {
     // Reset the initial positions on each pass so we get a stable sort
     for (i = 0, iLen = displayMaster.length; i < iLen; i++) {
       aiOrig[i] = i;
@@ -65,7 +69,7 @@ export function _fnSort(oSettings, col, dir) {
 
     // If the first sort is desc, then reverse the array to preserve original
     // order, just in reverse
-    if (aSort.length && aSort[0].dir === "desc" && oSettings.orderDescReverse) {
+    if (aSort.length && aSort[0].dir === 'desc' && oSettings.orderDescReverse) {
       aiOrig.reverse();
     }
 
@@ -116,7 +120,7 @@ export function _fnSort(oSettings, col, dir) {
           test = x < y ? -1 : x > y ? 1 : 0;
 
           if (test !== 0) {
-            return sort.dir === "asc" ? test : -test;
+            return sort.dir === 'asc' ? test : -test;
           }
         }
       }
@@ -138,7 +142,7 @@ export function _fnSort(oSettings, col, dir) {
     oSettings.bSorted = true;
     oSettings.sortDetails = aSort;
 
-    _fnCallbackFire(oSettings, null, "order", [oSettings, aSort]);
+    _fnCallbackFire(oSettings, null, 'order', [oSettings, aSort]);
   }
 
   return displayMaster;
@@ -146,7 +150,7 @@ export function _fnSort(oSettings, col, dir) {
 
 export function _fnSortInit(settings) {
   var target = settings.nTHead;
-  var headerRows = target.querySelectorAll("tr");
+  var headerRows = target.querySelectorAll('tr');
   var titleRow = settings.titleRow;
   var notSelector =
     ':not([data-dt-order="disable"]):not([data-dt-order="icon-only"])';
@@ -166,15 +170,15 @@ export function _fnSortInit(settings) {
       settings,
       target,
       target === settings.nTHead
-        ? "tr" +
+        ? 'tr' +
             notSelector +
-            " th" +
+            ' th' +
             notSelector +
-            ", tr" +
+            ', tr' +
             notSelector +
-            " td" +
+            ' td' +
             notSelector
-        : "th" + notSelector + ", td" + notSelector
+        : 'th' + notSelector + ', td' + notSelector
     );
   }
 
@@ -185,13 +189,19 @@ export function _fnSortInit(settings) {
   settings.aaSorting = order;
 }
 
-export function _fnSortAttachListener(settings, node, selector, column, callback) {
+export function _fnSortAttachListener(
+  settings,
+  node,
+  selector,
+  column,
+  callback
+) {
   _fnBindAction(node, selector, function (e) {
     var run = false;
     var columns =
       column === undefined
         ? _fnColumnsFromHeader(e.target)
-        : typeof column === "function"
+        : typeof column === 'function'
           ? column()
           : Array.isArray(column)
             ? column
@@ -209,7 +219,7 @@ export function _fnSortAttachListener(settings, node, selector, column, callback
         // sort columns are ignored
         if (
           settings.aaSorting.length === 1 &&
-          settings.aaSorting[0][1] === ""
+          settings.aaSorting[0][1] === ''
         ) {
           break;
         }
@@ -231,8 +241,6 @@ export function _fnSortAttachListener(settings, node, selector, column, callback
   });
 }
 
-
-
 // Get the data to sort a column, be it from cache, fresh (populating the
 // cache), or from a sort formatter
 function _fnSortData(settings, colIdx) {
@@ -252,7 +260,7 @@ function _fnSortData(settings, colIdx) {
 
   // Use / populate cache
   var row, cellData;
-  var formatter = _dt_ext_types.order[column.sType + "-pre"];
+  var formatter = _dt_ext_types.order[column.sType + '-pre'];
   var data = settings.aoData;
 
   for (var rowIdx = 0; rowIdx < data.length; rowIdx++) {
@@ -270,7 +278,7 @@ function _fnSortData(settings, colIdx) {
     if (!row._aSortData[colIdx] || customSort) {
       cellData = customSort
         ? customData[rowIdx] // If there was a custom sort function, use data from there
-        : _fnGetCellData(settings, rowIdx, colIdx, "sort");
+        : _fnGetCellData(settings, rowIdx, colIdx, 'sort');
 
       row._aSortData[colIdx] = formatter
         ? formatter(cellData, settings)
@@ -278,7 +286,6 @@ function _fnSortData(settings, colIdx) {
     }
   }
 }
-
 
 /**
  * Sort the display array to match the master's order
@@ -339,14 +346,14 @@ function _fnSortAdd(settings, colIdx, addIndex, shift) {
   }
 
   // Convert to 2D array if needed
-  if (typeof sorting[0] === "number") {
+  if (typeof sorting[0] === 'number') {
     sorting = settings.aaSorting = [sorting];
   }
 
   // If appending the sort then we are multi-column sorting
   if ((shift || addIndex) && settings.oFeatures.bSortMulti) {
     // Are we already doing some kind of sort on this column?
-    var sortIdx = _pluck(sorting, "0").indexOf(colIdx);
+    var sortIdx = _pluck(sorting, '0').indexOf(colIdx);
 
     if (sortIdx !== -1) {
       // Yes, modify the sort
@@ -356,7 +363,7 @@ function _fnSortAdd(settings, colIdx, addIndex, shift) {
         nextSortIdx = 0; // can't remove sorting completely
       }
 
-      if (nextSortIdx === null || asSorting[nextSortIdx] === "") {
+      if (nextSortIdx === null || asSorting[nextSortIdx] === '') {
         sorting.splice(sortIdx, 1);
       } else {
         sorting[sortIdx][1] = asSorting[nextSortIdx];
@@ -407,7 +414,7 @@ export function _fnSortingClasses(settings) {
       colIdx = oldSort[i].src;
 
       // Remove column sorting
-      $(_pluck(settings.aoData, "anCells", colIdx)).removeClass(
+      $(_pluck(settings.aoData, 'anCells', colIdx)).removeClass(
         sortClass + (i < 2 ? i + 1 : 3)
       );
     }
@@ -416,7 +423,7 @@ export function _fnSortingClasses(settings) {
     for (i = 0, ien = sort.length; i < ien; i++) {
       colIdx = sort[i].src;
 
-      $(_pluck(settings.aoData, "anCells", colIdx)).addClass(
+      $(_pluck(settings.aoData, 'anCells', colIdx)).addClass(
         sortClass + (i < 2 ? i + 1 : 3)
       );
     }

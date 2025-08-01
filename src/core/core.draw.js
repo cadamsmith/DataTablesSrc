@@ -1,26 +1,32 @@
-import { _fnGetDataMaster, _fnCreateTr } from "./core.data";
-import { _addClass, _unique, _pluck, _range, _stringToCss } from "./core.internal";
-import { _isPlainObject, _each } from "./core.jq";
+import { _fnGetDataMaster, _fnCreateTr } from './core.data';
+import {
+  _addClass,
+  _unique,
+  _pluck,
+  _range,
+  _stringToCss,
+} from './core.internal';
+import { _isPlainObject, _each } from './core.jq';
 import {
   _fnCallbackFire,
   _fnLog,
   _fnDataSource,
   _fnRenderer,
   _fnEscapeObject,
-} from "./core.support";
+} from './core.support';
 import {
   _fnColumnTypes,
   _fnColumnOptions,
   _fnVisbleColumns,
-  _fnScrollDraw
-} from "./core.columns";
-import { _dt_util_replaceable } from "../api/api.util.replaceable";
-import { _fnProcessingDisplay, _processingHtml } from "./core.processing";
-import { _fnAjaxUpdate } from "./core.ajax";
-import { _fnFilterComplete } from "./core.filter";
-import $ from "jquery";
-import { _dt_ext_feature, _dt_ext_features } from "../ext/ext.feature";
-import { _dt_ext_types } from "../ext/ext.types";
+  _fnScrollDraw,
+} from './core.columns';
+import { _dt_util_replaceable } from '../api/api.util.replaceable';
+import { _fnProcessingDisplay, _processingHtml } from './core.processing';
+import { _fnAjaxUpdate } from './core.ajax';
+import { _fnFilterComplete } from './core.filter';
+import $ from 'jquery';
+import { _dt_ext_feature, _dt_ext_features } from '../ext/ext.feature';
+import { _dt_ext_types } from '../ext/ext.types';
 
 /**
  * Create the HTML header for the table
@@ -31,8 +37,8 @@ export function _fnBuildHead(settings, side) {
   var classes = settings.oClasses;
   var columns = settings.aoColumns;
   var i, ien, row;
-  var target = side === "header" ? settings.nTHead : settings.nTFoot;
-  var titleProp = side === "header" ? "sTitle" : side;
+  var target = side === 'header' ? settings.nTHead : settings.nTFoot;
+  var titleProp = side === 'header' ? 'sTitle' : side;
 
   // Footer might be defined
   if (!target) {
@@ -40,25 +46,25 @@ export function _fnBuildHead(settings, side) {
   }
 
   // If no cells yet and we have content for them, then create
-  if (side === "header" || _pluck(settings.aoColumns, titleProp).join("")) {
-    row = $("tr", target);
+  if (side === 'header' || _pluck(settings.aoColumns, titleProp).join('')) {
+    row = $('tr', target);
 
     // Add a row if needed
     if (!row.length) {
-      row = $("<tr/>").appendTo(target);
+      row = $('<tr/>').appendTo(target);
     }
 
     // Add the number of cells needed to make up to the number of columns
     if (row.length === 1) {
       var cellCount = 0;
 
-      $("td, th", row).each(function () {
+      $('td, th', row).each(function () {
         cellCount += this.colSpan;
       });
 
       for (i = cellCount, ien = columns.length; i < ien; i++) {
-        $("<th/>")
-          .html(columns[i][titleProp] || "")
+        $('<th/>')
+          .html(columns[i][titleProp] || '')
           .appendTo(row);
       }
     }
@@ -66,18 +72,18 @@ export function _fnBuildHead(settings, side) {
 
   var detected = _fnDetectHeader(settings, target, true);
 
-  if (side === "header") {
+  if (side === 'header') {
     settings.aoHeader = detected;
-    $("tr", target).addClass(classes.thead.row);
+    $('tr', target).addClass(classes.thead.row);
   } else {
     settings.aoFooter = detected;
-    $("tr", target).addClass(classes.tfoot.row);
+    $('tr', target).addClass(classes.tfoot.row);
   }
 
   // Every cell needs to be passed through the renderer
   $(target)
-    .children("tr")
-    .children("th, td")
+    .children('tr')
+    .children('th, td')
     .each(function () {
       _fnRenderer(settings, side)(settings, $(this), classes);
     });
@@ -153,7 +159,7 @@ export function _fnHeaderLayout(settings, source, incColumns) {
           colspan++;
         }
 
-        var titleSpan = $("span.dt-column-title", cell);
+        var titleSpan = $('span.dt-column-title', cell);
 
         structure[row][column] = {
           cell: cell,
@@ -196,8 +202,8 @@ export function _fnDrawHead(settings, source) {
       if (point) {
         $(point.cell)
           .appendTo(tr)
-          .attr("rowspan", point.rowspan)
-          .attr("colspan", point.colspan);
+          .attr('rowspan', point.rowspan)
+          .attr('colspan', point.colspan);
       }
     }
   }
@@ -214,7 +220,7 @@ export function _fnDraw(oSettings, ajaxComplete) {
   _fnStart(oSettings);
 
   /* Provide a pre-callback function which can be used to cancel the draw is false is returned */
-  var aPreDraw = _fnCallbackFire(oSettings, "aoPreDrawCallback", "preDraw", [
+  var aPreDraw = _fnCallbackFire(oSettings, 'aoPreDrawCallback', 'preDraw', [
     oSettings,
   ]);
   if (aPreDraw.indexOf(false) !== -1) {
@@ -224,7 +230,7 @@ export function _fnDraw(oSettings, ajaxComplete) {
 
   var anRows = [];
   var iRowCount = 0;
-  var bServerSide = _fnDataSource(oSettings) == "ssp";
+  var bServerSide = _fnDataSource(oSettings) == 'ssp';
   var aiDisplay = oSettings.aiDisplay;
   var iDisplayStart = oSettings._iDisplayStart;
   var iDisplayEnd = oSettings.fnDisplayEnd();
@@ -275,7 +281,7 @@ export function _fnDraw(oSettings, ajaxComplete) {
       // Row callback functions - might want to manipulate the row
       // iRowCount and j are not currently documented. Are they at all
       // useful?
-      _fnCallbackFire(oSettings, "aoRowCallback", null, [
+      _fnCallbackFire(oSettings, 'aoRowCallback', null, [
         nRow,
         aoData._aData,
         iRowCount,
@@ -291,16 +297,16 @@ export function _fnDraw(oSettings, ajaxComplete) {
   }
 
   /* Header and footer callbacks */
-  _fnCallbackFire(oSettings, "aoHeaderCallback", "header", [
-    $(oSettings.nTHead).children("tr")[0],
+  _fnCallbackFire(oSettings, 'aoHeaderCallback', 'header', [
+    $(oSettings.nTHead).children('tr')[0],
     _fnGetDataMaster(oSettings),
     iDisplayStart,
     iDisplayEnd,
     aiDisplay,
   ]);
 
-  _fnCallbackFire(oSettings, "aoFooterCallback", "footer", [
-    $(oSettings.nTFoot).children("tr")[0],
+  _fnCallbackFire(oSettings, 'aoFooterCallback', 'footer', [
+    $(oSettings.nTFoot).children('tr')[0],
     _fnGetDataMaster(oSettings),
     iDisplayStart,
     iDisplayEnd,
@@ -318,12 +324,12 @@ export function _fnDraw(oSettings, ajaxComplete) {
 
   // Empty table needs a specific class
   $(oSettings.nTableWrapper).toggleClass(
-    "dt-empty-footer",
-    $("tr", oSettings.nTFoot).length === 0
+    'dt-empty-footer',
+    $('tr', oSettings.nTFoot).length === 0
   );
 
   /* Call all required callback functions for the end of a draw */
-  _fnCallbackFire(oSettings, "aoDrawCallback", "draw", [oSettings], true);
+  _fnCallbackFire(oSettings, 'aoDrawCallback', 'draw', [oSettings], true);
 
   /* Draw is complete, sorting and filtering must be as well */
   oSettings.bSorted = false;
@@ -369,7 +375,7 @@ export function _fnReDraw(settings, holdPosition, recompute, sortFn) {
 
   _fnDraw(settings);
 
-  settings.api.one("draw", function () {
+  settings.api.one('draw', function () {
     settings._drawHold = false;
   });
 }
@@ -384,14 +390,14 @@ function _emptyRow(settings) {
 
   // Make use of the fact that settings.json is only set once the initial data has
   // been loaded. Show loading when that isn't the case
-  if ((dataSrc === "ssp" || dataSrc === "ajax") && !settings.json) {
+  if ((dataSrc === 'ssp' || dataSrc === 'ajax') && !settings.json) {
     zero = oLang.sLoadingRecords;
   } else if (oLang.sEmptyTable && settings.fnRecordsTotal() === 0) {
     zero = oLang.sEmptyTable;
   }
 
-  return $("<tr/>").append(
-    $("<td />", {
+  return $('<tr/>').append(
+    $('<td />', {
       colSpan: _fnVisbleColumns(settings),
       class: settings.oClasses.empty.row,
     }).html(zero)
@@ -453,8 +459,8 @@ function _layoutGetRow(rows, rowNum, align) {
     if (row.rowNum === rowNum) {
       // full is on its own, but start and end share a row
       if (
-        (align === "full" && row.full) ||
-        ((align === "start" || align === "end") && (row.start || row.end))
+        (align === 'full' && row.full) ||
+        ((align === 'start' || align === 'end') && (row.start || row.end))
       ) {
         if (!row[align]) {
           row[align] = {
@@ -502,7 +508,7 @@ function _layoutArray(settings, layout, side) {
 
     var parts = pos.match(/^([a-z]+)([0-9]*)([A-Za-z]*)$/);
     var rowNum = parts[2] ? parts[2] * 1 : 0;
-    var align = parts[3] ? parts[3].toLowerCase() : "full";
+    var align = parts[3] ? parts[3].toLowerCase() : 'full';
 
     // Filter out the side we aren't interested in
     if (parts[1] !== side) {
@@ -524,14 +530,14 @@ function _layoutArray(settings, layout, side) {
     if (order1 === order2) {
       var ret = a.full && !b.full ? -1 : 1;
 
-      return side === "bottom" ? ret * -1 : ret;
+      return side === 'bottom' ? ret * -1 : ret;
     }
 
     return order2 - order1;
   });
 
   // Invert for below the table
-  if (side === "bottom") {
+  if (side === 'bottom') {
     rows.reverse();
   }
 
@@ -554,7 +560,7 @@ function _layoutArray(settings, layout, side) {
 function _layoutResolve(settings, row) {
   var getFeature = function (feature, opts) {
     if (!_dt_ext_features[feature]) {
-      _fnLog(settings, 0, "Unknown feature: " + feature);
+      _fnLog(settings, 0, 'Unknown feature: ' + feature);
     }
 
     return _dt_ext_features[feature].apply(this, [settings, opts]);
@@ -570,25 +576,25 @@ function _layoutResolve(settings, row) {
     for (var i = 0, ien = line.length; i < ien; i++) {
       if (!line[i]) {
         continue;
-      } else if (typeof line[i] === "string") {
+      } else if (typeof line[i] === 'string') {
         line[i] = getFeature(line[i], null);
       } else if (_isPlainObject(line[i])) {
         // If it's an object, it just has feature and opts properties from
         // the transform in _layoutArray
         line[i] = getFeature(line[i].feature, line[i].opts);
-      } else if (typeof line[i].node === "function") {
+      } else if (typeof line[i].node === 'function') {
         line[i] = line[i].node(settings);
-      } else if (typeof line[i] === "function") {
+      } else if (typeof line[i] === 'function') {
         var inst = line[i](settings);
 
-        line[i] = typeof inst.node === "function" ? inst.node() : inst;
+        line[i] = typeof inst.node === 'function' ? inst.node() : inst;
       }
     }
   };
 
-  resolve("start");
-  resolve("end");
-  resolve("full");
+  resolve('start');
+  resolve('end');
+  resolve('full');
 }
 
 /**
@@ -601,9 +607,9 @@ export function _fnAddOptionsHtml(settings) {
   var table = $(settings.nTable);
 
   // Wrapper div around everything DataTables controls
-  var insert = $("<div/>")
+  var insert = $('<div/>')
     .attr({
-      id: settings.sTableId + "_wrapper",
+      id: settings.sTableId + '_wrapper',
       class: classes.container,
     })
     .insertBefore(table);
@@ -614,9 +620,9 @@ export function _fnAddOptionsHtml(settings) {
     // Legacy
     _fnLayoutDom(settings, settings.sDom, insert);
   } else {
-    var top = _layoutArray(settings, settings.layout, "top");
-    var bottom = _layoutArray(settings, settings.layout, "bottom");
-    var renderer = _fnRenderer(settings, "layout");
+    var top = _layoutArray(settings, settings.layout, 'top');
+    var bottom = _layoutArray(settings, settings.layout, 'bottom');
+    var renderer = _fnRenderer(settings, 'layout');
 
     // Everything above - the renderer will actually insert the contents into the document
     top.forEach(function (item) {
@@ -655,44 +661,44 @@ function _fnLayoutDom(settings, dom, insert) {
     featureNode = null;
     option = parts[i];
 
-    if (option == "<") {
+    if (option == '<') {
       // New container div
-      newNode = $("<div/>");
+      newNode = $('<div/>');
 
       // Check to see if we should append an id and/or a class name to the container
       next = parts[i + 1];
 
       if (next[0] == "'" || next[0] == '"') {
-        attr = next.replace(/['"]/g, "");
+        attr = next.replace(/['"]/g, '');
 
-        var id = "",
+        var id = '',
           className;
 
         /* The attribute can be in the format of "#id.class", "#id" or "class" This logic
          * breaks the string into parts and applies them as needed
          */
-        if (attr.indexOf(".") != -1) {
-          var split = attr.split(".");
+        if (attr.indexOf('.') != -1) {
+          var split = attr.split('.');
 
           id = split[0];
           className = split[1];
-        } else if (attr[0] == "#") {
+        } else if (attr[0] == '#') {
           id = attr;
         } else {
           className = attr;
         }
 
-        newNode.attr("id", id.substring(1)).addClass(className);
+        newNode.attr('id', id.substring(1)).addClass(className);
 
         i++; // Move along the position array
       }
 
       insert.append(newNode);
       insert = newNode;
-    } else if (option == ">") {
+    } else if (option == '>') {
       // End container div
       insert = insert.parent();
-    } else if (option == "t") {
+    } else if (option == 't') {
       // Table
       featureNode = _fnFeatureHtmlTable(settings);
     } else {
@@ -721,11 +727,11 @@ function _fnLayoutDom(settings, dom, insert) {
  */
 export function _fnDetectHeader(settings, thead, write) {
   var columns = settings.aoColumns;
-  var rows = $(thead).children("tr");
+  var rows = $(thead).children('tr');
   var row, cell;
   var i, k, l, iLen, shifted, column, colspan, rowspan;
   var titleRow = settings.titleRow;
-  var isHeader = thead && thead.nodeName.toLowerCase() === "thead";
+  var isHeader = thead && thead.nodeName.toLowerCase() === 'thead';
   var layout = [];
   var unique;
   var shift = function (a, i, j) {
@@ -749,15 +755,15 @@ export function _fnDetectHeader(settings, thead, write) {
     cell = row.firstChild;
     while (cell) {
       if (
-        cell.nodeName.toUpperCase() == "TD" ||
-        cell.nodeName.toUpperCase() == "TH"
+        cell.nodeName.toUpperCase() == 'TD' ||
+        cell.nodeName.toUpperCase() == 'TH'
       ) {
         var cols = [];
         var jqCell = $(cell);
 
         // Get the col and rowspan attributes from the DOM and sanitise them
-        colspan = cell.getAttribute("colspan") * 1;
-        rowspan = cell.getAttribute("rowspan") * 1;
+        colspan = cell.getAttribute('colspan') * 1;
+        rowspan = cell.getAttribute('rowspan') * 1;
         colspan = !colspan || colspan === 0 || colspan === 1 ? 1 : colspan;
         rowspan = !rowspan || rowspan === 0 || rowspan === 1 ? 1 : rowspan;
 
@@ -777,7 +783,7 @@ export function _fnDetectHeader(settings, thead, write) {
             // Get the width for the column. This can be defined from the
             // width attribute, style attribute or `columns.width` option
             var columnDef = columns[shifted];
-            var width = cell.getAttribute("width") || null;
+            var width = cell.getAttribute('width') || null;
             var t = cell.style.width.match(/width:\s*(\d+[pxem%]+)/);
             if (t) {
               width = t[1];
@@ -816,7 +822,7 @@ export function _fnDetectHeader(settings, thead, write) {
             // provided.
             if (!columnDef.ariaTitle) {
               columnDef.ariaTitle =
-                jqCell.attr("aria-label") || columnDef.sTitle;
+                jqCell.attr('aria-label') || columnDef.sTitle;
             }
 
             // Column specific class names
@@ -826,9 +832,9 @@ export function _fnDetectHeader(settings, thead, write) {
           }
 
           // Wrap the column title so we can write to it in future
-          if ($("span.dt-column-title", cell).length === 0) {
-            $("<span>")
-              .addClass("dt-column-title")
+          if ($('span.dt-column-title', cell).length === 0) {
+            $('<span>')
+              .addClass('dt-column-title')
               .append(cell.childNodes)
               .appendTo(cell);
           }
@@ -836,20 +842,20 @@ export function _fnDetectHeader(settings, thead, write) {
           if (
             settings.orderIndicators &&
             isHeader &&
-            jqCell.filter(":not([data-dt-order=disable])").length !== 0 &&
-            jqCell.parent(":not([data-dt-order=disable])").length !== 0 &&
-            $("span.dt-column-order", cell).length === 0
+            jqCell.filter(':not([data-dt-order=disable])').length !== 0 &&
+            jqCell.parent(':not([data-dt-order=disable])').length !== 0 &&
+            $('span.dt-column-order', cell).length === 0
           ) {
-            $("<span>").addClass("dt-column-order").appendTo(cell);
+            $('<span>').addClass('dt-column-order').appendTo(cell);
           }
 
           // We need to wrap the elements in the header in another element to use flexbox
           // layout for those elements
-          var headerFooter = isHeader ? "header" : "footer";
+          var headerFooter = isHeader ? 'header' : 'footer';
 
-          if ($("span.dt-column-" + headerFooter, cell).length === 0) {
-            $("<div>")
-              .addClass("dt-column-" + headerFooter)
+          if ($('span.dt-column-' + headerFooter, cell).length === 0) {
+            $('<div>')
+              .addClass('dt-column-' + headerFooter)
               .append(cell.childNodes)
               .appendTo(cell);
           }
@@ -871,7 +877,7 @@ export function _fnDetectHeader(settings, thead, write) {
 
         // Assign an attribute so spanning cells can still be identified
         // as belonging to a column
-        cell.setAttribute("data-dt-column", _unique(cols).join(","));
+        cell.setAttribute('data-dt-column', _unique(cols).join(','));
       }
 
       cell = cell.nextSibling;
@@ -886,7 +892,7 @@ export function _fnDetectHeader(settings, thead, write) {
  *  @param {object} oSettings dataTables settings object
  */
 function _fnStart(oSettings) {
-  var bServerSide = _fnDataSource(oSettings) == "ssp";
+  var bServerSide = _fnDataSource(oSettings) == 'ssp';
   var iInitDisplayStart = oSettings.iInitDisplayStart;
 
   // Check and see if we have an initial draw position from state saving
@@ -894,8 +900,8 @@ function _fnStart(oSettings) {
     oSettings._iDisplayStart = bServerSide
       ? iInitDisplayStart
       : iInitDisplayStart >= oSettings.fnRecordsDisplay()
-      ? 0
-      : iInitDisplayStart;
+        ? 0
+        : iInitDisplayStart;
 
     oSettings.iInitDisplayStart = -1;
   }
@@ -913,7 +919,7 @@ export function _fnFeatureHtmlTable(settings) {
   // Scrolling from here on in
   var scroll = settings.oScroll;
 
-  if (scroll.sX === "" && scroll.sY === "") {
+  if (scroll.sX === '' && scroll.sY === '') {
     return settings.nTable;
   }
 
@@ -924,8 +930,8 @@ export function _fnFeatureHtmlTable(settings) {
   var captionSide = caption ? caption._captionSide : null;
   var headerClone = $(table[0].cloneNode(false));
   var footerClone = $(table[0].cloneNode(false));
-  var footer = table.children("tfoot");
-  var _div = "<div/>";
+  var footer = table.children('tfoot');
+  var _div = '<div/>';
   var size = function (s) {
     return !s ? null : _stringToCss(s);
   };
@@ -954,31 +960,31 @@ export function _fnFeatureHtmlTable(settings) {
     .append(
       $(_div, { class: classes.header.self })
         .css({
-          overflow: "hidden",
-          position: "relative",
+          overflow: 'hidden',
+          position: 'relative',
           border: 0,
-          width: scrollX ? size(scrollX) : "100%",
+          width: scrollX ? size(scrollX) : '100%',
         })
         .append(
           $(_div, { class: classes.header.inner })
             .css({
-              "box-sizing": "content-box",
-              width: scroll.sXInner || "100%",
+              'box-sizing': 'content-box',
+              width: scroll.sXInner || '100%',
             })
             .append(
               headerClone
-                .removeAttr("id")
-                .css("margin-left", 0)
-                .append(captionSide === "top" ? caption : null)
-                .append(table.children("thead"))
+                .removeAttr('id')
+                .css('margin-left', 0)
+                .append(captionSide === 'top' ? caption : null)
+                .append(table.children('thead'))
             )
         )
     )
     .append(
       $(_div, { class: classes.body })
         .css({
-          position: "relative",
-          overflow: "auto",
+          position: 'relative',
+          overflow: 'auto',
           width: size(scrollX),
         })
         .append(table)
@@ -988,17 +994,17 @@ export function _fnFeatureHtmlTable(settings) {
     scroller.append(
       $(_div, { class: classes.footer.self })
         .css({
-          overflow: "hidden",
+          overflow: 'hidden',
           border: 0,
-          width: scrollX ? size(scrollX) : "100%",
+          width: scrollX ? size(scrollX) : '100%',
         })
         .append(
           $(_div, { class: classes.footer.inner }).append(
             footerClone
-              .removeAttr("id")
-              .css("margin-left", 0)
-              .append(captionSide === "bottom" ? caption : null)
-              .append(table.children("tfoot"))
+              .removeAttr('id')
+              .css('margin-left', 0)
+              .append(captionSide === 'bottom' ? caption : null)
+              .append(table.children('tfoot'))
           )
         )
     );
@@ -1010,7 +1016,7 @@ export function _fnFeatureHtmlTable(settings) {
   var scrollFoot = footer ? children[2] : null;
 
   // When the body is scrolled, then we also want to scroll the headers
-  $(scrollBody).on("scroll.DT", function () {
+  $(scrollBody).on('scroll.DT', function () {
     var scrollLeft = this.scrollLeft;
 
     scrollHead.scrollLeft = scrollLeft;
@@ -1021,7 +1027,7 @@ export function _fnFeatureHtmlTable(settings) {
   });
 
   // When focus is put on the header cells, we might need to scroll the body
-  $("th, td", scrollHead).on("focus", function () {
+  $('th, td', scrollHead).on('focus', function () {
     var scrollLeft = scrollHead.scrollLeft;
 
     scrollBody.scrollLeft = scrollLeft;
@@ -1031,9 +1037,9 @@ export function _fnFeatureHtmlTable(settings) {
     }
   });
 
-  $(scrollBody).css("max-height", scrollY);
+  $(scrollBody).css('max-height', scrollY);
   if (!scroll.bCollapse) {
-    $(scrollBody).css("height", scrollY);
+    $(scrollBody).css('height', scrollY);
   }
 
   settings.nScrollHead = scrollHead;

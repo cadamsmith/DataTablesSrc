@@ -1,6 +1,6 @@
-import { _fnArrayApply } from "../core/core.support";
-import { _fnHeaderLayout } from "../core/core.draw";
-import $ from "jquery";
+import { _fnArrayApply } from '../core/core.support';
+import { _fnHeaderLayout } from '../core/core.draw';
+import $ from 'jquery';
 
 export function _registerApis_table(register, registerPlural, constructNewApi) {
   /**
@@ -14,14 +14,14 @@ export function _registerApis_table(register, registerPlural, constructNewApi) {
    *   select multiple tables or as an integer to select a single table.
    * @returns {DataTable.Api} Returns a new API instance if a selector is given.
    */
-  register("tables()", function (selector) {
+  register('tables()', function (selector) {
     // A new instance is created if there was a selector specified
     return selector !== undefined && selector !== null
       ? constructNewApi(__table_selector(selector, this.context))
       : this;
   });
 
-  register("table()", function (selector) {
+  register('table()', function (selector) {
     var tables = this.tables(selector);
     var ctx = tables.context;
 
@@ -31,17 +31,17 @@ export function _registerApis_table(register, registerPlural, constructNewApi) {
 
   // Common methods, combined to reduce size
   [
-    ["nodes", "node", "nTable"],
-    ["body", "body", "nTBody"],
-    ["header", "header", "nTHead"],
-    ["footer", "footer", "nTFoot"],
+    ['nodes', 'node', 'nTable'],
+    ['body', 'body', 'nTBody'],
+    ['header', 'header', 'nTHead'],
+    ['footer', 'footer', 'nTFoot'],
   ].forEach(function (item) {
     registerPlural(
-      "tables()." + item[0] + "()",
-      "table()." + item[1] + "()",
+      'tables().' + item[0] + '()',
+      'table().' + item[1] + '()',
       function () {
         return this.iterator(
-          "table",
+          'table',
           function (ctx) {
             return ctx[item[2]];
           },
@@ -53,55 +53,48 @@ export function _registerApis_table(register, registerPlural, constructNewApi) {
 
   // Structure methods
   [
-    ["header", "aoHeader"],
-    ["footer", "aoFooter"],
+    ['header', 'aoHeader'],
+    ['footer', 'aoFooter'],
   ].forEach(function (item) {
-    register(
-      "table()." + item[0] + ".structure()",
-      function (selector) {
-        var indexes = this.columns(selector).indexes().flatten().toArray();
-        var ctx = this.context[0];
-        var structure = _fnHeaderLayout(ctx, ctx[item[1]], indexes);
+    register('table().' + item[0] + '.structure()', function (selector) {
+      var indexes = this.columns(selector).indexes().flatten().toArray();
+      var ctx = this.context[0];
+      var structure = _fnHeaderLayout(ctx, ctx[item[1]], indexes);
 
-        // The structure is in column index order - but from this method we want the return to be
-        // in the columns() selector API order. In order to do that we need to map from one form
-        // to the other
-        var orderedIndexes = indexes.slice().sort(function (a, b) {
-          return a - b;
-        });
+      // The structure is in column index order - but from this method we want the return to be
+      // in the columns() selector API order. In order to do that we need to map from one form
+      // to the other
+      var orderedIndexes = indexes.slice().sort(function (a, b) {
+        return a - b;
+      });
 
-        return structure.map(function (row) {
-          return indexes.map(function (colIdx) {
-            return row[orderedIndexes.indexOf(colIdx)];
-          });
+      return structure.map(function (row) {
+        return indexes.map(function (colIdx) {
+          return row[orderedIndexes.indexOf(colIdx)];
         });
-      }
+      });
+    });
+  });
+
+  registerPlural('tables().containers()', 'table().container()', function () {
+    return this.iterator(
+      'table',
+      function (ctx) {
+        return ctx.nTableWrapper;
+      },
+      1
     );
   });
 
-  registerPlural(
-    "tables().containers()",
-    "table().container()",
-    function () {
-      return this.iterator(
-        "table",
-        function (ctx) {
-          return ctx.nTableWrapper;
-        },
-        1
-      );
-    }
-  );
-
-  register("tables().every()", function (fn) {
+  register('tables().every()', function (fn) {
     var that = this;
 
-    return this.iterator("table", function (s, i) {
+    return this.iterator('table', function (s, i) {
       fn.call(that.table(i), i);
     });
   });
 
-  register("caption()", function (value, side) {
+  register('caption()', function (value, side) {
     var context = this.context;
 
     // Getter - return existing node's content
@@ -112,7 +105,7 @@ export function _registerApis_table(register, registerPlural, constructNewApi) {
     }
 
     return this.iterator(
-      "table",
+      'table',
       function (ctx) {
         var table = $(ctx.nTable);
         var caption = $(ctx.captionNode);
@@ -120,7 +113,7 @@ export function _registerApis_table(register, registerPlural, constructNewApi) {
 
         // Create the node if it doesn't exist yet
         if (!caption.length) {
-          caption = $("<caption/>").html(value);
+          caption = $('<caption/>').html(value);
           ctx.captionNode = caption[0];
 
           // If side isn't set, we need to insert into the document to let the
@@ -129,22 +122,22 @@ export function _registerApis_table(register, registerPlural, constructNewApi) {
           if (!side) {
             table.prepend(caption);
 
-            side = caption.css("caption-side");
+            side = caption.css('caption-side');
           }
         }
 
         caption.html(value);
 
         if (side) {
-          caption.css("caption-side", side);
+          caption.css('caption-side', side);
           caption[0]._captionSide = side;
         }
 
-        if (container.find("div.dataTables_scroll").length) {
-          var selector = side === "top" ? "Head" : "Foot";
+        if (container.find('div.dataTables_scroll').length) {
+          var selector = side === 'top' ? 'Head' : 'Foot';
 
           container
-            .find("div.dataTables_scroll" + selector + " table")
+            .find('div.dataTables_scroll' + selector + ' table')
             .prepend(caption);
         } else {
           table.prepend(caption);
@@ -154,7 +147,7 @@ export function _registerApis_table(register, registerPlural, constructNewApi) {
     );
   });
 
-  register("caption.node()", function () {
+  register('caption.node()', function () {
     var ctx = this.context;
 
     return ctx.length ? ctx[0].captionNode : null;
@@ -186,7 +179,7 @@ var __table_selector = function (selector, a) {
   }
 
   // Integer is used to pick out a table by index
-  if (typeof selector === "number") {
+  if (typeof selector === 'number') {
     return [a[selector]];
   }
 

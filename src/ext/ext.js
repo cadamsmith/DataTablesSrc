@@ -1,13 +1,13 @@
-import { _dt_ext_classes } from "./ext.classes";
-import { _dt_version, _dt_versionCheck } from "../api/api.version";
-import { _dt_ext_pagination, _dt_ext_renderer } from "./ext.renderer";
-import { _dt_ext_types } from "./ext.types";
-import { _extend } from "../core/core.jq";
-import { _dt_ext_selector } from "./ext.selector";
-import { _dt_ext_order } from "./ext.order";
-import { _dt_ext_feature, _dt_ext_features } from "./ext.feature";
-import { _dt_ext_escape } from "./ext.escape";
-import { _dt_ext_errMode } from "./ext.errMode";
+import { _dt_ext_classes } from './ext.classes';
+import { _dt_version, _dt_versionCheck } from '../api/api.version';
+import { _dt_ext_pagination, _dt_ext_renderer } from './ext.renderer';
+import { _dt_ext_types } from './ext.types';
+import { _extend } from '../core/core.jq';
+import { _dt_ext_selector } from './ext.selector';
+import { _dt_ext_order } from './ext.order';
+import { _dt_ext_feature, _dt_ext_features } from './ext.feature';
+import { _dt_ext_escape } from './ext.escape';
+import { _dt_ext_errMode } from './ext.errMode';
 
 /**
  * DataTables extensions
@@ -22,7 +22,6 @@ import { _dt_ext_errMode } from "./ext.errMode";
  *
  *  @namespace
  */
-
 
 /**
  * Extension object for DataTables that is used to provide all extension
@@ -40,7 +39,7 @@ const _dt_ext = {
    *
    *  @type string
    */
-  builder: "-source-",
+  builder: '-source-',
 
   /**
    * Buttons. For use with the Buttons extension for DataTables. This is

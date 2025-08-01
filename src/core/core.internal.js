@@ -1,4 +1,4 @@
-import { _dt_util_replaceable } from "../api/api.util.replaceable";
+import { _dt_util_replaceable } from '../api/api.util.replaceable';
 
 var _re_dic = {};
 
@@ -31,31 +31,31 @@ export var _re_formatted_numeric =
 
 // Escape regular expression special characters
 export var _re_escape_regex = new RegExp(
-  "(\\" +
+  '(\\' +
     [
-      "/",
-      ".",
-      "*",
-      "+",
-      "?",
-      "|",
-      "(",
-      ")",
-      "[",
-      "]",
-      "{",
-      "}",
-      "\\",
-      "$",
-      "^",
-      "-",
-    ].join("|\\") +
-    ")",
-  "g"
+      '/',
+      '.',
+      '*',
+      '+',
+      '?',
+      '|',
+      '(',
+      ')',
+      '[',
+      ']',
+      '{',
+      '}',
+      '\\',
+      '$',
+      '^',
+      '-',
+    ].join('|\\') +
+    ')',
+  'g'
 );
 
 export var _empty = function (d) {
-  return !d || d === true || d === "-" ? true : false;
+  return !d || d === true || d === '-' ? true : false;
 };
 
 // Convert from a formatted number with characters other than `.` as the
@@ -63,10 +63,10 @@ export var _empty = function (d) {
 export var _numToDecimal = function (num, decimalPoint) {
   // Cache created regular expressions for speed as this function is called often
   if (!_re_dic[decimalPoint]) {
-    _re_dic[decimalPoint] = new RegExp(_escapeRegex(decimalPoint), "g");
+    _re_dic[decimalPoint] = new RegExp(_escapeRegex(decimalPoint), 'g');
   }
-  return typeof num === "string" && decimalPoint !== "."
-    ? num.replace(/\./g, "").replace(_re_dic[decimalPoint], ".")
+  return typeof num === 'string' && decimalPoint !== '.'
+    ? num.replace(/\./g, '').replace(_re_dic[decimalPoint], '.')
     : num;
 };
 
@@ -148,9 +148,9 @@ export var _intVal = function (s) {
 
 export var _isNumber = function (d, decimalPoint, formatted, allowEmpty) {
   var type = typeof d;
-  var strType = type === "string";
+  var strType = type === 'string';
 
-  if (type === "number" || type === "bigint") {
+  if (type === 'number' || type === 'bigint') {
     return true;
   }
 
@@ -166,7 +166,7 @@ export var _isNumber = function (d, decimalPoint, formatted, allowEmpty) {
   }
 
   if (formatted && strType) {
-    d = d.replace(_re_formatted_numeric, "");
+    d = d.replace(_re_formatted_numeric, '');
   }
 
   return !isNaN(parseFloat(d)) && isFinite(d);
@@ -174,7 +174,7 @@ export var _isNumber = function (d, decimalPoint, formatted, allowEmpty) {
 
 // A string without HTML in it can be considered to be HTML still
 var _isHtml = function (d) {
-  return _empty(d) || typeof d === "string";
+  return _empty(d) || typeof d === 'string';
 };
 
 // Is a string a number surrounded by HTML?
@@ -184,14 +184,19 @@ export var _htmlNumeric = function (d, decimalPoint, formatted, allowEmpty) {
   }
 
   // input and select strings mean that this isn't just a number
-  if (typeof d === "string" && d.match(/<(input|select)/i)) {
+  if (typeof d === 'string' && d.match(/<(input|select)/i)) {
     return null;
   }
 
   var html = _isHtml(d);
   return !html
     ? null
-    : _isNumber(_dt_util_replaceable.stripHtml(d), decimalPoint, formatted, allowEmpty)
+    : _isNumber(
+          _dt_util_replaceable.stripHtml(d),
+          decimalPoint,
+          formatted,
+          allowEmpty
+        )
       ? true
       : null;
 };
@@ -295,7 +300,7 @@ export var _flatten = function (out, val) {
 // Similar to jQuery's addClass, but use classList.add
 export function _addClass(el, name) {
   if (name) {
-    name.split(" ").forEach(function (n) {
+    name.split(' ').forEach(function (n) {
       if (n) {
         // `add` does deduplication, so no need to check `contains`
         el.classList.add(n);
@@ -305,7 +310,7 @@ export function _addClass(el, name) {
 }
 
 export function _escapeRegex(val) {
-  return val.replace(_re_escape_regex, "\\$1");
+  return val.replace(_re_escape_regex, '\\$1');
 }
 
 /**
@@ -314,10 +319,10 @@ export function _escapeRegex(val) {
  * @return {array} Split string
  */
 export function _splitObjNotation(str) {
-  var parts = str.match(/(\\.|[^.])+/g) || [""];
+  var parts = str.match(/(\\.|[^.])+/g) || [''];
 
   return parts.map(function (s) {
-    return s.replace(/\\\./g, ".");
+    return s.replace(/\\\./g, '.');
   });
 }
 
@@ -329,13 +334,13 @@ export function _splitObjNotation(str) {
  */
 export function _stringToCss(s) {
   if (s === null) {
-    return "0px";
+    return '0px';
   }
 
-  if (typeof s == "number") {
-    return s < 0 ? "0px" : s + "px";
+  if (typeof s == 'number') {
+    return s < 0 ? '0px' : s + 'px';
   }
 
   // Check it has a unit character already
-  return s.match(/\d$/) ? s + "px" : s;
+  return s.match(/\d$/) ? s + 'px' : s;
 }

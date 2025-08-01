@@ -1,14 +1,12 @@
 import {
   _escapeRegex,
-  _re_escape_regex,
   __reArray,
   __reFn,
   _unique,
   _splitObjNotation,
-} from "../core/core.internal";
-import { _each, _isPlainObject } from "../core/core.jq";
-import { _dt_util_replaceable } from "./api.util.replaceable";
-import { _re_html } from "../core/core.regex";
+} from '../core/core.internal';
+import { _each, _isPlainObject } from '../core/core.jq';
+import { _dt_util_replaceable } from './api.util.replaceable';
 
 /**
  * DataTables utility methods
@@ -30,7 +28,7 @@ export const _dt_util = {
   diacritics: function (mixed, both) {
     var type = typeof mixed;
 
-    if (type !== "function") {
+    if (type !== 'function') {
       return _dt_util_replaceable.normalize(mixed, both);
     }
     _dt_util_replaceable.normalize = mixed;
@@ -114,15 +112,15 @@ export const _dt_util = {
     } else if (source === null) {
       // Nothing to do when the data source is null
       return function () {};
-    } else if (typeof source === "function") {
+    } else if (typeof source === 'function') {
       return function (data, val, meta) {
-        source(data, "set", val, meta);
+        source(data, 'set', val, meta);
       };
     } else if (
-      typeof source === "string" &&
-      (source.indexOf(".") !== -1 ||
-        source.indexOf("[") !== -1 ||
-        source.indexOf("(") !== -1)
+      typeof source === 'string' &&
+      (source.indexOf('.') !== -1 ||
+        source.indexOf('[') !== -1 ||
+        source.indexOf('(') !== -1)
     ) {
       // Like the get, we need to get data from a nested object
       var setData = function (data, val, src) {
@@ -133,8 +131,8 @@ export const _dt_util = {
 
         for (var i = 0, iLen = a.length - 1; i < iLen; i++) {
           // Protect against prototype pollution
-          if (a[i] === "__proto__" || a[i] === "constructor") {
-            throw new Error("Cannot set prototype values");
+          if (a[i] === '__proto__' || a[i] === 'constructor') {
+            throw new Error('Cannot set prototype values');
           }
 
           // Check if we are dealing with an array notation request
@@ -142,13 +140,13 @@ export const _dt_util = {
           funcNotation = a[i].match(__reFn);
 
           if (arrayNotation) {
-            a[i] = a[i].replace(__reArray, "");
+            a[i] = a[i].replace(__reArray, '');
             data[a[i]] = [];
 
             // Get the remainder of the nested object to set so we can recurse
             b = a.slice();
             b.splice(0, i + 1);
-            innerSrc = b.join(".");
+            innerSrc = b.join('.');
 
             // Traverse each entry in the array setting the properties requested
             if (Array.isArray(val)) {
@@ -169,7 +167,7 @@ export const _dt_util = {
             return;
           } else if (funcNotation) {
             // Function call
-            a[i] = a[i].replace(__reFn, "");
+            a[i] = a[i].replace(__reFn, '');
             data = data[a[i]](val);
           }
 
@@ -184,11 +182,11 @@ export const _dt_util = {
         // Last item in the input - i.e, the actual set
         if (aLast.match(__reFn)) {
           // Function call
-          data = data[aLast.replace(__reFn, "")](val);
+          data = data[aLast.replace(__reFn, '')](val);
         } else {
           // If array notation is used, we just want to strip it and use the property name
           // and assign the value. If it isn't used, then we get the result we want anyway
-          data[aLast.replace(__reArray, "")] = val;
+          data[aLast.replace(__reArray, '')] = val;
         }
       };
 
@@ -230,15 +228,15 @@ export const _dt_util = {
         // type, row and meta also passed, but not used
         return data;
       };
-    } else if (typeof source === "function") {
+    } else if (typeof source === 'function') {
       return function (data, type, row, meta) {
         return source(data, type, row, meta);
       };
     } else if (
-      typeof source === "string" &&
-      (source.indexOf(".") !== -1 ||
-        source.indexOf("[") !== -1 ||
-        source.indexOf("(") !== -1)
+      typeof source === 'string' &&
+      (source.indexOf('.') !== -1 ||
+        source.indexOf('[') !== -1 ||
+        source.indexOf('(') !== -1)
     ) {
       /* If there is a . in the source string then the data source is in a
        * nested object so we loop over the data for each level to get the next
@@ -249,7 +247,7 @@ export const _dt_util = {
       var fetchData = function (data, type, src) {
         var arrayNotation, funcNotation, out, innerSrc;
 
-        if (src !== "") {
+        if (src !== '') {
           var a = _splitObjNotation(src);
 
           for (var i = 0, iLen = a.length; i < iLen; i++) {
@@ -259,17 +257,17 @@ export const _dt_util = {
 
             if (arrayNotation) {
               // Array notation
-              a[i] = a[i].replace(__reArray, "");
+              a[i] = a[i].replace(__reArray, '');
 
               // Condition allows simply [] to be passed in
-              if (a[i] !== "") {
+              if (a[i] !== '') {
                 data = data[a[i]];
               }
               out = [];
 
               // Get the remainder of the nested object to get
               a.splice(0, i + 1);
-              innerSrc = a.join(".");
+              innerSrc = a.join('.');
 
               // Traverse each entry in the array getting the properties requested
               if (Array.isArray(data)) {
@@ -284,14 +282,14 @@ export const _dt_util = {
                 1,
                 arrayNotation[0].length - 1
               );
-              data = join === "" ? out : out.join(join);
+              data = join === '' ? out : out.join(join);
 
               // The inner call to fetchData has already traversed through the remainder
               // of the source requested, so we exit from the loop
               break;
             } else if (funcNotation) {
               // Function call
-              a[i] = a[i].replace(__reFn, "");
+              a[i] = a[i].replace(__reFn, '');
               data = data[a[i]]();
               continue;
             }
@@ -325,10 +323,10 @@ export const _dt_util = {
   stripHtml: function (mixed) {
     var type = typeof mixed;
 
-    if (type === "function") {
+    if (type === 'function') {
       _dt_util_replaceable.stripHtml = mixed;
       return;
-    } else if (type === "string") {
+    } else if (type === 'string') {
       return _dt_util_replaceable.stripHtml(mixed);
     }
     return mixed;
@@ -337,10 +335,10 @@ export const _dt_util = {
   escapeHtml: function (mixed) {
     var type = typeof mixed;
 
-    if (type === "function") {
+    if (type === 'function') {
       _dt_util_replaceable.escapeHtml = mixed;
       return;
-    } else if (type === "string" || Array.isArray(mixed)) {
+    } else if (type === 'string' || Array.isArray(mixed)) {
       return _dt_util_replaceable.escapeHtml(mixed);
     }
     return mixed;

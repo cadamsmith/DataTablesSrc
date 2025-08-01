@@ -1,20 +1,20 @@
-import { _fnCallbackFire } from "../core/core.support";
-import { _fnSaveState } from "../core/core.state";
-import { _fnVisbleColumns } from "../core/core.columns";
-import { _pluck } from "../core/core.internal";
-import { _dt_util } from "./api.util";
-import $ from "jquery";
+import { _fnCallbackFire } from '../core/core.support';
+import { _fnSaveState } from '../core/core.state';
+import { _fnVisbleColumns } from '../core/core.columns';
+import { _pluck } from '../core/core.internal';
+import { _dt_util } from './api.util';
+import $ from 'jquery';
 
 // Strings for the method names to help minification
-var _emp = "";
-var _child_obj = _emp + "row().child";
-var _child_mth = _child_obj + "()";
+var _emp = '';
+var _child_obj = _emp + 'row().child';
+var _child_mth = _child_obj + '()';
 
 export function _registerApis_rowDetails(register, _, constructNewApi) {
-  $(document).on("plugin-init.dt", function (e, context) {
+  $(document).on('plugin-init.dt', function (e, context) {
     var api = constructNewApi(context);
 
-    api.on("stateSaveParams.DT", function (e, settings, d) {
+    api.on('stateSaveParams.DT', function (e, settings, d) {
       // This could be more compact with the API, but it is a lot faster as a simple
       // internal loop
       var idFn = settings.rowIdFn;
@@ -26,7 +26,7 @@ export function _registerApis_rowDetails(register, _, constructNewApi) {
         var data = settings.aoData[rowIdx];
 
         if (data._detailsShow) {
-          ids.push("#" + idFn(data._aData));
+          ids.push('#' + idFn(data._aData));
         }
       }
 
@@ -34,7 +34,7 @@ export function _registerApis_rowDetails(register, _, constructNewApi) {
     });
 
     // For future state loads (e.g. with StateRestore)
-    api.on("stateLoaded.DT", function (e, settings, state) {
+    api.on('stateLoaded.DT', function (e, settings, state) {
       __details_state_load(api, state);
     });
 
@@ -70,8 +70,8 @@ export function _registerApis_rowDetails(register, _, constructNewApi) {
 
   register(
     [
-      _child_obj + ".show()",
-      _child_mth + ".show()", // only when `child()` was called with parameters (without
+      _child_obj + '.show()',
+      _child_mth + '.show()', // only when `child()` was called with parameters (without
     ],
     function () {
       // it returns an object and this method is not executed)
@@ -82,8 +82,8 @@ export function _registerApis_rowDetails(register, _, constructNewApi) {
 
   register(
     [
-      _child_obj + ".hide()",
-      _child_mth + ".hide()", // only when `child()` was called with parameters (without
+      _child_obj + '.hide()',
+      _child_mth + '.hide()', // only when `child()` was called with parameters (without
     ],
     function () {
       // it returns an object and this method is not executed)
@@ -94,8 +94,8 @@ export function _registerApis_rowDetails(register, _, constructNewApi) {
 
   register(
     [
-      _child_obj + ".remove()",
-      _child_mth + ".remove()", // only when `child()` was called with parameters (without
+      _child_obj + '.remove()',
+      _child_mth + '.remove()', // only when `child()` was called with parameters (without
     ],
     function () {
       // it returns an object and this method is not executed)
@@ -104,7 +104,7 @@ export function _registerApis_rowDetails(register, _, constructNewApi) {
     }
   );
 
-  register(_child_obj + ".isShown()", function () {
+  register(_child_obj + '.isShown()', function () {
     var ctx = this.context;
 
     if (ctx.length && this.length && ctx[0].aoData[this[0]]) {
@@ -122,11 +122,11 @@ var __details_state_load = function (api, state) {
         state.childRows.map(function (id) {
           // Escape any `:` characters from the row id. Accounts for
           // already escaped characters.
-          return id.replace(/([^:\\]*(?:\\.[^:\\]*)*):/g, "$1\\:");
+          return id.replace(/([^:\\]*(?:\\.[^:\\]*)*):/g, '$1\\:');
         })
       )
       .every(function () {
-        _fnCallbackFire(api.settings()[0], null, "requestChild", [this]);
+        _fnCallbackFire(api.settings()[0], null, 'requestChild', [this]);
       });
   }
 };
@@ -145,16 +145,16 @@ var __details_add = function (ctx, row, data, klass) {
 
     // If we get a TR element, then just add it directly - up to the dev
     // to add the correct number of columns etc
-    if (r.nodeName && r.nodeName.toLowerCase() === "tr") {
-      r.setAttribute("data-dt-row", row.idx);
+    if (r.nodeName && r.nodeName.toLowerCase() === 'tr') {
+      r.setAttribute('data-dt-row', row.idx);
       rows.push(r);
     } else {
       // Otherwise create a row with a wrapper
-      var created = $("<tr><td></td></tr>")
-        .attr("data-dt-row", row.idx)
+      var created = $('<tr><td></td></tr>')
+        .attr('data-dt-row', row.idx)
         .addClass(k);
 
-      $("td", created).addClass(k).html(r)[0].colSpan = _fnVisbleColumns(ctx);
+      $('td', created).addClass(k).html(r)[0].colSpan = _fnVisbleColumns(ctx);
 
       rows.push(created[0]);
     }
@@ -190,7 +190,7 @@ var __details_remove = function (api, idx) {
 
       row._detailsShow = undefined;
       row._details = undefined;
-      $(row.nTr).removeClass("dt-hasChild");
+      $(row.nTr).removeClass('dt-hasChild');
       __details_state(ctx);
     }
   }
@@ -207,13 +207,13 @@ var __details_display = function (api, show, constructNewApi) {
 
       if (show) {
         row._details.insertAfter(row.nTr);
-        $(row.nTr).addClass("dt-hasChild");
+        $(row.nTr).addClass('dt-hasChild');
       } else {
         row._details.detach();
-        $(row.nTr).removeClass("dt-hasChild");
+        $(row.nTr).removeClass('dt-hasChild');
       }
 
-      _fnCallbackFire(ctx[0], null, "childRow", [show, api.row(api[0])]);
+      _fnCallbackFire(ctx[0], null, 'childRow', [show, api.row(api[0])]);
 
       __details_events(ctx[0], constructNewApi);
       __details_state(ctx);
@@ -223,15 +223,15 @@ var __details_display = function (api, show, constructNewApi) {
 
 var __details_events = function (settings, constructNewApi) {
   var api = constructNewApi(settings);
-  var namespace = ".dt.DT_details";
-  var drawEvent = "draw" + namespace;
-  var colvisEvent = "column-sizing" + namespace;
-  var destroyEvent = "destroy" + namespace;
+  var namespace = '.dt.DT_details';
+  var drawEvent = 'draw' + namespace;
+  var colvisEvent = 'column-sizing' + namespace;
+  var destroyEvent = 'destroy' + namespace;
   var data = settings.aoData;
 
-  api.off(drawEvent + " " + colvisEvent + " " + destroyEvent);
+  api.off(drawEvent + ' ' + colvisEvent + ' ' + destroyEvent);
 
-  if (_pluck(data, "_details").length > 0) {
+  if (_pluck(data, '_details').length > 0) {
     // On each draw, insert the required elements into the document
     api.on(drawEvent, function (e, ctx) {
       if (settings !== ctx) {
@@ -239,7 +239,7 @@ var __details_events = function (settings, constructNewApi) {
       }
 
       api
-        .rows({ page: "current" })
+        .rows({ page: 'current' })
         .eq(0)
         .each(function (idx) {
           // Internal data grab
@@ -267,10 +267,10 @@ var __details_events = function (settings, constructNewApi) {
 
         if (row && row._details) {
           row._details.each(function () {
-            var el = $(this).children("td");
+            var el = $(this).children('td');
 
             if (el.length == 1) {
-              el.attr("colspan", visible);
+              el.attr('colspan', visible);
             }
           });
         }

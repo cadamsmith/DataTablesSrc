@@ -1,6 +1,6 @@
-import { _dt_ext_types } from "../ext/ext.types";
-import { _pluck } from "./core.internal";
-import { _isPlainObject } from "./core.jq";
+import { _dt_ext_types } from '../ext/ext.types';
+import { _pluck } from './core.internal';
+import { _isPlainObject } from './core.jq';
 
 export function _fnSortFlatten(settings) {
   var i,
@@ -45,7 +45,7 @@ export function _fnSortFlatten(settings) {
 
       for (k = 0, kLen = aDataSort.length; k < kLen; k++) {
         iCol = aDataSort[k];
-        sType = aoColumns[iCol].sType || "string";
+        sType = aoColumns[iCol].sType || 'string';
 
         if (nestedSort[i]._idx === undefined) {
           nestedSort[i]._idx = aoColumns[iCol].asSorting.indexOf(
@@ -60,8 +60,8 @@ export function _fnSortFlatten(settings) {
             dir: nestedSort[i][1],
             index: nestedSort[i]._idx,
             type: sType,
-            formatter: extSort[sType + "-pre"],
-            sorter: extSort[sType + "-" + nestedSort[i][1]],
+            formatter: extSort[sType + '-pre'],
+            sorter: extSort[sType + '-' + nestedSort[i][1]],
           });
         }
       }
@@ -79,7 +79,7 @@ export function _fnSortResolve(settings, nestedSort, sort) {
         nestedSort.push([a.idx, a.dir]);
       } else if (a.name) {
         // Name based ordering
-        var cols = _pluck(settings.aoColumns, "sName");
+        var cols = _pluck(settings.aoColumns, 'sName');
         var idx = cols.indexOf(a.name);
 
         if (idx !== -1) {
@@ -95,7 +95,7 @@ export function _fnSortResolve(settings, nestedSort, sort) {
   if (_isPlainObject(sort)) {
     // Object
     push(sort);
-  } else if (sort.length && typeof sort[0] === "number") {
+  } else if (sort.length && typeof sort[0] === 'number') {
     // 1D array
     push(sort);
   } else if (sort.length) {

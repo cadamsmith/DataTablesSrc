@@ -3,7 +3,7 @@ export function _isPlainObject(obj) {
 
   // Detect obvious negatives
   // Use toString instead of jQuery.type to catch host objects
-  if (!obj || toString.call(obj) !== "[object Object]") {
+  if (!obj || toString.call(obj) !== '[object Object]') {
     return false;
   }
 
@@ -15,9 +15,9 @@ export function _isPlainObject(obj) {
   }
 
   // Objects with prototype are plain iff they were constructed by a global Object function
-  Ctor = {}.hasOwnProperty.call(proto, "constructor") && proto.constructor;
+  Ctor = {}.hasOwnProperty.call(proto, 'constructor') && proto.constructor;
   return (
-    typeof Ctor === "function" &&
+    typeof Ctor === 'function' &&
     {}.hasOwnProperty.toString.call(Ctor) ===
       {}.hasOwnProperty.toString.call(Object)
   );
@@ -90,7 +90,7 @@ export function _extend() {
     deep = false;
 
   // Handle a deep copy situation
-  if (typeof target === "boolean") {
+  if (typeof target === 'boolean') {
     deep = target;
 
     // Skip the boolean and the target
@@ -99,7 +99,7 @@ export function _extend() {
   }
 
   // Handle case when target is a string or something (possible in deep copy)
-  if (typeof target !== "object" && typeof target !== "function") {
+  if (typeof target !== 'object' && typeof target !== 'function') {
     target = {};
   }
 
@@ -118,7 +118,7 @@ export function _extend() {
 
         // Prevent Object.prototype pollution
         // Prevent never-ending loop
-        if (name === "__proto__" || target === copy) {
+        if (name === '__proto__' || target === copy) {
           continue;
         }
 
@@ -169,24 +169,24 @@ function isArrayLike(obj) {
   var length = !!obj && obj.length,
     type = toType(obj);
 
-  if (typeof obj === "function" || isWindow(obj)) {
+  if (typeof obj === 'function' || isWindow(obj)) {
     return false;
   }
 
   return (
-    type === "array" ||
+    type === 'array' ||
     length === 0 ||
-    (typeof length === "number" && length > 0 && length - 1 in obj)
+    (typeof length === 'number' && length > 0 && length - 1 in obj)
   );
 }
 
 function toType(obj) {
   if (obj == null) {
-    return obj + "";
+    return obj + '';
   }
 
-  return typeof obj === "object"
-    ? {}[toString.call(obj)] || "object"
+  return typeof obj === 'object'
+    ? {}[toString.call(obj)] || 'object'
     : typeof obj;
 }
 

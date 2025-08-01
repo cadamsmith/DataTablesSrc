@@ -1,8 +1,8 @@
-import { _dt_models_search } from "./model.search";
-import { _dt_models_row } from "./model.row";
-import { _dt_models_column } from "./model.column";
-import { _dt_models_defaults } from "./model.defaults";
-import { _dt_models_settings } from "./model.settings";
+import { _dt_models_search } from './model.search';
+import { _dt_models_row } from './model.row';
+import { _dt_models_column } from './model.column';
+import { _dt_models_defaults } from './model.defaults';
+import { _dt_models_settings } from './model.settings';
 
 /**
  * Object models container, for the various models that DataTables has

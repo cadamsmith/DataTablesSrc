@@ -7,7 +7,7 @@ export default [
       format: 'esm',
       sourcemap: true,
     },
-    external: ['jquery']
+    external: ['jquery'],
   },
   // UMD build
   {
@@ -18,9 +18,9 @@ export default [
       name: 'DataTable',
       sourcemap: true,
       globals: {
-        jquery: '$'
-      }
+        jquery: '$',
+      },
     },
-    external: ['jquery']
+    external: ['jquery'],
   },
 ];

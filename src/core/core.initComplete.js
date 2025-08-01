@@ -1,5 +1,5 @@
-import { _fnAdjustColumnSizing } from "./core.columns";
-import { _fnCallbackFire } from "./core.support";
+import { _fnAdjustColumnSizing } from './core.columns';
+import { _fnCallbackFire } from './core.support';
 
 /**
  * Draw the table for the first time, adding all required features
@@ -19,6 +19,6 @@ export function _fnInitComplete(settings) {
   // column widths
   _fnAdjustColumnSizing(settings);
 
-  _fnCallbackFire(settings, null, "plugin-init", args, true);
-  _fnCallbackFire(settings, "aoInitComplete", "init", args, true);
+  _fnCallbackFire(settings, null, 'plugin-init', args, true);
+  _fnCallbackFire(settings, 'aoInitComplete', 'init', args, true);
 }

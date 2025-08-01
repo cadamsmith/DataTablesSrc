@@ -1,134 +1,133 @@
-
 $table-typography-selector: '' !default;
 
 table.dataTable#{$table-typography-selector} {
-	&.nowrap {
-		th, td {
-			white-space: nowrap;
-		}
-	}
+  &.nowrap {
+    th, td {
+      white-space: nowrap;
+    }
+  }
 
-	th,
-	td {
-		box-sizing: border-box;
+  th,
+  td {
+    box-sizing: border-box;
 
-		&.dt-type-numeric,
-		&.dt-type-date {
-			text-align: right;
+    &.dt-type-numeric,
+    &.dt-type-date {
+      text-align: right;
 
-			div.dt-column-header,
-			div.dt-column-footer {
-				flex-direction: row-reverse;
-			}
-		}
+      div.dt-column-header,
+      div.dt-column-footer {
+        flex-direction: row-reverse;
+      }
+    }
 
-		&.dt-left {
-			text-align: left;
+    &.dt-left {
+      text-align: left;
 
-			div.dt-column-header,
-			div.dt-column-footer {
-				flex-direction: row;
-			}
-		}
+      div.dt-column-header,
+      div.dt-column-footer {
+        flex-direction: row;
+      }
+    }
 
-		&.dt-center {
-			text-align: center;
-		}
+    &.dt-center {
+      text-align: center;
+    }
 
-		&.dt-right {
-			text-align: right;
+    &.dt-right {
+      text-align: right;
 
-			div.dt-column-header,
-			div.dt-column-footer {
-				flex-direction: row-reverse;
-			}
-		}
+      div.dt-column-header,
+      div.dt-column-footer {
+        flex-direction: row-reverse;
+      }
+    }
 
-		&.dt-justify {
-			text-align: justify;
+    &.dt-justify {
+      text-align: justify;
 
-			div.dt-column-header,
-			div.dt-column-footer {
-				flex-direction: row;
-			}
-		}
+      div.dt-column-header,
+      div.dt-column-footer {
+        flex-direction: row;
+      }
+    }
 
-		&.dt-nowrap {
-			white-space: nowrap;
-		}
+    &.dt-nowrap {
+      white-space: nowrap;
+    }
 
-		&.dt-empty {
-			text-align: center;
-			vertical-align: top;
-		}
-	}
+    &.dt-empty {
+      text-align: center;
+      vertical-align: top;
+    }
+  }
 
-	thead,
-	tfoot {
-		th,
-		td {
-			text-align: left;
-			vertical-align: var(--dt-header-vertical-align);
+  thead,
+  tfoot {
+    th,
+    td {
+      text-align: left;
+      vertical-align: var(--dt-header-vertical-align);
 
-			&.dt-head-left {
-				text-align: left;
+      &.dt-head-left {
+        text-align: left;
 
-				div.dt-column-header,
-				div.dt-column-footer {
-					flex-direction: row;
-				}
-			}
-			
-			&.dt-head-center{
-				text-align: center;
-			}
+        div.dt-column-header,
+        div.dt-column-footer {
+          flex-direction: row;
+        }
+      }
 
-			&.dt-head-right {
-				text-align: right;
+      &.dt-head-center {
+        text-align: center;
+      }
 
-				div.dt-column-header,
-				div.dt-column-footer {
-					flex-direction: row-reverse;
-				}
-			}
+      &.dt-head-right {
+        text-align: right;
 
-			&.dt-head-justify {
-				text-align: justify;
+        div.dt-column-header,
+        div.dt-column-footer {
+          flex-direction: row-reverse;
+        }
+      }
 
-				div.dt-column-header,
-				div.dt-column-footer {
-					flex-direction: row;
-				}
-			}
+      &.dt-head-justify {
+        text-align: justify;
 
-			&.dt-head-nowrap {
-				white-space: nowrap;
-			}
-		}
-	}
+        div.dt-column-header,
+        div.dt-column-footer {
+          flex-direction: row;
+        }
+      }
 
-	tbody {
-		th,
-		td {
-			&.dt-body-left {
-				text-align: left;
-			}
+      &.dt-head-nowrap {
+        white-space: nowrap;
+      }
+    }
+  }
 
-			&.dt-body-center {
-				text-align: center;
-			}
+  tbody {
+    th,
+    td {
+      &.dt-body-left {
+        text-align: left;
+      }
 
-			&.dt-body-right {
-				text-align: right;
-			}
+      &.dt-body-center {
+        text-align: center;
+      }
 
-			&.dt-body-justify {
-				text-align: justify;
-			}
+      &.dt-body-right {
+        text-align: right;
+      }
 
-			&.dt-body-nowrap {
-				white-space: nowrap;
-			}
-		}
-	}
+      &.dt-body-justify {
+        text-align: justify;
+      }
+
+      &.dt-body-nowrap {
+        white-space: nowrap;
+      }
+    }
+  }
 }

@@ -22,12 +22,16 @@ test.describe('core - $()', () => {
   });
 
   test('Returns a jQuery instance', async ({ page }) => {
-    const isJQuery = await page.evaluate(() => window.table.$('tr') instanceof window.jQuery);
+    const isJQuery = await page.evaluate(
+      () => window.table.$('tr') instanceof window.jQuery
+    );
     expect(isJQuery).toBe(true);
   });
 
   test('Selector - node', async ({ page }) => {
-    const text = await page.evaluate(() => window.table.$(window.table.cell(2, 0).node()).text());
+    const text = await page.evaluate(() =>
+      window.table.$(window.table.cell(2, 0).node()).text()
+    );
     expect(text).toBe('Ashton Cox');
   });
 
@@ -51,28 +55,32 @@ test.describe('core - $()', () => {
   });
 
   test('Modifier - page', async ({ page }) => {
-    const len = await page.evaluate(() => window.table.$('tr', { page: 'current' }).length);
+    const len = await page.evaluate(
+      () => window.table.$('tr', { page: 'current' }).length
+    );
     expect(len).toBe(10);
   });
 
   test('Modifier - order - original', async ({ page }) => {
-    const firstWord = await page.evaluate(() =>
-      window.table
-        .$('tr:eq(0)', { order: 'original' })
-        .text()
-        .trim()
-        .split(' ')[0]
+    const firstWord = await page.evaluate(
+      () =>
+        window.table
+          .$('tr:eq(0)', { order: 'original' })
+          .text()
+          .trim()
+          .split(' ')[0]
     );
     expect(firstWord).toBe('Tiger');
   });
 
   test('Modifier - order - current', async ({ page }) => {
-    const firstWord = await page.evaluate(() =>
-      window.table
-        .$('tr:eq(0)', { order: 'current' })
-        .text()
-        .trim()
-        .split(' ')[0]
+    const firstWord = await page.evaluate(
+      () =>
+        window.table
+          .$('tr:eq(0)', { order: 'current' })
+          .text()
+          .trim()
+          .split(' ')[0]
     );
     expect(firstWord).toBe('Airi');
   });

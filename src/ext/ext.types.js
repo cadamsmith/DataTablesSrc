@@ -1,14 +1,14 @@
-import { _dt_util_replaceable } from "../api/api.util.replaceable";
+import { _dt_util_replaceable } from '../api/api.util.replaceable';
 import {
   _empty,
   _re_date,
   _htmlNumeric,
   _re_formatted_numeric,
   _isNumber,
-} from "../core/core.internal";
-import { _filterString } from "./ext.filter";
-import { __numericReplace } from "./ext.sorting";
-import { _re_html } from "../core/core.regex";
+} from '../core/core.internal';
+import { _filterString } from './ext.filter';
+import { __numericReplace } from './ext.sorting';
+import { _re_html } from '../core/core.regex';
 
 /**
  * Type based plug-ins.
@@ -187,9 +187,9 @@ export var _dt_type = function (name, prop, val) {
         return fn._name === name;
       }),
       order: {
-        pre: _dt_ext_types.order[name + "-pre"],
-        asc: _dt_ext_types.order[name + "-asc"],
-        desc: _dt_ext_types.order[name + "-desc"],
+        pre: _dt_ext_types.order[name + '-pre'],
+        asc: _dt_ext_types.order[name + '-asc'],
+        desc: _dt_ext_types.order[name + '-desc'],
       },
       render: _dt_ext_types.render[name],
       search: _dt_ext_types.search[name],
@@ -202,7 +202,7 @@ export var _dt_type = function (name, prop, val) {
   var setDetect = function (detect) {
     // `detect` can be a function or an object - we set a name
     // property for either - that is used for the detection
-    Object.defineProperty(detect, "_name", { value: name });
+    Object.defineProperty(detect, '_name', { value: name });
 
     var idx = _dt_ext_types.detect.findIndex(function (item) {
       return item._name === name;
@@ -215,9 +215,9 @@ export var _dt_type = function (name, prop, val) {
     }
   };
   var setOrder = function (obj) {
-    _dt_ext_types.order[name + "-pre"] = obj.pre; // can be undefined
-    _dt_ext_types.order[name + "-asc"] = obj.asc; // can be undefined
-    _dt_ext_types.order[name + "-desc"] = obj.desc; // can be undefined
+    _dt_ext_types.order[name + '-pre'] = obj.pre; // can be undefined
+    _dt_ext_types.order[name + '-asc'] = obj.asc; // can be undefined
+    _dt_ext_types.order[name + '-desc'] = obj.desc; // can be undefined
   };
 
   // prop is optional
@@ -226,19 +226,19 @@ export var _dt_type = function (name, prop, val) {
     prop = null;
   }
 
-  if (prop === "className") {
-    setProp("className", val);
-  } else if (prop === "detect") {
+  if (prop === 'className') {
+    setProp('className', val);
+  } else if (prop === 'detect') {
     setDetect(val);
-  } else if (prop === "order") {
+  } else if (prop === 'order') {
     setOrder(val);
-  } else if (prop === "render") {
-    setProp("render", val);
-  } else if (prop === "search") {
-    setProp("search", val);
+  } else if (prop === 'render') {
+    setProp('render', val);
+  } else if (prop === 'search') {
+    setProp('search', val);
   } else if (!prop) {
     if (val.className) {
-      setProp("className", val.className);
+      setProp('className', val.className);
     }
 
     if (val.detect !== undefined) {
@@ -250,11 +250,11 @@ export var _dt_type = function (name, prop, val) {
     }
 
     if (val.render !== undefined) {
-      setProp("render", val.render);
+      setProp('render', val.render);
     }
 
     if (val.search !== undefined) {
-      setProp("search", val.search);
+      setProp('search', val.search);
     }
   }
 };
@@ -266,32 +266,32 @@ export var _dt_listTypes = function () {
   });
 };
 
-export function _registerBuiltInTypes(){
-  _dt_type("string", _dt_type_string);
-  _dt_type("string-utf8", _dt_type_stringUtf8);
-  _dt_type("html", _dt_type_html);
-  _dt_type("html-utf8", _dt_type_htmlUtf8);
-  _dt_type("date", _dt_type_date);
-  _dt_type("html-num-fmt", _dt_type_htmlNumFmt);
-  _dt_type("html-num", _dt_type_htmlNum);
-  _dt_type("num-fmt", _dt_type_numFmt);
-  _dt_type("num", _dt_type_num);
-} 
+export function _registerBuiltInTypes() {
+  _dt_type('string', _dt_type_string);
+  _dt_type('string-utf8', _dt_type_stringUtf8);
+  _dt_type('html', _dt_type_html);
+  _dt_type('html-utf8', _dt_type_htmlUtf8);
+  _dt_type('date', _dt_type_date);
+  _dt_type('html-num-fmt', _dt_type_htmlNumFmt);
+  _dt_type('html-num', _dt_type_htmlNum);
+  _dt_type('num-fmt', _dt_type_numFmt);
+  _dt_type('num', _dt_type_num);
+}
 
 var _dt_type_string = {
   detect: function () {
-    return "string";
+    return 'string';
   },
   order: {
     pre: function (a) {
       // This is a little complex, but faster than always calling toString,
       // http://jsperf.com/tostring-v-check
-      return _empty(a) && typeof a !== "boolean"
-        ? ""
-        : typeof a === "string"
+      return _empty(a) && typeof a !== 'boolean'
+        ? ''
+        : typeof a === 'string'
           ? a.toLowerCase()
           : !a.toString
-            ? ""
+            ? ''
             : a.toString();
     },
   },
@@ -312,7 +312,7 @@ var _dt_type_stringUtf8 = {
         !_empty(d) &&
         // eslint-disable-next-line compat/compat
         navigator.languages &&
-        typeof d === "string" &&
+        typeof d === 'string' &&
         d.match(/[^\x00-\x7F]/)
       );
     },
@@ -329,20 +329,20 @@ var _dt_type_stringUtf8 = {
 var _dt_type_html = {
   detect: {
     allOf: function (d) {
-      return _empty(d) || (typeof d === "string" && d.indexOf("<") !== -1);
+      return _empty(d) || (typeof d === 'string' && d.indexOf('<') !== -1);
     },
     oneOf: function (d) {
       // At least one data point must contain a `<`
-      return !_empty(d) && typeof d === "string" && d.indexOf("<") !== -1;
+      return !_empty(d) && typeof d === 'string' && d.indexOf('<') !== -1;
     },
   },
   order: {
     pre: function (a) {
       return _empty(a)
-        ? ""
+        ? ''
         : a.replace
           ? _dt_util_replaceable.stripHtml(a).trim().toLowerCase()
-          : a + "";
+          : a + '';
     },
   },
   search: _filterString(true, true),
@@ -351,7 +351,7 @@ var _dt_type_html = {
 var _dt_type_htmlUtf8 = {
   detect: {
     allOf: function (d) {
-      return _empty(d) || (typeof d === "string" && d.indexOf("<") !== -1);
+      return _empty(d) || (typeof d === 'string' && d.indexOf('<') !== -1);
     },
     oneOf: function (d) {
       // At least one data point must contain a `<` and a non-ASCII character
@@ -360,9 +360,9 @@ var _dt_type_htmlUtf8 = {
         // eslint-disable-next-line compat/compat
         navigator.languages &&
         !_empty(d) &&
-        typeof d === "string" &&
-        d.indexOf("<") !== -1 &&
-        typeof d === "string" &&
+        typeof d === 'string' &&
+        d.indexOf('<') !== -1 &&
+        typeof d === 'string' &&
         d.match(/[^\x00-\x7F]/)
       );
     },
@@ -377,7 +377,7 @@ var _dt_type_htmlUtf8 = {
 };
 
 var _dt_type_date = {
-  className: "dt-type-date",
+  className: 'dt-type-date',
   detect: {
     allOf: function (d) {
       // V8 tries _very_ hard to make a string passed into `Date.parse()`
@@ -391,7 +391,7 @@ var _dt_type_date = {
     },
     oneOf: function (d) {
       // At least one entry must be a date or a string with a date
-      return d instanceof Date || (typeof d === "string" && _re_date.test(d));
+      return d instanceof Date || (typeof d === 'string' && _re_date.test(d));
     },
   },
   order: {
@@ -403,7 +403,7 @@ var _dt_type_date = {
 };
 
 var _dt_type_htmlNumFmt = {
-  className: "dt-type-numeric",
+  className: 'dt-type-numeric',
   detect: {
     allOf: function (d, settings) {
       var decimal = settings.oLanguage.sDecimal;
@@ -425,7 +425,7 @@ var _dt_type_htmlNumFmt = {
 };
 
 var _dt_type_htmlNum = {
-  className: "dt-type-numeric",
+  className: 'dt-type-numeric',
   detect: {
     allOf: function (d, settings) {
       var decimal = settings.oLanguage.sDecimal;
@@ -447,7 +447,7 @@ var _dt_type_htmlNum = {
 };
 
 var _dt_type_numFmt = {
-  className: "dt-type-numeric",
+  className: 'dt-type-numeric',
   detect: {
     allOf: function (d, settings) {
       var decimal = settings.oLanguage.sDecimal;
@@ -468,7 +468,7 @@ var _dt_type_numFmt = {
 };
 
 var _dt_type_num = {
-  className: "dt-type-numeric",
+  className: 'dt-type-numeric',
   detect: {
     allOf: function (d, settings) {
       var decimal = settings.oLanguage.sDecimal;
@@ -489,8 +489,8 @@ var _dt_type_num = {
 };
 
 var __diacriticSort = function (a, b) {
-  a = a !== null && a !== undefined ? a.toString().toLowerCase() : "";
-  b = b !== null && b !== undefined ? b.toString().toLowerCase() : "";
+  a = a !== null && a !== undefined ? a.toString().toLowerCase() : '';
+  b = b !== null && b !== undefined ? b.toString().toLowerCase() : '';
 
   // Checked for `navigator.languages` support in `oneOf` so this code can't execute in old
   // Safari and thus can disable this check

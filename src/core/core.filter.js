@@ -1,10 +1,10 @@
-import { _fnDataSource, _fnCallbackFire, _fnArrayApply } from "./core.support";
-import { _fnGetCellData } from "./core.data";
-import { _dt_ext } from "../ext/ext";
-import $ from "jquery";
-import { _escapeRegex } from "./core.internal";
-import { _each, _extend } from "./core.jq";
-import { _dt_util_replaceable } from "../api/api.util.replaceable";
+import { _fnDataSource, _fnCallbackFire, _fnArrayApply } from './core.support';
+import { _fnGetCellData } from './core.data';
+import { _dt_ext } from '../ext/ext';
+import $ from 'jquery';
+import { _escapeRegex } from './core.internal';
+import { _each, _extend } from './core.jq';
+import { _dt_util_replaceable } from '../api/api.util.replaceable';
 
 /**
  * Filter the table using both the global filter and column based filtering
@@ -16,7 +16,7 @@ export function _fnFilterComplete(settings, input) {
   var columnsSearch = settings.aoPreSearchCols;
 
   // In server-side processing all filtering is done by the server, so no point hanging around here
-  if (_fnDataSource(settings) != "ssp") {
+  if (_fnDataSource(settings) != 'ssp') {
     // Check if any of the rows were invalidated
     _fnFilterData(settings);
 
@@ -48,7 +48,7 @@ export function _fnFilterComplete(settings, input) {
   // Tell the draw function we have been filtering
   settings.bFiltered = true;
 
-  _fnCallbackFire(settings, null, "search", [settings]);
+  _fnCallbackFire(settings, null, 'search', [settings]);
 }
 
 /**
@@ -88,7 +88,7 @@ function _fnFilterCustom(settings) {
  * Filter the data table based on user input and draw the table
  */
 function _fnFilter(searchRows, settings, input, options, column) {
-  if (input === "") {
+  if (input === '') {
     return;
   }
 
@@ -97,7 +97,7 @@ function _fnFilter(searchRows, settings, input, options, column) {
 
   // Search term can be a function, regex or string - if a string we apply our
   // smart filtering regex (assuming the options require that)
-  var searchFunc = typeof input === "function" ? input : null;
+  var searchFunc = typeof input === 'function' ? input : null;
   var rpSearch =
     input instanceof RegExp
       ? input
@@ -150,7 +150,7 @@ function _fnFilterCreateSearch(search, inOpts) {
     inOpts
   );
 
-  if (typeof search !== "string") {
+  if (typeof search !== 'string') {
     search = search.toString();
   }
 
@@ -159,8 +159,8 @@ function _fnFilterCreateSearch(search, inOpts) {
 
   if (options.exact) {
     return new RegExp(
-      "^" + _escapeRegex(search) + "$",
-      options.caseInsensitive ? "i" : ""
+      '^' + _escapeRegex(search) + '$',
+      options.caseInsensitive ? 'i' : ''
     );
   }
 
@@ -176,13 +176,13 @@ function _fnFilterCreateSearch(search, inOpts) {
      *
      * ^(?=.*?\bone\b)(?=.*?\btwo three\b)(?=.*?\bfour\b).*$
      */
-    var parts = search.match(/!?["\u201C][^"\u201D]+["\u201D]|[^ ]+/g) || [""];
+    var parts = search.match(/!?["\u201C][^"\u201D]+["\u201D]|[^ ]+/g) || [''];
     var a = parts.map(function (word) {
       var negative = false;
       var m;
 
       // Determine if it is a "does not include"
-      if (word.charAt(0) === "!") {
+      if (word.charAt(0) === '!') {
         negative = true;
         word = word.substring(1);
       }
@@ -191,7 +191,7 @@ function _fnFilterCreateSearch(search, inOpts) {
       if (word.charAt(0) === '"') {
         m = word.match(/^"(.*)"$/);
         word = m ? m[1] : word;
-      } else if (word.charAt(0) === "\u201C") {
+      } else if (word.charAt(0) === '\u201C') {
         // Smart quote match (iPhone users)
         m = word.match(/^\u201C(.*)\u201D$/);
         word = m ? m[1] : word;
@@ -201,32 +201,32 @@ function _fnFilterCreateSearch(search, inOpts) {
       // allowed to match at the end of the expression.
       if (negative) {
         if (word.length > 1) {
-          not.push("(?!" + word + ")");
+          not.push('(?!' + word + ')');
         }
 
-        word = "";
+        word = '';
       }
 
-      return word.replace(/"/g, "");
+      return word.replace(/"/g, '');
     });
 
-    var match = not.length ? not.join("") : "";
+    var match = not.length ? not.join('') : '';
 
-    var boundary = options.boundary ? "\\b" : "";
+    var boundary = options.boundary ? '\\b' : '';
 
     search =
-      "^(?=.*?" +
+      '^(?=.*?' +
       boundary +
-      a.join(")(?=.*?" + boundary) +
-      ")(" +
+      a.join(')(?=.*?' + boundary) +
+      ')(' +
       match +
-      ".)*$";
+      '.)*$';
   }
 
-  return new RegExp(search, options.caseInsensitive ? "i" : "");
+  return new RegExp(search, options.caseInsensitive ? 'i' : '');
 }
 
-var __filter_div = $("<div>")[0];
+var __filter_div = $('<div>')[0];
 var __filter_div_textContent = __filter_div.textContent !== undefined;
 
 // Update the filtering data for each row if needed (by invalidation or first run)
@@ -251,25 +251,25 @@ function _fnFilterData(settings) {
         column = columns[j];
 
         if (column.bSearchable) {
-          cellData = _fnGetCellData(settings, rowIdx, j, "filter");
+          cellData = _fnGetCellData(settings, rowIdx, j, 'filter');
 
           // Search in DataTables is string based
           if (cellData === null) {
-            cellData = "";
+            cellData = '';
           }
 
-          if (typeof cellData !== "string" && cellData.toString) {
+          if (typeof cellData !== 'string' && cellData.toString) {
             cellData = cellData.toString();
           }
         } else {
-          cellData = "";
+          cellData = '';
         }
 
         // If it looks like there is an HTML entity in the string,
         // attempt to decode it so sorting works as expected. Note that
         // we could use a single line of jQuery to do this, but the DOM
         // method used here is much faster https://jsperf.com/html-decode
-        if (cellData.indexOf && cellData.indexOf("&") !== -1) {
+        if (cellData.indexOf && cellData.indexOf('&') !== -1) {
           __filter_div.innerHTML = cellData;
           cellData = __filter_div_textContent
             ? __filter_div.textContent
@@ -277,14 +277,14 @@ function _fnFilterData(settings) {
         }
 
         if (cellData.replace) {
-          cellData = cellData.replace(/[\r\n\u2028]/g, "");
+          cellData = cellData.replace(/[\r\n\u2028]/g, '');
         }
 
         filterData.push(cellData);
       }
 
       row._aFilterData = filterData;
-      row._sFilterRow = filterData.join("  ");
+      row._sFilterRow = filterData.join('  ');
       wasInvalidated = true;
     }
   }

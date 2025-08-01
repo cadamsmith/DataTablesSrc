@@ -1,9 +1,9 @@
-import $ from "jquery";
-import { _each, _extend, _isPlainObject } from "./core.jq";
-import { _dt_util_replaceable } from "../api/api.util.replaceable";
-import { _dt_ext_renderer } from "../ext/ext.renderer";
-import { _dt_ext_escape } from "../ext/ext.escape";
-import { _dt_ext_errMode } from "../ext/ext.errMode";
+import $ from 'jquery';
+import { _each, _extend, _isPlainObject } from './core.jq';
+import { _dt_util_replaceable } from '../api/api.util.replaceable';
+import { _dt_ext_renderer } from '../ext/ext.renderer';
+import { _dt_ext_escape } from '../ext/ext.escape';
+import { _dt_ext_errMode } from '../ext/ext.errMode';
 
 /**
  * Detect the data source being used for the table. Used to simplify the code
@@ -15,11 +15,11 @@ import { _dt_ext_errMode } from "../ext/ext.errMode";
  */
 export function _fnDataSource(settings) {
   if (settings.oFeatures.bServerSide) {
-    return "ssp";
+    return 'ssp';
   } else if (settings.ajax) {
-    return "ajax";
+    return 'ajax';
   }
-  return "dom";
+  return 'dom';
 }
 
 /**
@@ -62,14 +62,14 @@ export function _fnMap(ret, src, name, mappedName) {
  */
 export function _fnLog(settings, level, msg, tn) {
   msg =
-    "DataTables warning: " +
-    (settings ? "table id=" + settings.sTableId + " - " : "") +
+    'DataTables warning: ' +
+    (settings ? 'table id=' + settings.sTableId + ' - ' : '') +
     msg;
 
   if (tn) {
     msg +=
-      ". For more information about this error, please see " +
-      "https://datatables.net/tn/" +
+      '. For more information about this error, please see ' +
+      'https://datatables.net/tn/' +
       tn;
   }
 
@@ -78,14 +78,14 @@ export function _fnLog(settings, level, msg, tn) {
     var type = _dt_ext_errMode();
 
     if (settings) {
-      _fnCallbackFire(settings, null, "dt-error", [settings, tn, msg], true);
+      _fnCallbackFire(settings, null, 'dt-error', [settings, tn, msg], true);
     }
 
-    if (type == "alert") {
+    if (type == 'alert') {
       alert(msg);
-    } else if (type == "throw") {
+    } else if (type == 'throw') {
       throw new Error(msg);
-    } else if (typeof type == "function") {
+    } else if (typeof type == 'function') {
       type(settings, tn, msg);
     }
   } else if (window.console && console.log) {
@@ -127,18 +127,18 @@ export function _fnCallbackFire(
   }
 
   if (eventName !== null) {
-    var e = $.Event(eventName + ".dt");
+    var e = $.Event(eventName + '.dt');
     var table = $(settings.nTable);
 
     // Expose the DataTables API on the event object for easy access
     e.dt = settings.api;
 
-    table[bubbles ? "trigger" : "triggerHandler"](e, args);
+    table[bubbles ? 'trigger' : 'triggerHandler'](e, args);
 
     // If not yet attached to the document, trigger the event
     // on the body directly to sort of simulate the bubble
-    if (bubbles && table.parents("body").length === 0) {
-      $("body").trigger(e, args);
+    if (bubbles && table.parents('body').length === 0) {
+      $('body').trigger(e, args);
     }
 
     ret.push(e.result);
@@ -155,7 +155,7 @@ export function _fnRenderer(settings, type) {
     // Specific renderer for this type. If available use it, otherwise use
     // the default.
     return host[renderer[type]] || host._;
-  } else if (typeof renderer === "string") {
+  } else if (typeof renderer === 'string') {
     // Common renderer - if there is one available for this type use it,
     // otherwise use the default
     return host[renderer] || host._;
@@ -252,8 +252,8 @@ export function _fnExtend(out, extender, breakRefs) {
         _extend(true, out[prop], val);
       } else if (
         breakRefs &&
-        prop !== "data" &&
-        prop !== "aaData" &&
+        prop !== 'data' &&
+        prop !== 'aaData' &&
         Array.isArray(val)
       ) {
         out[prop] = val.slice();
@@ -278,16 +278,16 @@ export function _fnExtend(out, extender, breakRefs) {
  */
 export function _fnBindAction(n, selector, fn) {
   $(n)
-    .on("click.DT", selector, function (e) {
+    .on('click.DT', selector, function (e) {
       fn(e);
     })
-    .on("keypress.DT", selector, function (e) {
+    .on('keypress.DT', selector, function (e) {
       if (e.which === 13) {
         e.preventDefault();
         fn(e);
       }
     })
-    .on("selectstart.DT", selector, function () {
+    .on('selectstart.DT', selector, function () {
       // Don't want a double click resulting in text selection
       return false;
     });
@@ -338,9 +338,9 @@ export function _fnMacros(settings, str, entries) {
       /_PAGES_/g,
       formatter.call(settings, all ? 1 : Math.ceil(vis / len))
     )
-    .replace(/_ENTRIES_/g, settings.api.i18n("entries", "", entries))
-    .replace(/_ENTRIES-MAX_/g, settings.api.i18n("entries", "", max))
-    .replace(/_ENTRIES-TOTAL_/g, settings.api.i18n("entries", "", vis));
+    .replace(/_ENTRIES_/g, settings.api.i18n('entries', '', entries))
+    .replace(/_ENTRIES-MAX_/g, settings.api.i18n('entries', '', max))
+    .replace(/_ENTRIES-TOTAL_/g, settings.api.i18n('entries', '', vis));
 }
 
 /**
@@ -356,6 +356,6 @@ export function _fnListener(that, name, src) {
   }
 
   for (let i = 0; i < src.length; i++) {
-    that.on(name + ".dt", src[i]);
+    that.on(name + '.dt', src[i]);
   }
 }

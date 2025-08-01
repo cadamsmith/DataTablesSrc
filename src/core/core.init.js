@@ -3,35 +3,35 @@ import {
   _fnApplyColumnDefs,
   _fnColumnOptions,
   _colGroup,
-} from "./core.columns";
+} from './core.columns';
 import {
   _fnCallbackFire,
   _fnDataSource,
   _fnEscapeObject,
   _fnLog,
-} from "./core.support";
+} from './core.support';
 import {
   _fnBuildHead,
   _fnDrawHead,
   _fnReDraw,
   _fnAddOptionsHtml,
   _fnDetectHeader,
-} from "./core.draw";
-import { _fnAddData, _fnAddTr } from "./core.data";
-import { _fnProcessingDisplay } from "./core.processing";
-import { _fnBuildAjax, _fnAjaxDataSrc } from "./core.ajax";
-import { _fnSortInit, _fnSort } from "./core.sort";
-import { _fnLoadState } from "./core.state";
+} from './core.draw';
+import { _fnAddData, _fnAddTr } from './core.data';
+import { _fnProcessingDisplay } from './core.processing';
+import { _fnBuildAjax, _fnAjaxDataSrc } from './core.ajax';
+import { _fnSortInit, _fnSort } from './core.sort';
+import { _fnLoadState } from './core.state';
 import {
   _fnCompatOpts,
   _fnCompatCols,
   _fnCamelToHungarian,
-} from "./core.compat";
-import $ from "jquery";
-import { _dt_api } from "../api/api.base";
-import { _extend } from "./core.jq";
-import { _dt_ext_classes } from "../ext/ext.classes";
-import { _fnInitComplete } from "./core.initComplete";
+} from './core.compat';
+import $ from 'jquery';
+import { _dt_api } from '../api/api.base';
+import { _extend } from './core.jq';
+import { _dt_ext_classes } from '../ext/ext.classes';
+import { _fnInitComplete } from './core.initComplete';
 
 /**
  * Normalize the oInit object based on the defaults and the table's initialisation options
@@ -75,8 +75,8 @@ export function _fnCheckReInit(allSettings, oInit, defaults, emptyInit) {
         new _dt_api(s).destroy();
         break;
       } else {
-        _fnLog(s, 0, "Cannot reinitialise DataTable", 3);
-        throw new Error("Cannot reinitialise DataTable");
+        _fnLog(s, 0, 'Cannot reinitialise DataTable', 3);
+        throw new Error('Cannot reinitialise DataTable');
       }
     }
 
@@ -130,32 +130,32 @@ export function _fnSetUpColumns(oSettings, oInit, $this, thead) {
   /* HTML5 attribute detection - build an mData object automatically if the
    * attributes are found
    */
-  var rowOne = $this.children("tbody").find("tr:first-child").eq(0);
+  var rowOne = $this.children('tbody').find('tr:first-child').eq(0);
 
   if (rowOne.length) {
     var a = function (cell, name) {
-      return cell.getAttribute("data-" + name) !== null ? name : null;
+      return cell.getAttribute('data-' + name) !== null ? name : null;
     };
 
     $(rowOne[0])
-      .children("th, td")
+      .children('th, td')
       .each(function (i, cell) {
         var col = oSettings.aoColumns[i];
 
         if (!col) {
-          _fnLog(oSettings, 0, "Incorrect column count", 18);
+          _fnLog(oSettings, 0, 'Incorrect column count', 18);
         }
 
         if (col.mData === i) {
-          var sort = a(cell, "sort") || a(cell, "order");
-          var filter = a(cell, "filter") || a(cell, "search");
+          var sort = a(cell, 'sort') || a(cell, 'order');
+          var filter = a(cell, 'filter') || a(cell, 'search');
 
           if (sort !== null || filter !== null) {
             col.mData = {
-              _: i + ".display",
-              sort: sort !== null ? i + ".@data-" + sort : undefined,
-              type: sort !== null ? i + ".@data-" + sort : undefined,
-              filter: filter !== null ? i + ".@data-" + filter : undefined,
+              _: i + '.display',
+              sort: sort !== null ? i + '.@data-' + sort : undefined,
+              type: sort !== null ? i + '.@data-' + sort : undefined,
+              filter: filter !== null ? i + '.@data-' + filter : undefined,
             };
             col._isArrayHost = true;
 
@@ -175,11 +175,11 @@ export function _fnStoreHtmlElements(oSettings, $this, thead) {
    * Table HTML init
    * Cache the header, body and footer as required, creating them if needed
    */
-  var caption = $this.children("caption");
+  var caption = $this.children('caption');
 
   if (oSettings.caption) {
     if (caption.length === 0) {
-      caption = $("<caption/>").appendTo($this);
+      caption = $('<caption/>').appendTo($this);
     }
 
     caption.html(oSettings.caption);
@@ -188,26 +188,26 @@ export function _fnStoreHtmlElements(oSettings, $this, thead) {
   // Store the caption side, so we can remove the element from the document
   // when creating the element
   if (caption.length) {
-    caption[0]._captionSide = caption.css("caption-side");
+    caption[0]._captionSide = caption.css('caption-side');
     oSettings.captionNode = caption[0];
   }
 
   if (thead.length === 0) {
-    thead = $("<thead/>").appendTo($this);
+    thead = $('<thead/>').appendTo($this);
   }
   oSettings.nTHead = thead[0];
 
-  var tbody = $this.children("tbody");
+  var tbody = $this.children('tbody');
   if (tbody.length === 0) {
-    tbody = $("<tbody/>").insertAfter(thead);
+    tbody = $('<tbody/>').insertAfter(thead);
   }
   oSettings.nTBody = tbody[0];
 
-  var tfoot = $this.children("tfoot");
+  var tfoot = $this.children('tfoot');
   if (tfoot.length === 0) {
     // If we are a scrolling table, and no footer has been given, then we need to create
     // a tfoot element for the caption element to be appended to
-    tfoot = $("<tfoot/>").appendTo($this);
+    tfoot = $('<tfoot/>').appendTo($this);
   }
   oSettings.nTFoot = tfoot[0];
 }
@@ -237,22 +237,22 @@ export async function _fnHandleLanguageDefinitions(oSettings, oInit, defaults) {
   _extend(true, oLanguage, oInit.oLanguage);
 
   if (!oLanguage.sUrl) {
-    _fnCallbackFire(oSettings, null, "i18n", [oSettings], true);
+    _fnCallbackFire(oSettings, null, 'i18n', [oSettings], true);
     return;
   }
 
   // Get the language definitions from a file
   try {
     const json = await $.ajax({
-      dataType: "json",
+      dataType: 'json',
       url: oLanguage.sUrl,
     });
 
     _fnCamelToHungarian(defaults.oLanguage, json);
     _extend(true, oLanguage, json, oSettings.oInit.oLanguage);
-    _fnCallbackFire(oSettings, null, "i18n", [oSettings], true);
+    _fnCallbackFire(oSettings, null, 'i18n', [oSettings], true);
   } catch (e) {
-    _fnLog(oSettings, 0, "i18n file loading error", 21);
+    _fnLog(oSettings, 0, 'i18n file loading error', 21);
     // Continue on as best we can
   }
 }
@@ -277,8 +277,8 @@ export function _fnInitialise(settings) {
   }
 
   // Build the header / footer for the table
-  _fnBuildHead(settings, "header");
-  _fnBuildHead(settings, "footer");
+  _fnBuildHead(settings, 'header');
+  _fnBuildHead(settings, 'footer');
 
   // Load the table's state (if needed) and then render around it and draw
   _fnLoadState(settings, init, function () {
@@ -295,9 +295,9 @@ export function _fnInitialise(settings) {
       for (i = 0; i < init.aaData.length; i++) {
         _fnAddData(settings, init.aaData[i]);
       }
-    } else if (deferLoading || dataSrc == "dom") {
+    } else if (deferLoading || dataSrc == 'dom') {
       // Grab the data from the page
-      _fnAddTr(settings, $(settings.nTBody).children("tr"));
+      _fnAddTr(settings, $(settings.nTBody).children('tr'));
     }
 
     // Filter not yet applied - copy the display master
@@ -312,7 +312,7 @@ export function _fnInitialise(settings) {
     /* Okay to show that something is going on now */
     _fnProcessingDisplay(settings, true);
 
-    _fnCallbackFire(settings, null, "preInit", [settings], true);
+    _fnCallbackFire(settings, null, 'preInit', [settings], true);
 
     // If there is default sorting required - let's do it. The sort function
     // will do the drawing for us. Otherwise we draw the table regardless of the
@@ -321,9 +321,9 @@ export function _fnInitialise(settings) {
     _fnReDraw(settings, undefined, undefined, _fnSort);
 
     // Server-side processing init complete is done by _fnAjaxUpdateDraw
-    if (dataSrc != "ssp" || deferLoading) {
+    if (dataSrc != 'ssp' || deferLoading) {
       // if there is an ajax source load the data
-      if (dataSrc == "ajax") {
+      if (dataSrc == 'ajax') {
         _fnBuildAjax(
           settings,
           {},
