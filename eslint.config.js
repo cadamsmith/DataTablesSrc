@@ -7,6 +7,9 @@ export default defineConfig([
     files: ['**/*.{js,mjs,cjs}'],
     plugins: { js },
     extends: ['js/recommended'],
+    globals: {
+      JQuery: true
+    },
     languageOptions: { globals: globals.browser },
   },
 ]);

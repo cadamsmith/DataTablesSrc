@@ -1,4 +1,4 @@
 node_modules
 .DS_Store
-old_tests
+test-results
 .idea
