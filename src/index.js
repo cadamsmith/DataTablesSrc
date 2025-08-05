@@ -22,7 +22,6 @@ import { _fnSortingClasses } from './core/core.sort';
 import {
   _fnApplyClasses,
   _fnHandleLanguageDefinitions,
-  _fnCheckReInit,
   _fnInitialise,
   _fnNormalizeDefaults,
   _fnSetUpColumns,
@@ -102,11 +101,42 @@ const DataTable = function (selector, options) {
 
     _fnNormalizeDefaults(defaults, $this, oInit);
 
-    try {
-      _fnCheckReInit(DataTable.settings, oInit, defaults, emptyInit);
-    } catch (e) {
-      console.log(e);
-      return;
+    /* Check to see if we are re-initialising a table */
+    const allSettings = DataTable.settings;
+    for (i = 0, iLen = allSettings.length; i < iLen; i++) {
+      const s = allSettings[i];
+
+      /* Base check on table node */
+      if (
+        s.nTable == this ||
+        (s.nTHead && s.nTHead.parentNode == this) ||
+        (s.nTFoot && s.nTFoot.parentNode == this)
+      ) {
+        var bRetrieve =
+          oInit.bRetrieve !== undefined ? oInit.bRetrieve : defaults.bRetrieve;
+        var bDestroy =
+          oInit.bDestroy !== undefined ? oInit.bDestroy : defaults.bDestroy;
+
+        if (emptyInit || bRetrieve) {
+          return s.oInstance;
+        } else if (bDestroy) {
+          new DataTable.Api(s).destroy();
+          break;
+        } else {
+          _fnLog(s, 0, 'Cannot reinitialise DataTable', 3);
+          return;
+        }
+      }
+
+      /* If the element we are initialising has the same ID as a table which was previously
+       * initialised, but the table nodes don't match (from before) then we destroy the old
+       * instance by simply deleting it. This is under the assumption that the table has been
+       * destroyed by other methods. Anyone using non-id selectors will need to do this manually
+       */
+      if (s.sTableId == this.id) {
+        allSettings.splice(i, 1);
+        break;
+      }
     }
 
     /* Ensure the table has an ID - required for accessibility */

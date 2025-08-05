@@ -28,7 +28,6 @@ import {
   _fnCamelToHungarian,
 } from './core.compat';
 import $ from 'jquery';
-import { _dt_api } from '../api/api.base';
 import { _extend } from './core.jq';
 import { _dt_ext_classes } from '../ext/ext.classes';
 import { _fnInitComplete } from './core.initComplete';
@@ -51,45 +50,6 @@ export function _fnNormalizeDefaults(defaults, $table, oInit) {
     _extend(oInit, _fnEscapeObject($table.data())),
     true
   );
-}
-
-export function _fnCheckReInit(allSettings, oInit, defaults, emptyInit) {
-  /* Check to see if we are re-initialising a table */
-  for (let i = 0, iLen = allSettings.length; i < iLen; i++) {
-    var s = allSettings[i];
-
-    /* Base check on table node */
-    if (
-      s.nTable == this ||
-      (s.nTHead && s.nTHead.parentNode == this) ||
-      (s.nTFoot && s.nTFoot.parentNode == this)
-    ) {
-      var bRetrieve =
-        oInit.bRetrieve !== undefined ? oInit.bRetrieve : defaults.bRetrieve;
-      var bDestroy =
-        oInit.bDestroy !== undefined ? oInit.bDestroy : defaults.bDestroy;
-
-      if (emptyInit || bRetrieve) {
-        return s.oInstance;
-      } else if (bDestroy) {
-        new _dt_api(s).destroy();
-        break;
-      } else {
-        _fnLog(s, 0, 'Cannot reinitialise DataTable', 3);
-        throw new Error('Cannot reinitialise DataTable');
-      }
-    }
-
-    /* If the element we are initialising has the same ID as a table which was previously
-     * initialised, but the table nodes don't match (from before) then we destroy the old
-     * instance by simply deleting it. This is under the assumption that the table has been
-     * destroyed by other methods. Anyone using non-id selectors will need to do this manually
-     */
-    if (s.sTableId == this.id) {
-      allSettings.splice(i, 1);
-      break;
-    }
-  }
 }
 
 /**
