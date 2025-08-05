@@ -39,7 +39,7 @@ import {
   _dt_type,
   _registerBuiltInTypes,
 } from './ext/ext.types';
-import { _dt_api, _registerBuiltInApis } from './api/api.base';
+import _dt_api from './api/api.all';
 import { _dt_models } from './model/model.all';
 import { _each, _extend, _isPlainObject } from './core/core.jq';
 import { _dt_version, _dt_versionCheck } from './api/api.version';
@@ -319,7 +319,6 @@ DataTable.types = _dt_listTypes;
 DataTable.feature = _dt_feature;
 
 // set up DataTable apis, types and features
-_registerBuiltInApis();
 _registerBuiltInTypes();
 _registerBuiltInFeatures();
 

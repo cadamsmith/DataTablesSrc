@@ -23,7 +23,7 @@
     "build:css": "sass src/styles/dataTables.dataTables.scss dist/dataTables.css --no-source-map",
     "build:js": "rollup -c",
     "build": "npm run build:css && npm run build:js",
-    "test": "playwright test"
+    "test": "npx playwright test"
   },
   "author": {
     "name": "SpryMedia Ltd",
