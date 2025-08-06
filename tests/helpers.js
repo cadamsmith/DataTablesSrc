@@ -23,3 +23,34 @@ function getBaseUrl() {
   // Use the Playwright baseURL
   return 'http://localhost:8080/tests/html/test_container.html';
 }
+
+// In tests/helpers.js
+
+/**
+ * Clicks a DataTable header cell, supporting shift-click.
+ * @param {import('@playwright/test').Page} page
+ * @param {string|number} selectorOrColumn - Selector string or column index
+ * @param {number|object} [columnOrOptions] - Column index or options
+ * @param {object} [options] - Options (e.g. { shift: true })
+ */
+export async function clickHeader(page, selectorOrColumn, columnOrOptions, options) {
+  let selector, column;
+  // Argument shifting logic
+  if (typeof selectorOrColumn === 'number') {
+    column = selectorOrColumn;
+    options = columnOrOptions;
+    selector = '#example thead th';
+  } else {
+    selector = selectorOrColumn;
+    column = columnOrOptions;
+  }
+  // Build the selector for the Nth header cell
+  const thSelector = `${selector}:nth-child(${column + 1})`;
+  if (options && options.shift) {
+    await page.click(thSelector, { modifiers: ['Shift'] });
+  } else {
+    await page.click(thSelector);
+  }
+  // Mimic the original delay
+  await page.waitForTimeout(25);
+}
